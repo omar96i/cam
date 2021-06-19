@@ -1,0 +1,23 @@
+vistas:
+	includes/header
+	cliente
+	profesional
+	detalle
+	carrito
+
+
+controladores:
+	cliente
+	Profesional
+	Login
+	Cajax
+	Home
+
+
+modelos:
+	MCliente
+	MProfesional
+	MAgenda
+	Musuarios
+	Mproductos
+	Mventas

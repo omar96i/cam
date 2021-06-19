@@ -1,0 +1,22 @@
+[30-Sep-2020 17:33:21 America/Bogota] PHP Fatal error:  Call to undefined function base_url() in /home/lflsoftw/public_html/psicologiaintegra/application/views/errors/html/error_general.php on line 130
+[30-Sep-2020 17:33:30 America/Bogota] PHP Fatal error:  Call to undefined function base_url() in /home/lflsoftw/public_html/psicologiaintegra/application/views/errors/html/error_general.php on line 130
+[30-Sep-2020 17:33:50 America/Bogota] PHP Fatal error:  Call to undefined function base_url() in /home/lflsoftw/public_html/psicologiaintegra/application/views/errors/html/error_general.php on line 130
+[30-Sep-2020 17:34:01 America/Bogota] PHP Fatal error:  Call to undefined function base_url() in /home/lflsoftw/public_html/psicologiaintegra/application/views/errors/html/error_general.php on line 130
+[30-Sep-2020 18:29:59 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:30:12 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:32:25 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Profesional.php on line 47
+[30-Sep-2020 18:34:06 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:45:40 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:45:59 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:46:01 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:49:06 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:49:08 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:57:06 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 18:58:27 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[30-Sep-2020 19:01:35 America/Bogota] PHP Fatal error:  Call to a member function existe() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Cliente.php on line 39
+[02-Oct-2020 11:12:00 America/Bogota] PHP Fatal error:  Call to a member function consulta_agenda() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Agenda.php on line 299
+[02-Oct-2020 11:13:10 America/Bogota] PHP Fatal error:  Call to a member function consulta_agenda() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Agenda.php on line 299
+[02-Oct-2020 11:13:33 America/Bogota] PHP Fatal error:  Call to a member function consulta_agenda() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Agenda.php on line 299
+[02-Oct-2020 11:14:04 America/Bogota] PHP Fatal error:  Call to a member function consulta_agenda() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Agenda.php on line 299
+[02-Oct-2020 11:14:30 America/Bogota] PHP Fatal error:  Call to a member function consulta_agenda() on null in /home/lflsoftw/public_html/psicologiaintegra/application/controllers/Agenda.php on line 299
+[30-Dec-2020 09:23:31 America/Bogota] PHP Parse error:  syntax error, unexpected '{' in /home/lflsoftw/public_html/cam/application/views/includes_admin/header.php on line 232
