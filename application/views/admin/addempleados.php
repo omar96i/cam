@@ -33,6 +33,11 @@
                                 </div>
 
                                 <form action="" id="form_addproduct" enctype="multipart/form-data">
+									<div class="text-center mt-3 mb-3">
+										<div class="text-center">
+											<img src="" id="preview" width="40%" style="border-radius: 20px;"><br>
+										</div>
+									</div>
                                     <div class="row mt-3">
                                         <div class="col-sm-12 col-md-4">
                                             <div class="form-group">
@@ -155,6 +160,18 @@
 
 <script>
     $(document).ready(function() {
+		$("#imagen").change(function (e) { 
+			// Creamos el objeto de la clase FileReader
+			let reader = new FileReader();
+
+			// Leemos el archivo subido y se lo pasamos a nuestro fileReader
+			reader.readAsDataURL(e.target.files[0]);
+
+			// Le decimos que cuando este listo ejecute el código interno
+			reader.onload = function(){
+				$('#preview').attr('src', reader.result);
+			};
+		});
         $('.btn_addproduct').on('click' , function(e){
             e.preventDefault();
             var ruta      = "<?php echo base_url('admin/home/addnewempleado') ?>";
@@ -271,7 +288,6 @@
                         );
                         return;
                     }
-
                     alertify.alert('Ups :(' , r.msg);
 
                 })

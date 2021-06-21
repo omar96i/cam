@@ -31,8 +31,12 @@
                                         <h2 class="d-inline">Editar Empleado</h2>
                                     </div>
                                 </div>
-
                                 <form action="" id="form_editusuary">
+									<div class="text-center mt-3 mb-3">
+										<div class="text-center">
+											<img src="<?php echo base_url('assets/images/imagenes_empleado/').$usuarios->foto; ?>" id="preview" width="40%" style="border-radius: 20px;"><br>
+										</div>
+									</div>
                                     <div class="row mt-3">
                                         <div class="col-4">
                                             <div class="form-group">
@@ -163,10 +167,20 @@
 
 
 <script>
+	$("#imagen").change(function (e) { 
+		// Creamos el objeto de la clase FileReader
+		let reader = new FileReader();
+
+		// Leemos el archivo subido y se lo pasamos a nuestro fileReader
+		reader.readAsDataURL(e.target.files[0]);
+
+		// Le decimos que cuando este listo ejecute el código interno
+		reader.onload = function(){
+			$('#preview').attr('src', reader.result);
+		};
+	});
     $('.btn_editusuary').on('click' , function(e){
         e.preventDefault();
-    
-
         ruta         = "<?php echo base_url('admin/home/storeempleado') ?>"
         id_usuario = $(this).data('id_usuario');
         var form_data = new FormData($('#form_editusuary')[0]);
@@ -230,8 +244,6 @@
             $('input[name="apellidos_u"]').val() != '' &&
 			$('input[name="cuenta_tipo_u"]').val() != ''
         ){      
-            
-            
             $.ajax({
                 url: ruta,
                 type: 'POST',

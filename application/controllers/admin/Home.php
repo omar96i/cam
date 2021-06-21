@@ -642,7 +642,10 @@ class Home extends CI_Controller {
 	 		$data_image = ['upload_data' => $this->upload->data()];
 
 	 		$data['foto'] = $data_image['upload_data']['file_name'];
-	 	}
+	 	}else{
+			echo json_encode(['status' => false, 'msg' => 'Error al subir la imagen']);
+			return;
+		}
 
 	 	////// FOTO UPLOAD //////
 
@@ -896,9 +899,11 @@ class Home extends CI_Controller {
 		$this->load->library('upload' , $config);
 	 	if($this->upload->do_upload('imagen')) {
 	 		$data_image = ['upload_data' => $this->upload->data()];
-
 	 		$data['foto'] = $data_image['upload_data']['file_name'];
-	 	}
+	 	}else{
+			echo json_encode(['status' => false, 'msg' => 'Error al subir la imagen']);
+			return;
+		}
 
 		 ////// FOTO UPLOAD //////
 
@@ -964,7 +969,6 @@ class Home extends CI_Controller {
 		$this->load->library('upload' , $config);
 	 	if($this->upload->do_upload('imagen')) {
 	 		$data_image = ['upload_data' => $this->upload->data()];
-
 	 		$data['foto'] = $data_image['upload_data']['file_name'];
 	 	}
 
@@ -972,7 +976,7 @@ class Home extends CI_Controller {
 		$this->output->delete_cache();
 
 		
-		$update_usuarios     = $this->Musuarios->updateusuarios($data, $data2);
+		$update_usuarios = $this->Musuarios->updateusuarios($data, $data2);
 		if(!$update_usuarios) {
 			echo json_encode(['status' => false, 'msg' => 'Algo pasó, no se pudo editar']);
 		}

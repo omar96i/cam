@@ -6,6 +6,7 @@ class Login extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Mlogin');
+		$this->load->model('MingresosSoftware');
 	}
 
 	public function loguear() {
@@ -41,7 +42,9 @@ class Login extends CI_Controller {
 			'tipo'       => $validate->tipo_cuenta,
 			'login'      => TRUE
 		];	
+		
 
+		$this->MingresosSoftware->insertIngreso($validate->id_usuario); 
 		$_SESSION['usuario'] = $usuario;
 
 		echo json_encode(['status' => true]);

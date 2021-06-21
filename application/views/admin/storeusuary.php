@@ -33,6 +33,11 @@
                                 </div>
 
                                 <form action="" id="form_editusuary">
+									<div class="text-center mt-3 mb-3">
+										<div class="text-center">
+											<img src="<?php echo base_url('assets/images/imagenes_usuario/').$usuarios->foto; ?>" id="preview" width="40%" style="border-radius: 20px;"><br>
+										</div>
+									</div>
                                     <div class="row mt-3">
                                         <div class="col-4">
                                             <div class="form-group">
@@ -165,6 +170,18 @@
 
 
 <script>
+	$("#imagen").change(function (e) { 
+		// Creamos el objeto de la clase FileReader
+		let reader = new FileReader();
+
+		// Leemos el archivo subido y se lo pasamos a nuestro fileReader
+		reader.readAsDataURL(e.target.files[0]);
+
+		// Le decimos que cuando este listo ejecute el código interno
+		reader.onload = function(){
+			$('#preview').attr('src', reader.result);
+		};
+	});
     $('.btn_editusuary').on('click' , function(e){
         e.preventDefault();
     

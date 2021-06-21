@@ -6,7 +6,7 @@ class IngresosSoftware extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('MhorasIngreso');
+		$this->load->model('MingresosSoftware');
 	}
 
 	public function index() {
@@ -14,13 +14,13 @@ class IngresosSoftware extends CI_Controller {
 			redirect('Home');
         }
 
-        $data['ingresos'] = $this->MhorasIngreso->getDataIngresos();
+        $data['ingresos'] = $this->MingresosSoftware->getDataIngresos();
 
 		if(!$data['ingresos']) {
 			$data['ingresos'] = 0;
 		} 
 		else {
-			$data['ingresos'] = count($this->MhorasIngreso->getDataIngresos());
+			$data['ingresos'] = count($this->MingresosSoftware->getDataIngresos());
 		}
         
         $this->load->view('includes_admin/header');
@@ -39,8 +39,8 @@ class IngresosSoftware extends CI_Controller {
 		$pagina           = $this->input->post('pagina');
 		$cantidad         = 4;
 		$inicio           = ($pagina - 1) * $cantidad;
-		$ingresos         = $this->MhorasIngreso->getDataGeneral($fecha_inicial, $fecha_final, $inicio, $cantidad);
-		$total_registros  = count($this->MhorasIngreso->getDataGeneral($fecha_inicial, $fecha_final)); 
+		$ingresos         = $this->MingresosSoftware->getDataGeneral($fecha_inicial, $fecha_final, $inicio, $cantidad);
+		$total_registros  = count($this->MingresosSoftware->getDataGeneral($fecha_inicial, $fecha_final)); 
 
 		if(!$ingresos) {
 			echo json_encode(['status' => false]);
