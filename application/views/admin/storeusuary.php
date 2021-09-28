@@ -113,17 +113,19 @@
                                             <div class="form-group">
                                                 <label for="cuenta_tipo_u" class="col-form-label">Tipo cuenta:</label>
                                                 <select name="cuenta_tipo_u" id="cuenta_tipo_u" class="form-control">
-                                                    <option value="administrador" <?php if($usuarios->tipo_cuenta == "administrador"){ echo "selected"; } ?> >administrador</option>
-                                                    <option value="supervisor" <?php if($usuarios->tipo_cuenta == "supervisor"){ echo "selected"; } ?>>supervisor</option>
-                                                    <option value="empleado" <?php if($usuarios->tipo_cuenta == "empleado"){ echo "selected"; } ?>>empleado</option>
-                                                    <option value="talento humano" <?php if($usuarios->tipo_cuenta == "talento humano"){ echo "selected"; } ?>>talento humano</option>
+                                                    <option value="administrador" <?php if($usuarios->tipo_cuenta == "administrador"){ echo "selected"; } ?> >Administrador</option>
+                                                    <option value="supervisor" <?php if($usuarios->tipo_cuenta == "supervisor"){ echo "selected"; } ?>>Supervisor</option>
+                                                    <option value="empleado" <?php if($usuarios->tipo_cuenta == "empleado"){ echo "selected"; } ?>>Empleado</option>
+                                                    <option value="talento humano" <?php if($usuarios->tipo_cuenta == "talento humano"){ echo "selected"; } ?>>Talento humano</option>
                                                     <option value="tecnico sistemas" <?php if($usuarios->tipo_cuenta == "tecnico sistemas"){ echo "selected"; } ?>>Tecnico sistemas</option>
                                                     <option value="fotografo" <?php if($usuarios->tipo_cuenta == "fotografo"){ echo "selected"; } ?>>Fotografo</option>
 													<option value="psicologa" <?php if($usuarios->tipo_cuenta == "psicologa"){ echo "selected"; } ?>>Psicologa</option>
-													<option value="psicologa" <?php if($usuarios->tipo_cuenta == "servicios generales"){ echo "selected"; } ?>>Servicios generales</option>
-													<option value="psicologa" <?php if($usuarios->tipo_cuenta == "community manager"){ echo "selected"; } ?>>Community manager</option>
-													<option value="psicologa" <?php if($usuarios->tipo_cuenta == "maquillador"){ echo "selected"; } ?>>Maquillador</option>
-													<option value="psicologa" <?php if($usuarios->tipo_cuenta == "operario de mantenimiento"){ echo "selected"; } ?>>Operario de mantenimiento</option>
+													<option value="servicios generales" <?php if($usuarios->tipo_cuenta == "servicios generales"){ echo "selected"; } ?>>Servicios generales</option>
+													<option value="community manager" <?php if($usuarios->tipo_cuenta == "community manager"){ echo "selected"; } ?>>Community manager</option>
+													<option value="maquillador" <?php if($usuarios->tipo_cuenta == "maquillador"){ echo "selected"; } ?>>Maquillador</option>
+													<option value="operativo" <?php if($usuarios->tipo_cuenta == "operativo"){ echo "selected"; } ?>>Operativo</option>
+													<option value="supervisor de los monitores" <?php if($usuarios->tipo_cuenta == "supervisor de los monitores"){ echo "selected"; } ?>>Supervisor de los monitores</option>
+													<option value="operario de mantenimiento" <?php if($usuarios->tipo_cuenta == "operario de mantenimiento"){ echo "selected"; } ?>>Operario de mantenimiento</option>
                                                 </select>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>

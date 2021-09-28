@@ -167,6 +167,8 @@ class MsalarioEmpleados extends CI_Model {
 			->or_where('tipo_cuenta', 'maquillador')
 			->or_where('tipo_cuenta', 'fotografo')
 			->or_where('tipo_cuenta', 'community manager')
+			->or_where('tipo_cuenta', 'operativo')
+			->or_where('tipo_cuenta', 'supervisor de los monitores')
 			->get();
 
 		if ($empleados->num_rows() > 0) {
@@ -218,6 +220,14 @@ class MsalarioEmpleados extends CI_Model {
 					$sueldo_general = $datos_sueldo[0]->sueldo;
 				}else if($value->tipo_cuenta == "community manager"){
 					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'community manager')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
+				}else if($value->tipo_cuenta == "operativo"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'operativo')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
+				}else if($value->tipo_cuenta == "supervisor de los monitores"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'supervisor de los monitores')->where('estado', 'activo')->get()->result();
 					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
 					$sueldo_general = $datos_sueldo[0]->sueldo;
 				}

@@ -31,7 +31,6 @@
                                         <h2 class="d-inline">Agregar Salario</h2>
                                     </div>
                                 </div>
-
                                 <form action="" id="form_addproduct" enctype="multipart/form-data">
                                     <div class="row mt-3">
                                         <div class="col-sm-12 col-md-4">
@@ -49,6 +48,8 @@
                                                     <option value="community manager">Community manager</option>
                                                     <option value="maquillador">Maquillador</option>
                                                     <option value="servicios generales">Servicios generales</option>
+                                                    <option value="operativo">Operativo</option>
+                                                    <option value="supervisor de los monitores">Supervisor de los monitores</option>
                                                     <option value="operario de mantenimiento">Operario de mantenimiento</option>
 	                                            </select>
 	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>

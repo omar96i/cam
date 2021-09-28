@@ -111,9 +111,11 @@
                                                     <option value="fotografo">Fotografo</option>
                                                     <option value="psicologa">Psicologa</option>
                                                     <option value="servicios generales">Servicios generales</option>
-                                                    <option value="community manager">community manager</option>
+                                                    <option value="community manager">Community manager</option>
                                                     <option value="maquillador">Maquillador</option>
-                                                    <option value="operario de mantenimiento">Operario de mantenimiento</option>
+                                                    <option value="operativo">Operativo</option>
+													<option value="supervisor de los monitores">Supervisor de los monitores</option>
+													<option value="operario de mantenimiento">Operario de mantenimiento</option>
                                                 </select>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
