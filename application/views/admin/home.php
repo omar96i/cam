@@ -109,13 +109,13 @@
 			            <div class="modal-body">
 			                <div class="form-group">
 			                    <label for="fecha_inicial" class="col-form-label">Fecha inicial:</label>
-			                    <input type="date" id="fecha_inicial" class="form-control" name="fecha_inicial">
+			                    <input type="date" id="fecha_inicial_nomina" class="form-control">
 			                    <div class="invalid-feedback">El campo no debe quedar vacío</div>
 			                </div>
 			                
 			                <div class="form-group">
 			                    <label for="fecha_final" class="col-form-label">Fecha final:</label>
-			                    <input type="date" id="fecha_final" class="form-control" name="fecha_final">
+			                    <input type="date" id="fecha_final_nomina" class="form-control">
 			                    <div class="invalid-feedback">El campo no debe quedar vacío</div>
 			                </div>
 			            </div>
@@ -172,8 +172,10 @@
 			    }
 			    $('body').on('click' , '.btn_generar_factura' , function(e){
 			        e.preventDefault();
-			        fecha_inicial = $("#fecha_inicial").val();
-			        fecha_final = $("#fecha_final").val();
+			        fecha_inicial = $("#fecha_inicial_nomina").val();
+			        fecha_final = $("#fecha_final_nomina").val();
+
+					console.log(fecha_inicial)
 			    
 			        ruta = "<?php echo base_url('admin/Home/consultarNominaGeneral'); ?>";
 		            $.ajax({

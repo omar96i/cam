@@ -22,6 +22,9 @@ class Home extends CI_Controller {
 		if(isset($_SESSION['usuario']) && $this->session->userdata('usuario')["tipo"]=='fotografo') {
 			redirect('fotografo/Home');
 		}
+		if(isset($_SESSION['usuario']) && $this->session->userdata('usuario')["tipo"]=='psicologa') {
+			redirect('psicologa/Home');
+		}
 		$this->load->view('login');
 		$data['footer'] = 'fixed-bottom';
 		$this->load->view('includes/footer' , $data);

@@ -35,22 +35,22 @@ class Home extends CI_Controller {
 	}
 
 	public function nomina(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['factura']     = $this->Mregistronomina->verRegistrosAdmin();
+
+			if(!$data['factura']) {
+				$data['factura'] = 0;
+			} 
+			else {
+				$data['factura'] = count($this->Mregistronomina->verRegistrosAdmin());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/factura' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['factura']     = $this->Mregistronomina->verRegistrosAdmin();
-
-		if(!$data['factura']) {
-			$data['factura'] = 0;
-		} 
-		else {
-			$data['factura'] = count($this->Mregistronomina->verRegistrosAdmin());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/factura' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	/// ASIGNACIONES SUPERVISOR INICIO ///
@@ -701,42 +701,42 @@ class Home extends CI_Controller {
 	}
 
 	public function verRegistrosFactura($id_registro){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['registro_horas'] = $this->Mregistrohoras->t_h_registro_horas_factura($id_registro);
+			$data['id_factura'] = $id_registro;
+
+			if(!$data['registro_horas']) {
+				$data['registro_horas'] = 0;
+			}
+			else {
+				$data['registro_horas'] = count($this->Mregistrohoras->t_h_registro_horas_factura($id_registro));
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/registrohoras' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['registro_horas'] = $this->Mregistrohoras->t_h_registro_horas_factura($id_registro);
-		$data['id_factura'] = $id_registro;
-
-		if(!$data['registro_horas']) {
-			$data['registro_horas'] = 0;
-		}
-		else {
-			$data['registro_horas'] = count($this->Mregistrohoras->t_h_registro_horas_factura($id_registro));
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/registrohoras' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function getDatosRegistros(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$id = $this->input->post('id');
+			$respuesta = $this->Mregistrohoras->getDatosRegistros($id);
+			if(!$respuesta) {
+				echo json_encode(['status' => false]);
+				return;
+			}
+			echo json_encode(
+				[
+					'status'          => true, 
+					'data'            => $respuesta
+				]);
+		}else{
 			redirect('Home');
 		}
-		$id = $this->input->post('id');
-		$respuesta = $this->Mregistrohoras->getDatosRegistros($id);
-
-		if(!$respuesta) {
-			echo json_encode(['status' => false]);
-			return;
-		}
-
-		echo json_encode(
-			[
-				'status'          => true, 
-				'data'            => $respuesta
-			]);
+		
 	}
 
 	public function updateDatosRegistros(){
@@ -1002,31 +1002,35 @@ class Home extends CI_Controller {
 	/// PENALIZACIONES INICIO ///
 
 	public function penalizaciones(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['penalizaciones'] = $this->Mpenalizaciones->getPenalizaciones();
+
+			if(!$data['penalizaciones']) {
+				$data['penalizaciones'] = 0;
+			} 
+			else {
+				$data['penalizaciones'] = count($this->Mpenalizaciones->getPenalizaciones());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/penalizaciones' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
 
-		$data['penalizaciones'] = $this->Mpenalizaciones->getPenalizaciones();
-
-		if(!$data['penalizaciones']) {
-			$data['penalizaciones'] = 0;
-		} 
-		else {
-			$data['penalizaciones'] = count($this->Mpenalizaciones->getPenalizaciones());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/penalizaciones' , $data);
-		$this->load->view('includes_admin/footer');
+		
 	}
 
 	public function addpenalizaciones(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/addpenalizacion');
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/addpenalizacion');
-		$this->load->view('includes_admin/footer');
+		
 	}
 
 	public function verpenalizaciones(){
@@ -1077,15 +1081,14 @@ class Home extends CI_Controller {
 	}
 
 	public function editarPenalizaciones($id_penalizacion){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['penalizaciones'] = $this->Mpenalizaciones->dataPenalizacion($id_penalizacion);
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarPenalizaciones' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['penalizaciones'] = $this->Mpenalizaciones->dataPenalizacion($id_penalizacion);
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/editarPenalizaciones' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function storePenalizacion(){
@@ -1130,15 +1133,15 @@ class Home extends CI_Controller {
 	/// ASISTENCIAS INICIO ///
 
 	public function asistencias(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['asistencias'] = $this->Masistencia->nums_motivoAsistencias();
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/asistencias' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['asistencias'] = $this->Masistencia->nums_motivoAsistencias();
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/asistencias' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function verasistencias(){
@@ -1168,12 +1171,13 @@ class Home extends CI_Controller {
 	}	
 
 	public function addasistencia(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/addasistencia');
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
-		}
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/addasistencia');
-		$this->load->view('includes_admin/footer');
+		}	
 	}
 
 	public function agregarAsistencia(){
@@ -1243,34 +1247,34 @@ class Home extends CI_Controller {
 	/// ADELANTOS INICIO ///
 
 	public function adelantos(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['adelantos'] = $this->Madelantos->getAdelantos();
+
+			if(!$data['adelantos']) {
+				$data['adelantos'] = 0;
+			} 
+			else {
+				$data['adelantos'] = count($this->Madelantos->getAdelantos());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/adelantos' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['adelantos'] = $this->Madelantos->getAdelantos();
-
-		if(!$data['adelantos']) {
-			$data['adelantos'] = 0;
-		} 
-		else {
-			$data['adelantos'] = count($this->Madelantos->getAdelantos());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/adelantos' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function addAdelanto(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['personas'] = $this->Musuarios->getUsuariosAdelantos();
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/addAdelanto', $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['personas'] = $this->Musuarios->getUsuariosAdelantos();
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/addAdelanto', $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function agregarAdelanto(){
@@ -1323,16 +1327,16 @@ class Home extends CI_Controller {
 	}
 
 	public function editaradelantos($id_adelanto){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['adelantos'] = $this->Madelantos->dataAdelantos($id_adelanto);
+			$data['personas'] = $this->Musuarios->getUsuariosAdelantos();
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarAdelantos' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['adelantos'] = $this->Madelantos->dataAdelantos($id_adelanto);
-		$data['personas'] = $this->Musuarios->getUsuariosAdelantos();
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/editarAdelantos' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function storeAdelantos(){
@@ -1361,22 +1365,20 @@ class Home extends CI_Controller {
 	/// PORCENTAJES INICIO ///
 		/// DIAS INICIO ///
 	public function diasPorcentajes(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['porcentajes'] = $this->MporcentajeDias->getPorcentajes();
+			if(!$data['porcentajes']) {
+				$data['porcentajes'] = 0;
+			} 
+			else {
+				$data['porcentajes'] = count($this->MporcentajeDias->getPorcentajes());
+			}
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/porcentajeDias' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['porcentajes'] = $this->MporcentajeDias->getPorcentajes();
-
-		if(!$data['porcentajes']) {
-			$data['porcentajes'] = 0;
-		} 
-		else {
-			$data['porcentajes'] = count($this->MporcentajeDias->getPorcentajes());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/porcentajeDias' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 	public function verPorcentajeDias(){
 		if(!$this->input->is_ajax_request()){
@@ -1405,12 +1407,14 @@ class Home extends CI_Controller {
 		]);
 	}
 	public function addPorcentajesDias(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/addPorcentajesDias');
+			$this->load->view('includes_admin/footer');
+ 		}else{
 			redirect('Home');
- 		}
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/addPorcentajesDias');
-		$this->load->view('includes_admin/footer');
+		}
+		
 	}
 	public function agregarPorcentajeDias(){
 		if(!$this->input->is_ajax_request()){
@@ -1434,15 +1438,15 @@ class Home extends CI_Controller {
 	}
 
 	public function editarPorcentajesDias($id_porcentaje){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['porcentaje'] = $this->MporcentajeDias->dataPorcentajes($id_porcentaje);
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarPorcentajeDias' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['porcentaje'] = $this->MporcentajeDias->dataPorcentajes($id_porcentaje);
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/editarPorcentajeDias' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function storePorcentajeDias(){
@@ -1473,31 +1477,35 @@ class Home extends CI_Controller {
 
 	// METAS INICIO //
 	public function metasPorcentajes(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['porcentajes'] = $this->MporcentajeMetas->getPorcentajes();
+
+			if(!$data['porcentajes']) {
+				$data['porcentajes'] = 0;
+			} 
+			else {
+				$data['porcentajes'] = count($this->MporcentajeMetas->getPorcentajes());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/porcentajeMetas' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
 
-		$data['porcentajes'] = $this->MporcentajeMetas->getPorcentajes();
-
-		if(!$data['porcentajes']) {
-			$data['porcentajes'] = 0;
-		} 
-		else {
-			$data['porcentajes'] = count($this->MporcentajeMetas->getPorcentajes());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/porcentajeMetas' , $data);
-		$this->load->view('includes_admin/footer');
+		
 	}
 
 	public function addPorcentajesMetas(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/addPorcentajesMetas');
+			$this->load->view('includes_admin/footer');
+ 		}else{
 			redirect('Home');
- 		}
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/addPorcentajesMetas');
-		$this->load->view('includes_admin/footer');
+		}
+		
 	}
 
 	public function agregarPorcentajeMetas(){
@@ -1546,15 +1554,17 @@ class Home extends CI_Controller {
 		]);
 	}
 	public function editarPorcentajesMetas($id_porcentaje){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['porcentaje'] = $this->MporcentajeMetas->dataPorcentajes($id_porcentaje);
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarPorcentajeMetas' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
 
-		$data['porcentaje'] = $this->MporcentajeMetas->dataPorcentajes($id_porcentaje);
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/editarPorcentajeMetas' , $data);
-		$this->load->view('includes_admin/footer');
+		
 	}
 
 	public function storePorcentajeMetas(){
@@ -1581,51 +1591,52 @@ class Home extends CI_Controller {
 
 	/// METAS INICIO ///
 	public function metasSupervisor(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['metas'] = $this->Mmetas->getMetas();
+			if(!$data['metas']) {
+				$data['metas'] = 0;
+			} 
+			else {
+				$data['metas'] = count($this->Mmetas->getMetas());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/metasSupervisor' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
 
-		$data['metas'] = $this->Mmetas->getMetas();
-
-		if(!$data['metas']) {
-			$data['metas'] = 0;
-		} 
-		else {
-			$data['metas'] = count($this->Mmetas->getMetas());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/metasSupervisor' , $data);
-		$this->load->view('includes_admin/footer');
+		
 	}
 	public function metas(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['metas'] = $this->Mmetas->getMetas();
+			if(!$data['metas']) {
+				$data['metas'] = 0;
+			} 
+			else {
+				$data['metas'] = count($this->Mmetas->getMetas());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/metas' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['metas'] = $this->Mmetas->getMetas();
-
-		if(!$data['metas']) {
-			$data['metas'] = 0;
-		} 
-		else {
-			$data['metas'] = count($this->Mmetas->getMetas());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/metas' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function addMetas(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['empleados'] = $this->Musuarios->getempleadosMetas(); 
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/addMetasUsuario', $data);
+			$this->load->view('includes_admin/footer');
+			
+ 		}else{
 			redirect('Home');
- 		}
-		$data['empleados'] = $this->Musuarios->getempleadosMetas(); 
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/addMetasUsuario', $data);
-		$this->load->view('includes_admin/footer');
-
+		}
 	}
 
 	public function consultarEmpleadoMetasNull(){
@@ -1726,14 +1737,14 @@ class Home extends CI_Controller {
 	}
 
 	public function editarmetas($id){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['meta'] = $this->Mmetas->dataMetas($id);
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarMetas' , $data);
+			$this->load->view('includes_admin/footer');
+ 		}else{
 			redirect('Home');
- 		}
- 		$data['meta'] = $this->Mmetas->dataMetas($id);
-
- 		$this->load->view('includes_admin/header');
- 		$this->load->view('admin/editarMetas' , $data);
- 		$this->load->view('includes_admin/footer');
+		}
 	}
 
 	public function storeMetas(){
@@ -1775,22 +1786,21 @@ class Home extends CI_Controller {
 
 	public function salario_empleados(){
 
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['salario']     = $this->MsalarioEmpleados->getSalarios();
+			if(!$data['salario']) {
+				$data['salario'] = 0;
+			} 
+			else {
+				$data['salario'] = count($this->MsalarioEmpleados->getSalarios());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/salarioempleados' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['salario']     = $this->MsalarioEmpleados->getSalarios();
-
-		if(!$data['salario']) {
-			$data['salario'] = 0;
-		} 
-		else {
-			$data['salario'] = count($this->MsalarioEmpleados->getSalarios());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/salarioempleados' , $data);
-		$this->load->view('includes_admin/footer');
 		
 	}
 
@@ -1824,13 +1834,13 @@ class Home extends CI_Controller {
 	}
 
 	public function addSalario(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/addSalario');
+			$this->load->view('includes_admin/footer');
+ 		}else{
 			redirect('Home');
- 		}
-
- 		$this->load->view('includes_admin/header');
- 		$this->load->view('admin/addSalario');
- 		$this->load->view('includes_admin/footer');
+		}
 	}
 
 	public function agregarSalario(){
@@ -1895,22 +1905,23 @@ class Home extends CI_Controller {
 	/// INICIO FACTURA SUPERVISOR ///
 
 	public function factura_supervisor(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['factura'] = $this->MfacturasSupervisor->getFacturas();
+			if(!$data['factura']) {
+				$data['factura'] = 0;
+			} 
+			else {
+				$data['factura'] = count($this->MfacturasSupervisor->getFacturas());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/factura_supervisor' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
 
-		$data['factura'] = $this->MfacturasSupervisor->getFacturas();
-
-		if(!$data['factura']) {
-			$data['factura'] = 0;
-		} 
-		else {
-			$data['factura'] = count($this->MfacturasSupervisor->getFacturas());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/factura_supervisor' , $data);
-		$this->load->view('includes_admin/footer');
+		
 	}
 
 	public function getfacturasSupervisor(){
@@ -1946,22 +1957,21 @@ class Home extends CI_Controller {
 	/// INICIO FACTURA GENERAL ///
 
 	public function factura_general(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['factura'] = $this->MfacturaGeneral->getFacturas();
+			if(!$data['factura']) {
+				$data['factura'] = 0;
+			} 
+			else {
+				$data['factura'] = count($this->MfacturaGeneral->getFacturas());
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/factura_general' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$data['factura'] = $this->MfacturaGeneral->getFacturas();
-
-		if(!$data['factura']) {
-			$data['factura'] = 0;
-		} 
-		else {
-			$data['factura'] = count($this->MfacturaGeneral->getFacturas());
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/factura_general' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function getfacturasGeneral(){

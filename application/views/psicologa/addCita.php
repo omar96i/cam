@@ -13,7 +13,7 @@
     <div class="content-header mt-1 mr-3"> 
         <div class="row">
             <div class="col-md-12">
-                <a href="<?= base_url('fotografo/Citas') ?>" class="btn btn-info float-right">Retroceder</a>
+                <a href="<?= base_url('psicologa/Citas') ?>" class="btn btn-info float-right">Retroceder</a>
             </div><!-- /.col -->
         </div><!-- /.row -->
     </div>
@@ -28,7 +28,7 @@
                             <div class="col-sm-12">
                                 <div class="row">
                                     <div class="col-8">
-                                        <h2 class="d-inline">Editar Cita</h2>
+                                        <h2 class="d-inline">Agregar Cita</h2>
                                     </div>
                                 </div>
 
@@ -40,26 +40,26 @@
                                                 <select name="usuarios" id="usuario" class="form-control">
 	                                                <option value="0">Sin seleccionar</option>
 	                                                <?php foreach ($empleados as $key => $value) {?>
-	                                                	<option value="<?php echo $value->id_persona ?>" <?php echo ($citas[0]->id_empleado==$value->id_persona)?"selected":""; ?>><?php echo $value->documento." / ".$value->nombres." ".$value->apellidos ?></option>
+	                                                	<option value="<?php echo $value->id_persona ?>"><?php echo $value->documento." / ".$value->nombres." ".$value->apellidos ?></option>
 	                                               	<?php
 	                                                } ?>
 	                                            </select>
 	                                        </div>
                                             <div class="form-group">
 	                                            <label for="descripcion" class="col-form-label">Descripcion:</label>
-                                                <textarea name="descripcion" id="descripcion" class="form-control" cols="30" rows="4"><?php echo $citas[0]->descripcion; ?></textarea>
+                                                <textarea name="descripcion" id="descripcion" class="form-control" cols="30" rows="4"></textarea>
 	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
 	                                        </div>
                                             <div class="form-group">
 	                                            <label for="fecha" class="col-form-label">Fecha:</label>
 
-                                                <input type="date" id="fecha" class="form-control" name="fecha" value="<?php echo $citas[0]->fecha; ?>">
+                                                <input type="date" id="fecha" class="form-control" name="fecha">
 	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
 	                                        </div>
                                             <div class="form-group">
-	                                            <label for="fecha" class="col-form-label">Fecha:</label>
+	                                            <label for="fecha" class="col-form-label">Hora:</label>
 
-                                                <input type="time" id="hora" class="form-control" name="fecha" value="<?php echo $citas[0]->hora; ?>">
+                                                <input type="time" id="hora" class="form-control" name="hora">
 	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
 	                                        </div>
                                         </div>
@@ -87,12 +87,11 @@
 
         $('.btn_agregar_reporte').on('click' , function(e){
             e.preventDefault();
-            var ruta      = "<?php echo base_url('fotografo/EditarCita/editarOnlyCita') ?>";
+            var ruta      = "<?php echo base_url('psicologa/AddCita/addCita') ?>";
                 descripcion = $("#descripcion").val();
                 fecha = $("#fecha").val();
-                hora = $("#hora").val();
                 usuario = $("#usuario").val();
-                id_cita = "<?php echo $citas[0]->id_citas; ?>";
+                hora = $("#hora").val();
 
                 if ($("#descripcion").val() == "") {
                     $("#descripcion").addClass('is-invalid');
@@ -113,13 +112,12 @@
                         url: ruta,
                         type: 'POST',
                         dataType: 'json',
-                        data: {id_usuario:usuario, descripcion: descripcion, fecha: fecha, hora: hora, id_cita: id_cita},
+                        data: {id_usuario:usuario, descripcion: descripcion, fecha: fecha, hora: hora},
                     })
                     .done(function(r) {
                         if(r.status){
-                            alertify.notify('Cita Editada', 'success', 2, function(){
-                               window.location.href = '../../Citas';
-                            });
+                            $('#form_addproduct').trigger('reset');
+                            alertify.notify('Cita Registrada', 'success', 2);
                             return;
                         }
 

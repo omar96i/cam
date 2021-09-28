@@ -31,7 +31,6 @@
                                         <h2 class="d-inline">Agregar Meta</h2>
                                     </div>
                                 </div>
-
                                 <form action="" id="form_addproduct" enctype="multipart/form-data">
                                     <div class="row mt-3">
                                         <div class="col-sm-12 col-md-4">

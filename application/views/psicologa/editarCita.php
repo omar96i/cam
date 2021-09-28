@@ -87,7 +87,7 @@
 
         $('.btn_agregar_reporte').on('click' , function(e){
             e.preventDefault();
-            var ruta      = "<?php echo base_url('fotografo/EditarCita/editarOnlyCita') ?>";
+            var ruta      = "<?php echo base_url('psicologa/EditarCita/editarOnlyCita') ?>";
                 descripcion = $("#descripcion").val();
                 fecha = $("#fecha").val();
                 hora = $("#hora").val();

@@ -182,10 +182,6 @@ class Mpaginas extends CI_Model {
 
 		$paginas = $this->db->get();
 
-		foreach ($paginas as $pagina) {
-			
-		}
-
 		if($paginas->num_rows() > 0) {
 			return $paginas->result();
 		}

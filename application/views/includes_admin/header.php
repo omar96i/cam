@@ -181,7 +181,7 @@
 							Opciones
 						</div> <i class="icon-menu" title="Main"></i></li>
 
-						<?php if ($this->session->userdata('usuario')["tipo"]=='administrador'){ ?>
+						<?php if ($this->session->userdata('usuario')["tipo"]=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano'){ ?>
 							<li class="nav-item">
 								<a href="<?php echo base_url() ?>" class="nav-link">
 									<img src="<?php echo base_url('assets/iconos_menu/casa.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> 
@@ -190,15 +190,17 @@
 									</span>
 								</a>
 							</li>
+							<?php if ($this->session->userdata('usuario')["tipo"]=='administrador') { ?>
 							<li class="nav-item">
-										<a href="<?php echo base_url('admin/Home/usuarios') ?>" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/user-protection.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;">  <span>Crear Usuario</span></a>
-									</li>
-									<li class="nav-item">
-										<a href="<?php echo base_url('admin/Home/empleados') ?>" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/mujer.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;">  <span>Crear Modelos</span></a>
-									</li>
-									<li class="nav-item">
-										<a href="<?php echo base_url('admin/Home/paginas') ?>" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/buscador-web_blanco.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;">  <span>Crear Paginas</span></a>
-									</li>
+								<a href="<?php echo base_url('admin/Home/usuarios') ?>" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/user-protection.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;">  <span>Crear Usuario</span></a>
+							</li>
+							<li class="nav-item">
+								<a href="<?php echo base_url('admin/Home/empleados') ?>" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/mujer.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;">  <span>Crear Modelos</span></a>
+							</li>
+							<li class="nav-item">
+								<a href="<?php echo base_url('admin/Home/paginas') ?>" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/buscador-web_blanco.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;">  <span>Crear Paginas</span></a>
+							</li>
+							<?php } ?>
 							<li class="nav-item nav-item-submenu">
 								<a href="#" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/engranaje_white.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;">  <span>Configuracion</span></a>
 								<ul class="nav nav-group-sub" data-submenu-title="Configuracion">
@@ -234,10 +236,11 @@
 									
 									
 									
-
+									<?php if ($this->session->userdata('usuario')["tipo"]=='administrador') { ?>
 									<li class="nav-item">
 										<a href="<?php echo base_url('admin/Home/asignaciones') ?>" class="nav-link">Asignaciones</a>
 									</li>
+									<?php } ?>
 
 									<li class="nav-item">
 										<a href="<?php echo base_url('admin/Home/adelantos') ?>" class="nav-link">Adelantos</a>
@@ -328,17 +331,9 @@
 						<?php } ?>
 
 						<?php if ($this->session->userdata('usuario')["tipo"]=='talento humano'){ ?>
-							<li class="nav-item">
-								<a href="<?php echo base_url() ?>" class="nav-link">
-									<img src="<?php echo base_url('assets/iconos_menu/casa.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> 
-									<span>
-										Inicio
-									</span>
-								</a>
-							</li>
 
 							<li class="nav-item nav-item-submenu">
-								<a href="#" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/engranaje_white.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> <span>Configuracion</span></a>
+								<a href="#" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/engranaje_white.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> <span>Configuracion talento humano</span></a>
 								<ul class="nav nav-group-sub" data-submenu-title="Configuracion">
 									<li class="nav-item">
 										<a href="<?php echo base_url('talento_humano/Home/usuarios') ?>" class="nav-link">Modelos</a>
@@ -396,9 +391,27 @@
 								</ul>
 							</li>
 									
-						<?php }?>
+						<?php }
+						if ($this->session->userdata('usuario')["tipo"]=='psicologa'){?>
+							<li class="nav-item">
+								<a href="<?php echo base_url() ?>" class="nav-link">
+									<img src="<?php echo base_url('assets/iconos_menu/casa.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> 
+									<span>
+										Inicio
+									</span>
+								</a>
+							</li>
 
-						<?php if ($this->session->userdata('usuario')["tipo"]=='empleado'){ ?>
+							<li class="nav-item nav-item-submenu">
+								<a href="#" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/engranaje_white.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> <span>Configuracion</span></a>
+								<ul class="nav nav-group-sub" data-submenu-title="Configuracion">
+									<li class="nav-item">
+										<a href="<?php echo base_url('psicologa/Citas') ?>" class="nav-link">Citas</a>
+									</li>
+								</ul>
+							</li>
+						<?php } 
+						if ($this->session->userdata('usuario')["tipo"]=='empleado'){ ?>
 							<li class="nav-item">
 								<a href="<?php echo base_url() ?>" class="nav-link">
 									<img src="<?php echo base_url('assets/iconos_menu/casa.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> 

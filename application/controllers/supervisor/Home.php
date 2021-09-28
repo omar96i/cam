@@ -171,8 +171,6 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-
-
 		$id_usuario 	  = $this->input->post('id_usuario');
 		$valor            = $this->input->post('valor');
 		$pagina           = $this->input->post('pagina');

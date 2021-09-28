@@ -12,14 +12,14 @@ class AddCita extends CI_Controller {
 	}
 
 	public function index(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='fotografo') {
+		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='psicologa') {
 			redirect('Home');
         }
         
         $data['empleados'] = $this->Musuarios->getUsuariosFotografo();
 
         $this->load->view('includes_admin/header');
-		$this->load->view('fotografo/addCita', $data);
+		$this->load->view('psicologa/addCita', $data);
 		$this->load->view('includes_admin/footer');
 	}
 
@@ -29,7 +29,7 @@ class AddCita extends CI_Controller {
 		$data['fecha'] = $this->input->post('fecha');
         $data['hora'] = $this->input->post('hora');
         $data['id_empleado'] = $this->input->post('id_usuario');
-        $data['tipo'] = "fotografo";
+        $data['tipo'] = "psicologa";
 
 
 		$respuesta = $this->Mcitas->addCita($data);

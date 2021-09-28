@@ -56,7 +56,6 @@ class MsalarioEmpleados extends CI_Model {
 		$supervisores = $this->db->select('persona.id_persona')->from('persona')->join('usuarios', 'usuarios.id_persona = persona.id_persona')->where('usuarios.estado', 'activo')->where('tipo_cuenta', 'supervisor')->get();
 
 		if ($supervisores->num_rows() > 0) {
-			$sueldo_supervisor;
 			$adelantos_supervisor = [];
 			$metas_supervisor = [];
 			$acum = 0;
@@ -156,7 +155,19 @@ class MsalarioEmpleados extends CI_Model {
 	}
 
 	public function generarFacturaGeneral($data){
-		$empleados = $this->db->select('persona.id_persona, usuarios.tipo_cuenta')->from('persona')->join('usuarios', 'usuarios.id_persona = persona.id_persona')->where('estado', 'activo')->where('tipo_cuenta', 'administrador')->or_where('tipo_cuenta', 'talento humano')->get();
+		$empleados = $this->db->select('persona.id_persona, usuarios.tipo_cuenta')
+		->from('persona')->join('usuarios', 'usuarios.id_persona = persona.id_persona')
+			->where('estado', 'activo')
+			->where('tipo_cuenta', 'administrador')
+			->or_where('tipo_cuenta', 'talento humano')
+			->or_where('tipo_cuenta', 'tecnico sistemas')
+			->or_where('tipo_cuenta', 'servicios generales')
+			->or_where('tipo_cuenta', 'psicologa')
+			->or_where('tipo_cuenta', 'operario de mantenimiento')
+			->or_where('tipo_cuenta', 'maquillador')
+			->or_where('tipo_cuenta', 'fotografo')
+			->or_where('tipo_cuenta', 'community manager')
+			->get();
 
 		if ($empleados->num_rows() > 0) {
 			$adelantos_general = [];
@@ -168,26 +179,47 @@ class MsalarioEmpleados extends CI_Model {
 				$sueldo_general = 0;
 				$adelanto = 0;
 				$id_adelanto = 0;
-
-
 				$consulta_adelantos = $this->db->select_sum('valor')->from('adelanto')->where('id_empleado', $value->id_persona)->where('estado', 'sin registrar')->get()->result();
 				$adelanto = 0;
 				if (!empty($consulta_adelantos[0]->valor)) {
 					$adelanto = $consulta_adelantos[0]->valor;
 				}
-
-
-
 				if ($value->tipo_cuenta == "administrador") {
 					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'administrador')->where('estado', 'activo')->get()->result();
 					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
 					$sueldo_general = $datos_sueldo[0]->sueldo;
-
 				}else if($value->tipo_cuenta == "talento humano"){
 					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'talento humano')->where('estado', 'activo')->get()->result();
 					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
 					$sueldo_general = $datos_sueldo[0]->sueldo;
-
+				}else if($value->tipo_cuenta == "tecnico sistemas"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'tecnico sistemas')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
+				}else if($value->tipo_cuenta == "servicios generales"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'servicios generales')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
+				}else if($value->tipo_cuenta == "psicologa"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'psicologa')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
+				}else if($value->tipo_cuenta == "operario de mantenimiento"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'operario de mantenimiento')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
+				}else if($value->tipo_cuenta == "maquillador"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'maquillador')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
+				}else if($value->tipo_cuenta == "fotografo"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'fotografo')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
+				}else if($value->tipo_cuenta == "community manager"){
+					$datos_sueldo = $this->db->select('id_sueldos_empleados, sueldo')->from('sueldos_empleados')->where('tipo_usuario', 'community manager')->where('estado', 'activo')->get()->result();
+					$insert_data['id_sueldo'] = $datos_sueldo[0]->id_sueldos_empleados;
+					$sueldo_general = $datos_sueldo[0]->sueldo;
 				}
 
 				$insert_data['id_empleado'] = $value->id_persona;

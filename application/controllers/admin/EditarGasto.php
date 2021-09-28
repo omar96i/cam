@@ -24,19 +24,20 @@ class EditarGasto extends CI_Controller {
 	}
 
 	public function index($id){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['respuesta'] = $this->Mgastos->getDataEditGasto($id);
+
+			if (!$data['respuesta']) {
+				$data['respuesta'] = "NO##ENCONTRO##NADA";
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarGasto', $data);
+			$this->load->view('includes_admin/footer');
+			
+		}else{
 			redirect('Home');
 		}
-
-		$data['respuesta'] = $this->Mgastos->getDataEditGasto($id);
-
-		if (!$data['respuesta']) {
-			$data['respuesta'] = "NO##ENCONTRO##NADA";
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/editarGasto', $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 

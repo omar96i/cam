@@ -41,7 +41,15 @@
 	                                                <option value="0">Sin seleccionar</option>
                                                     <option value="administrador">Administrador</option>
                                                     <option value="talento humano">Talento humano</option>
+                                                    <option value="tecnico sistemas">Tecnico sistemas</option>
                                                     <option value="supervisor">Supervisor</option>
+                                                    <option value="psicologa">Psicologa</option>
+                                                    <option value="servicios generales">Servicios generales</option>
+                                                    <option value="fotografo">Fotógrafo</option>
+                                                    <option value="community manager">Community manager</option>
+                                                    <option value="maquillador">Maquillador</option>
+                                                    <option value="servicios generales">Servicios generales</option>
+                                                    <option value="operario de mantenimiento">Operario de mantenimiento</option>
 	                                            </select>
 	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
 	                                        </div>

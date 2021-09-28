@@ -7,14 +7,16 @@
 			<div class="col-xl-12">
 				<!-- Traffic sources -->
 				<div class="card">
+				tipo
 					<div class="card-header header-elements-inline">
-						<h1 class="card-title">Cita Fotografica</h1>
+					<h1 class="card-title">Cita <?php echo ($notificacion[0]->tipo == "fotografo")  ? "Fotografica" : "Psicologica" ?></h1>
+						<?php  $notificacion[0]->tipo = ($notificacion[0]->tipo == "fotografo" ) ? $notificacion[0]->tipo = "Fotografo" : $notificacion[0]->tipo = "Psicologa"; ?>
 					</div>
 
 					<div class="card-body">
 						<div class="row">
 							<div class="col-sm-12">
-								<p style="font-size: 16px"><strong>Fotografo: </strong><?php echo $notificacion[0]->nombres." ".$notificacion[0]->apellidos; ?></p>
+								<p style="font-size: 16px"><strong><?php  echo $notificacion[0]->tipo ?>: </strong><?php echo $notificacion[0]->nombres." ".$notificacion[0]->apellidos; ?></p>
 								<p style="font-size: 16px"><strong>Descripcion: </strong><?php echo $notificacion[0]->descripcion; ?></p>
 								<p style="font-size: 16px"><strong>Fecha: </strong><?php echo $notificacion[0]->fecha; ?></p>
 								<p style="font-size: 16px"><strong>Hora: </strong><?php echo $notificacion[0]->hora; ?></p>

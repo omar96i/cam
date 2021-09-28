@@ -24,14 +24,13 @@ class AddGasto extends CI_Controller {
 	}
 
 	public function index(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/addGasto');
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('admin/addGasto');
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function addGasto(){

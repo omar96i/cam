@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MingresosSoftware extends CI_Model {
+	
 	public function insertIngreso($id_usuario){
         $this->db->set('id_usuario', $id_usuario);
         $this->db->insert('ingresos_software');

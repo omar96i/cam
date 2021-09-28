@@ -109,6 +109,11 @@
                                                     <option value="talento humano">Talento Humano</option>
                                                     <option value="tecnico sistemas">Tecnico Sistemas</option>
                                                     <option value="fotografo">Fotografo</option>
+                                                    <option value="psicologa">Psicologa</option>
+                                                    <option value="servicios generales">Servicios generales</option>
+                                                    <option value="community manager">community manager</option>
+                                                    <option value="maquillador">Maquillador</option>
+                                                    <option value="operario de mantenimiento">Operario de mantenimiento</option>
                                                 </select>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>

@@ -10,26 +10,22 @@ class Citas extends CI_Controller {
 	}
 
 	public function index(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$data['citas'] = $this->Mcitas->getCitasAdmin();
+
+			if(!$data['citas']) {
+				$data['citas'] = 0;
+			} 
+			else {
+				$data['citas'] = count($this->Mcitas->getCitasAdmin());
+			}
+			
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/citas', $data);
+			$this->load->view('includes_admin/footer');
+        }else{
 			redirect('Home');
-        }
-
-       
-
-        $data['citas'] = $this->Mcitas->getCitasAdmin();
-
-		if(!$data['citas']) {
-			$data['citas'] = 0;
-		} 
-		else {
-			$data['citas'] = count($this->Mcitas->getCitasAdmin());
 		}
-        
-        $this->load->view('includes_admin/header');
-		$this->load->view('admin/citas', $data);
-		$this->load->view('includes_admin/footer');
 	}
-
-	
 
 }

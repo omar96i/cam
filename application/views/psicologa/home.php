@@ -14,7 +14,7 @@
 					<div class="card-body">
 						<div class="row">
 							<div class="col-sm-12">
-								<p style="font-size: 16px">Fotografo de la plataforma</p>
+								<p style="font-size: 16px">Psicologa de la plataforma</p>
 							</div>
 						</div>
 					</div>
@@ -28,4 +28,3 @@
 		</div>
 		<!-- /main charts -->
 	</div>
-

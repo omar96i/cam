@@ -46,13 +46,13 @@ class Musuarios extends CI_Model {
 		return false;
 	}
 	public function getempleadosMetas() {
+		////
 		$this->db->select('persona.*, correo');
 		$this->db->from('persona');
 		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
 		$this->db->where('tipo_cuenta', 'empleado');
 		$this->db->where('usuarios.estado', 'activo');
 		$usuarios = $this->db->get();
-
 		if($usuarios->num_rows() > 0) {
 			return $usuarios->result();
 		}
