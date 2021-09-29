@@ -139,12 +139,12 @@
                             <td class="align-middle text-capitalize">${r.data[k]['sexo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['ciudad']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['correo']}</td>
-                            <!--<td class="align-middle text-capitalize">${r.data[k]['tipo_cuenta']}</td>-->
 
                             <td class="align-middle">
                                 <a href="<?php echo site_url('admin/Home/editarempleados/') ?>${r.data[k]['id_persona']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-danger btn_deletepersonal" data-id_persona="${r.data[k]['id_persona']}" data-toggle="tooltip" title="Eliminar"><img src="<?php echo base_url('assets/iconos_menu/eliminar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-info btn_modal_registros" data-id_persona="${r.data[k]['id_persona']}"><img src="<?php echo base_url('assets/iconos_menu/ojo.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
+								<a href="<?php echo base_url('Pdf/getInfPdf/') ?>${r.data[k]['id_persona']}" class="text-info"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="<?php echo base_url('supervisor/VerInformes/VerInformesEmpleado/') ?>${r.data[k]['id_persona']}" class="text-info"><img src="<?php echo base_url('assets/iconos_menu/reporte.png') ?>" alt=""></a>
                             </td>
                         </tr>`;

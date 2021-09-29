@@ -17,6 +17,4 @@ class Imprimir_factura extends CI_Controller {
 		$this->load->view('includes_admin/imprimir_footer');
 
 	}
-
-	
 }

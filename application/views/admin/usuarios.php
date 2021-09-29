@@ -114,6 +114,7 @@
                             <td class="align-middle ">
                                 <a href="<?php echo site_url('admin/Home/editarusuarios/') ?>${r.data[k]['id_persona']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-danger btn_deletepersonal" data-id_persona="${r.data[k]['id_persona']}" data-toggle="tooltip" title="Eliminar"><img src="<?php echo base_url('assets/iconos_menu/eliminar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
+								<a href="<?php echo base_url('Pdf/getInfPdf/') ?>${r.data[k]['id_persona']}" class="text-info"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                             </td>
                         </tr>`;
                     }

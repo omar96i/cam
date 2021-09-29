@@ -213,4 +213,13 @@ class Musuarios extends CI_Model {
 		$this->db->where('id_persona', $id_usuario);
 		return $this->db->update('usuarios', ['estado' => 'inactivo']);
 	}
+
+	public function getDatosPDF($id_usuario){
+		$this->db->select('persona.*, usuarios.tipo_cuenta, usuarios.created_at');
+		$this->db->from('persona');
+		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
+		$this->db->where('persona.id_persona', $id_usuario);
+		$datos=$this->db->get();
+		return $datos->result();
+	}
 }

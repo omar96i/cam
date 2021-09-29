@@ -256,7 +256,7 @@ class Mregistronomina extends CI_Model {
 
 	public function getDatosFacturaImprimir($id){
 
-		$consulta = $this->db->select('factura.*, persona.documento, persona.nombres, persona.apellidos, dolar.valor_dolar, registro_horas.cantidad_horas, registro_horas.fecha_registro as horas_factura')->from('factura')->join('persona', 'persona.id_persona = factura.id_usuario')->join('dolar', 'dolar.id_dolar = factura.id_dolar')->join('registro_horas', 'registro_horas.id_factura = factura.id_factura')->where('factura.id_factura', $id)->get()->result();
+		$consulta = $this->db->select('factura.*, usuarios.tipo_cuenta, persona.documento, persona.nombres, persona.apellidos, dolar.valor_dolar, registro_horas.cantidad_horas, registro_horas.fecha_registro as horas_factura, EXTRACT(MONTH FROM factura.fecha_registrado) as mes, EXTRACT(DAY FROM factura.fecha_inicio) as dia1, EXTRACT(DAY FROM factura.fecha_final) as dia2, EXTRACT(YEAR FROM factura.fecha_inicio) as year')->from('factura')->join('persona', 'persona.id_persona = factura.id_usuario')->join('usuarios', 'persona.id_persona = usuarios.id_persona')->join('dolar', 'dolar.id_dolar = factura.id_dolar')->join('registro_horas', 'registro_horas.id_factura = factura.id_factura')->where('factura.id_factura', $id)->get()->result();
 		return $consulta;
 	}
 
