@@ -21,6 +21,9 @@
 	<link href="<?php echo base_url('assets/admin/css/layout.min.css') ?>" rel="stylesheet" type="text/css">
 	<link href="<?php echo base_url('assets/admin/css/components.min.css') ?>" rel="stylesheet" type="text/css">
 	<link href="<?php echo base_url('assets/admin/css/colors.min.css') ?>" rel="stylesheet" type="text/css">
+	<link href="<?php echo base_url('assets/admin/css/colors.min.css') ?>" rel="stylesheet" type="text/css">
+	<link href="<?php echo base_url('assets/css/datatables.min.css') ?>" rel="stylesheet" type="text/css">
+
 	<link rel="stylesheet" href="<?php echo base_url('assets/alertifyjs/css/alertify.min.css') ?>">
 	<link rel="stylesheet" href="<?php echo base_url('assets/alertifyjs/css/themes/bootstrap.min.css') ?>">
 	<link href="<?php echo base_url('assets/waitMe/waitMe.min.css') ?>" rel="stylesheet">
@@ -31,6 +34,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 	<script src="<?php echo base_url('assets/admin/global_assets/js/main/jquery.min.js') ?>"></script>
 	<script src="<?php echo base_url('assets/admin/global_assets/js/main/bootstrap.bundle.min.js') ?>"></script>
+	<script src="<?php echo base_url('assets/admin/global_assets/js/main/bootstrap.bundle.min.js') ?>"></script>
+
 	<!-- /core JS files -->
 
 	<!-- Theme JS files -->
@@ -38,6 +43,10 @@
 	<script src="<?php echo base_url('assets/alertifyjs/alertify.min.js') ?>"></script>
 	<script src="<?php echo base_url('assets/waitMe/waitMe.min.js') ?>" type="text/javascript"></script>
 	<script src="<?php echo base_url('assets/glDatePicker/glDatePicker.min.js') ?>" type="text/javascript"></script>
+	<script src="<?php echo base_url('assets/js/datatables.min.js') ?>" type="text/javascript"></script>
+
+
+
 	<!-- /theme JS files -->
 </head>
 <body>
@@ -117,6 +126,9 @@
 						</span>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
+						<a href="<?php echo base_url('Pdf/getInfPdf/').$this->session->userdata('usuario')["id_usuario"] ?>" class="dropdown-item">
+							<i class=""></i>Generar carta laboral
+						</a>
 						<a href="<?php echo base_url('admin/Home/logout') ?>" class="dropdown-item btn_logout">
 							<i class="icon-switch2"></i>Cerrar sesión
 						</a>
@@ -368,8 +380,29 @@
 									<li class="nav-item">
 										<a href="<?php echo base_url('tecnico_sistemas/Reportes') ?>" class="nav-link">Reportes</a>
 									</li>
+									<li class="nav-item">
+										<li class="nav-item nav-item-submenu">
+											<a href="#" class="nav-link"><span>Metas</span></a>
+											<ul class="nav nav-group-sub" data-submenu-title="Configuracion">
+												<li class="nav-item">
+													<a href="<?php echo base_url('admin/Home/metas') ?>" class="nav-link">Modelos</a>
+												</li>
+												<li class="nav-item">
+													<a href="<?php echo base_url('admin/Home/metasSupervisor') ?>" class="nav-link">Supervisor</a>
+												</li>
+												
+											</ul>
+										</li>
+									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('supervisor/Home/asistencia') ?>" class="nav-link">Registrar Asistencia</a>
+									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('supervisor/VerAsistencia/index') ?>" class="nav-link">Ver Asistencia</a>
+									</li>
 								</ul>
 							</li>
+
 									
 						<?php } 
 						if ($this->session->userdata('usuario')["tipo"]=='fotografo'){ ?>

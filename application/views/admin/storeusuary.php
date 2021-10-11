@@ -124,7 +124,6 @@
 													<option value="community manager" <?php if($usuarios->tipo_cuenta == "community manager"){ echo "selected"; } ?>>Community manager</option>
 													<option value="maquillador" <?php if($usuarios->tipo_cuenta == "maquillador"){ echo "selected"; } ?>>Maquillador</option>
 													<option value="operativo" <?php if($usuarios->tipo_cuenta == "operativo"){ echo "selected"; } ?>>Operativo</option>
-													<option value="supervisor de los monitores" <?php if($usuarios->tipo_cuenta == "supervisor de los monitores"){ echo "selected"; } ?>>Supervisor de los monitores</option>
 													<option value="operario de mantenimiento" <?php if($usuarios->tipo_cuenta == "operario de mantenimiento"){ echo "selected"; } ?>>Operario de mantenimiento</option>
                                                 </select>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>

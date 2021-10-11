@@ -7,7 +7,6 @@
 			<div class="col-xl-12">
 				<!-- Traffic sources -->
 				<div class="card">
-				tipo
 					<div class="card-header header-elements-inline">
 					<h1 class="card-title">Cita <?php echo ($notificacion[0]->tipo == "fotografo")  ? "Fotografica" : "Psicologica" ?></h1>
 						<?php  $notificacion[0]->tipo = ($notificacion[0]->tipo == "fotografo" ) ? $notificacion[0]->tipo = "Fotografo" : $notificacion[0]->tipo = "Psicologa"; ?>

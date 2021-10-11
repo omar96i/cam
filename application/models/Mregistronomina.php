@@ -11,6 +11,8 @@ class Mregistronomina extends CI_Model {
 		$consulta_asistencia = $this->db->select('asistencia_empleado.*, asistencia.fecha')->from('asistencia_empleado')->join('asistencia', 'asistencia.id_asistencia = asistencia_empleado.id_asistencia')->where('asistencia.fecha <=', $data['fecha_final'])->where('asistencia.fecha >=', $data['fecha_inicial'])->where('id_empleado', $data['id_persona'])->where($sub_consulta)->get()->result();
 
 		$numero_dias = count($consulta_asistencia);
+
+		
 		////////////////////////////////////////////////////
 
 		

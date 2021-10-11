@@ -13,9 +13,10 @@ class Home extends CI_Controller {
 		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='psicologa') {
 			redirect('Home');
         }
+
         
         $this->load->view('includes_admin/header');
-		$this->load->view('psicologa/Home');
+		$this->load->view('psicologa/home');
 		$this->load->view('includes_admin/footer');
 	}
 }

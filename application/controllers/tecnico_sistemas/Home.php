@@ -15,7 +15,7 @@ class Home extends CI_Controller {
         }
         
         $this->load->view('includes_admin/header');
-		$this->load->view('tecnico_sistemas/Home');
+		$this->load->view('tecnico_sistemas/home');
 		$this->load->view('includes_admin/footer');
 	}
 

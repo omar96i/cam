@@ -39,5 +39,19 @@
 	<script src="<?php echo base_url('assets/waitMe/waitMe.min.js') ?>" type="text/javascript"></script>
 	<script src="<?php echo base_url('assets/glDatePicker/glDatePicker.min.js') ?>" type="text/javascript"></script>
 	<!-- /theme JS files -->
+
+	<style type="text/css" >
+	
+	@media print {
+    @page {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    body {
+        padding-top: 72px;
+        padding-bottom: 72px ;
+    }
+}
+    </style>
 </head>
 <body>

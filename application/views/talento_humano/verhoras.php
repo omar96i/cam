@@ -307,6 +307,7 @@
                 dataType: 'json',
                 data: {id_persona : id_persona, fecha_final: fecha_final},
                 success: function(r) {
+					console.log(r);
                     if(r.status){
                         alertify.success('Registro exitoso');
                         load_registro_horas('' , 1);

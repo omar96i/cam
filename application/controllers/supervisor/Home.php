@@ -281,27 +281,27 @@ class Home extends CI_Controller {
 	/// ASISTENCIA INICIO ///
 
 	public function asistencia(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='supervisor') {
+		if($this->session->userdata('usuario')['tipo']=='supervisor' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
+			$id_supervisor = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['asistencia']     = $this->Masistencia->getAsistencias($id_supervisor);
+
+			if(!$data['asistencia']) {
+				$data['asistencia'] = 0;
+
+			}else {
+				$data['items_asistencia'] = $this->Masistencia->extraerEmpleadosAsistencia($data['asistencia'][0]->id_asistencia);
+				$data['fecha'] = $data['asistencia'][0]->fecha;
+				$data['asistencia'] = count($this->Masistencia->getAsistencias($id_supervisor));
+				$data['motivos'] = $this->Masistencia->get_motivoAsistencias('');
+			}
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('supervisor/asistencia' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
-
-		$id_supervisor = $this->session->userdata('usuario')['id_usuario'];
-
-		$data['asistencia']     = $this->Masistencia->getAsistencias($id_supervisor);
-
-		if(!$data['asistencia']) {
-			$data['asistencia'] = 0;
-
-		}else {
-			$data['items_asistencia'] = $this->Masistencia->extraerEmpleadosAsistencia($data['asistencia'][0]->id_asistencia);
-			$data['fecha'] = $data['asistencia'][0]->fecha;
-			$data['asistencia'] = count($this->Masistencia->getAsistencias($id_supervisor));
-			$data['motivos'] = $this->Masistencia->get_motivoAsistencias('');
-		}
-
-		$this->load->view('includes_admin/header');
-		$this->load->view('supervisor/asistencia' , $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function verificarAsistencia(){
@@ -309,11 +309,12 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
+		$tipo_usuario = $this->session->userdata('usuario')['tipo'];
 		$id_supervisor = $this->session->userdata('usuario')['id_usuario'];
-		$fecha = date("Y-m-d");
+		$fecha = $this->input->post('fecha_asistencia');
 		$bandera = $this->Masistencia->verificarAsistenciaFecha($fecha, $id_supervisor);
 		if (!$bandera) {
-			$respuesta = $this->Masistencia->insertAsistencia($id_supervisor);
+			$respuesta = $this->Masistencia->insertAsistencia($id_supervisor, $tipo_usuario);
 			if ($respuesta) {
 				echo json_encode(['status' => true]);
 			}else{

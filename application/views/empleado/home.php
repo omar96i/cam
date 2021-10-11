@@ -103,7 +103,8 @@
 							        <table id="empty" class="table table-sm table-striped table-bordered">
 							            <thead class="text-center">
 							                <tr>
-							                    <th>Estado meta</th>
+												<th>Estado meta</th>
+							                    <th>Porcentaje de dias</th>
 							                    <th>Dias asistidos</th>
 							                    <th>Descuentos</th>
 							                    <th>Penalizacion</th>
@@ -121,12 +122,13 @@
 							            			<td colspan="9">Sin asignar</td>
 							            		</tr>						            			
 							            	<?php else: ?>	
-							            		<tr>
-							            		<?php if ($factura[0]->id_porcentaje_dias == null): ?>
-							            			<td>Incompleta</td>
-							            		<?php else: ?>
-							            			<td>Completa</td>
-							            		<?php endif ?>
+												<tr>
+													<td><?php echo $factura[0]->estado_meta; ?></td>
+													<?php if ($factura[0]->id_porcentaje_dias == null): ?>
+														<td>Incompleta</td>
+													<?php else: ?>
+														<td>Completa</td>
+													<?php endif ?>
 							            			<td><?php echo $factura[0]->cant_dias; ?></td>
 							            			<td><?php echo $factura[0]->descuento; ?></td>
 							            			<td><?php echo $factura[0]->penalizacion_horas; ?></td>

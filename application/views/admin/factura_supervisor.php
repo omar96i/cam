@@ -133,7 +133,9 @@
             method   : 'POST',
             data     : {valor : valor , pagina : pagina, fecha_inicio: fecha_inicio, fecha_final: fecha_final},
             success  : function(r){
+				console.log(r)
                 if(r.status){
+					
                     var tbody = '';
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
@@ -213,6 +215,7 @@
                 data: {fecha_inicial: fecha_inicial, fecha_final: fecha_final},
             })
             .done(function(r) {
+				console.log(r);
                 if(r.status){
                     $("#fecha_inicial").val("");
                     $("#fecha_final").val("");

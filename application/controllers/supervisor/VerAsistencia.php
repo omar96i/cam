@@ -18,25 +18,27 @@ class VerAsistencia extends CI_Controller {
 	}
 
 	public function index(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='supervisor') {
+		if($this->session->userdata('usuario')['tipo']=='supervisor' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['asistencia']     = $this->Masistencia->getDatosAsistencia($id_usuario);
+
+			if(!$data['asistencia']) {
+				$data['asistencia'] = 0;
+			} 
+			else {
+				$data['asistencia'] = count($this->Masistencia->getDatosAsistencia($id_usuario));
+			}
+
+			
+			$this->load->view('includes_admin/header');
+			$this->load->view('supervisor/verAsistencia', $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
 
-		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
-
-		$data['asistencia']     = $this->Masistencia->getDatosAsistencia($id_usuario);
-
-		if(!$data['asistencia']) {
-			$data['asistencia'] = 0;
-		} 
-		else {
-			$data['asistencia'] = count($this->Masistencia->getDatosAsistencia($id_usuario));
-		}
-
 		
-		$this->load->view('includes_admin/header');
-		$this->load->view('supervisor/verAsistencia', $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function getItemsAsistencia(){

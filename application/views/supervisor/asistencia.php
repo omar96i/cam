@@ -22,7 +22,9 @@
                                     <div class="col-8">
                                         <h2 class="d-inline">Asistencia</h2>
                                         <?php if (!isset($items_asistencia)) {?>
-                                            <a href="" class="btn btn-info mb-2 ml-1" id="btn_abrir_asistencia">Abrir asistencia</a>
+											<h2>Fecha:</h2>
+											<input type="date" class="form-control col-5" id="fecha_asistencia"><br>
+                                            <a href="" class="btn btn-info" id="btn_abrir_asistencia">Abrir asistencia</a>
                                         <?php } ?>
                                     </div>
 
@@ -186,31 +188,37 @@
     });
     $("#btn_abrir_asistencia").on('click', function(e) {
         e.preventDefault();
-
+		fecha_asistencia = $("#fecha_asistencia").val()
         alertify.confirm("Nomina" , "¿Abrir nueva asistencia?",
         function(){
-           $.ajax({
-               url: '<?= base_url('supervisor/Home/verificarAsistencia') ?>',
-               dataType: 'json',
-           })
-           .done(function(r) {
-                if(r.status){
-                    alertify.notify('Lista creada', 'success', 2, function(){
-                       window.location.href = '../Home/asistencia';
-                    });
-                    return;
-                }
-                if (r.mensaje == "Asistencia ya creada") {
-                    alertify.alert("Asistencia ya creada");
-                    return;
-                }
+			if(fecha_asistencia == ""){
+				alertify.alert("Selecciona una fecha");
+				return;
+			}
+			$.ajax({
+				url: '<?= base_url('supervisor/Home/verificarAsistencia') ?>',
+				type: 'POST',
+				dataType: 'json',
+				data: {fecha_asistencia: fecha_asistencia},
+			})
+			.done(function(r) {
+					if(r.status){
+						alertify.notify('Lista creada', 'success', 2, function(){
+						window.location.href = '../Home/asistencia';
+						});
+						return;
+					}
+					if (r.mensaje == "Asistencia ya creada") {
+						alertify.alert("Asistencia ya creada");
+						return;
+					}
 
-                alertify.alert("No dispones con empleados asignados");
-           })
-           .fail(function(r) {
-               console.log("error");
-               console.log(r);
-           });
+					alertify.alert("No dispones con empleados asignados");
+			})
+			.fail(function(r) {
+				console.log("error");
+				console.log(r);
+			});
         },
         function(){
             alertify.confirm().close();

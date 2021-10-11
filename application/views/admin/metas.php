@@ -19,11 +19,12 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="row">
+									<?php if($tipo_cuenta != "tecnico sistemas"){ ?>
                                     <div class="col-8">
                                         <h2 class="d-inline">Metas</h2>
                                         <a href="<?php echo base_url('admin/Home/addMetas') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                     </div>
-
+									<?php }?>
                                     <div class="col-4">
                                         <?php if(!empty($metas)): ?>
                                             <div class="input-group">
@@ -99,10 +100,12 @@
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>
                             <td class="align-middle">`
-                            if (r.data[k]['estado'] == "sin registrar") {
-                                tbody += `<a href="<?php echo site_url('admin/Home/editarmetas/') ?>${r.data[k]['id_meta']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
-
-                            }
+							<?php if($tipo_cuenta != "tecnico sistemas"){ ?>
+								if (r.data[k]['estado'] == "sin registrar") {
+									tbody += `<a href="<?php echo site_url('admin/Home/editarmetas/') ?>${r.data[k]['id_meta']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
+								}
+							<?php }?>
+                            
                         tbody += `</td>
                         </tr>`;
                                     

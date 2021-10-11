@@ -131,11 +131,19 @@ class Masistencia extends CI_Model {
 		}
 	}
 
-	public function insertAsistencia($id_supervisor){
-		$this->db->select('id_empleado');
-		$this->db->from('empleado_supervisor');
-		$this->db->where('id_supervisor', $id_supervisor);
-		$this->db->where('estado', 'activo');
+	public function insertAsistencia($id_supervisor, $tipo_usuario){
+		if($tipo_usuario == "tecnico sistemas"){
+			$this->db->select('id_usuario');
+			$this->db->from('usuarios');
+			$this->db->where('tipo_cuenta', 'supervisor');
+			$this->db->where('estado', 'activo');
+		}else{
+			$this->db->select('id_empleado');
+			$this->db->from('empleado_supervisor');
+			$this->db->where('id_supervisor', $id_supervisor);
+			$this->db->where('estado', 'activo');
+		}
+		
 		$consulta_items_empleados = $this->db->get();
 
 		if($consulta_items_empleados->num_rows() > 0) {
@@ -146,7 +154,7 @@ class Masistencia extends CI_Model {
 
 			$data2['id_asistencia'] = $this->db->insert_id();
 			foreach ($datos_consulta_items_empleados as $key => $value) {
-				$data2['id_empleado'] = $value->id_empleado;
+				$data2['id_empleado'] = ($tipo_usuario == "tecnico sistemas") ? $value->id_usuario : $value->id_empleado;
 				$data2['estado'] = "sin registrar";
 				$this->db->insert('asistencia_empleado', $data2);
 			}

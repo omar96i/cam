@@ -15,6 +15,19 @@ class MsalarioEmpleados extends CI_Model {
 		return false;
 	}
 
+	public function getSalarioTipoCuenta($tipo_cuenta){
+		$this->db->select('sueldo');
+		$this->db->from('sueldos_empleados');
+		$this->db->where('tipo_usuario', $tipo_cuenta);
+		$this->db->where('estado', 'activo');
+		$salario = $this->db->get();
+		if($salario->num_rows() > 0) {
+			return $salario->result();
+		}
+
+		return false;
+	}
+
 	public function verSalarios($valor, $fecha_inicial, $fecha_final, $inicio = FALSE , $registros_pagina = FALSE){
 		$this->db->select('*');
 		$this->db->from('sueldos_empleados');
@@ -53,21 +66,28 @@ class MsalarioEmpleados extends CI_Model {
 	}
 
 	public function generarFacturaEmpleados($data){
+		// Consultamos a los supervisores 
 		$supervisores = $this->db->select('persona.id_persona')->from('persona')->join('usuarios', 'usuarios.id_persona = persona.id_persona')->where('usuarios.estado', 'activo')->where('tipo_cuenta', 'supervisor')->get();
 
 		if ($supervisores->num_rows() > 0) {
+
+			// CONSULTAMOS ADELANTOS DEL SUPERVISOR
+
 			$adelantos_supervisor = [];
 			$metas_supervisor = [];
 			$acum = 0;
-
+			// CONSULTAMOS ADELANTOS DEL SUPERVISOR
 			foreach ($supervisores->result() as $key => $value) {
 				$consulta_adelantos_supervisor = $this->db->select('id_adelanto, valor, id_empleado')->from('adelanto')->where('id_empleado', $value->id_persona)->where('estado', 'sin registrar')->get();
 				if ($consulta_adelantos_supervisor->num_rows()>0) {
 					$adelantos_supervisor[$acum] = $consulta_adelantos_supervisor->result();
 					$acum = $acum+1;
+				}else{
+					$adelantos_supervisor[$acum] = false;
+					$acum = $acum+1;
 				}
 			}
-
+			// CONSULTAMOS METAS
 			$acum = 0;
 			foreach ($supervisores->result() as $key => $value) {
 				$consulta_metas_supervisor = $this->db->select('id_meta, num_horas, id_empleado')->from('metas')->where('id_empleado', $value->id_persona)->where('estado', 'sin registrar')->get();
@@ -75,41 +95,46 @@ class MsalarioEmpleados extends CI_Model {
 					$metas_supervisor[$acum] = $consulta_metas_supervisor->result();
 					$acum = $acum+1;
 				}
+				// else { si el supervisor no tiene meta se le paga? }
 			}
-
+			// sueldo de supervisores
 			$sueldo_supervisor = $this->db->select('sueldo,id_sueldos_empleados')->from('sueldos_empleados')->where('tipo_usuario', 'supervisor')->where('estado', 'activo')->get()->result();
 
-			
 
 			foreach ($supervisores->result() as $i => $valor_s) {
 				$aux_adelanto = 0;
 				$datos_insert = [];
 				$aux_cant_horas = 0;
 				$datos_insert['descuento'] = 0;
+				// VERIFICAMOS SI ESTE SUPERVISOR TIENE UN ADELANTO
 				foreach ($adelantos_supervisor as $j => $valor_a) {
-					foreach ($adelantos_supervisor[$j] as $k => $valor_l) {
-						if ($valor_s->id_persona == $valor_l->id_empleado) {
-							$aux_adelanto = $valor_l->id_adelanto;
-							$datos_insert['descuento'] = $datos_insert['descuento']+$valor_l->valor;
+					if($adelantos_supervisor[$j]){
+						foreach ($adelantos_supervisor[$j] as $k => $valor_l) {
+							if ($valor_s->id_persona == $valor_l->id_empleado) {
+								$aux_adelanto = $valor_l->id_adelanto;
+								$datos_insert['descuento'] = $datos_insert['descuento']+$valor_l->valor;
+							}
 						}
 					}
 				}
+
+				// VERIFICAMOS SI AL SUPERVISOR LE PERTENECE UNA META
 				foreach ($metas_supervisor as $a => $valor_m) {
 					foreach ($metas_supervisor[$a] as $s => $valor_q) {
 						if ($valor_q->id_empleado == $valor_s->id_persona) {
-						 	$aux_cant_horas = $valor_q->num_horas;
-						 	$datos_insert['id_meta'] = $valor_q->id_meta;
-						 } 
-						
-
+							$aux_cant_horas = $valor_q->num_horas;
+							$datos_insert['id_meta'] = $valor_q->id_meta;
+						} 
 					}
 				}
-
+				if(!isset($datos_insert['id_meta'])){
+					$datos_insert['id_meta'] = null;
+				}
 				$datos_insert['id_empleado'] = $valor_s->id_persona;
 				$datos_insert['id_administrador'] = $data['id_administrador'];
 				$datos_insert['id_sueldo'] = $sueldo_supervisor[0]->id_sueldos_empleados;
 				$num_horas_empleados = $this->db->select_sum('cantidad_horas')->from('registro_horas')->where('id_supervisor', $valor_s->id_persona)->where('fecha_registro <=', $data['fecha_final'])->where('fecha_registro >=', $data['fecha_inicial'])->get()->result();
-
+				// VERIFICAMOS SI EL SUPERVISOR CUMPLE LAS METAS DE HORAS
 				if (empty($num_horas_empleados[0]->cantidad_horas)) {
 					$datos_insert['cant_horas'] = 0;
 					$datos_insert['estado_meta'] = "incompleta";
@@ -122,7 +147,9 @@ class MsalarioEmpleados extends CI_Model {
 						$datos_insert['estado_meta'] = "incompleta";
 					}
 				}
+				//////////////////////////////////////////
 
+				// SI CUMPLE LA META SE LE DA COMISION
 				if ($datos_insert['estado_meta'] == "completada") {
 					$valor_dolar = $this->db->select('valor_dolar')->where('estado', 'activo')->from('dolar')->get()->result();
 
@@ -132,21 +159,22 @@ class MsalarioEmpleados extends CI_Model {
 					$datos_insert['total_comision'] = 0;
 				}
 
+				/////////////////////////////////////////////////
+				//INSERTAMOS LOS DATOS
 				$datos_insert['total_paga'] = ($sueldo_supervisor[0]->sueldo+$datos_insert['total_comision'])-$datos_insert['descuento'];
 				$datos_insert['fecha_inicial'] = $data['fecha_inicial']; 
 				$datos_insert['fecha_final'] = $data['fecha_final'];
 				$datos_insert['estado_factura'] = "sin registrar";
 
-				
 
 				$this->db->insert('factura_supervisor', $datos_insert);
 
 				$id = $this->db->insert_id();
-
+				// VERIFICAMOS SI TENIA ADELANTOS, SI LO TENIA FINALIZAMOS EL DESCUENTO DEL ADELANTO
 				if (!$aux_adelanto == 0) {
 					$this->db->set('id_factura_supervisor', $id)->set('estado', 'registrado')->where('id_empleado', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->update('adelanto');
 				}
-
+				// FINALIZAMOS LA META DEL SUPERVISOR
 				$this->db->set('estado', 'registrado')->where('id_empleado', $valor_s->id_persona)->update('metas');
 			}
 			return true;

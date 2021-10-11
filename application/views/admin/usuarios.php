@@ -23,19 +23,11 @@
                                         <h2 class="d-inline">Usuarios</h2>
                                         <a href="<?= base_url('admin/Home/addusuario') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($usuarios)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search usuarios">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
-
+								<hr>
                                 <?php if(!empty($usuarios)): ?>
                                     <div  class="table-responsive mt-1">
-                                        <table id="empty" class="table table-sm table-striped table-bordered" style="border-radius: 50%;">
+                                        <table id="empty" class="table table-striped table-bordered" style="border-radius: 50%;">
                                             <thead class="text-center">
                                                 <tr>
                                                     <th>#</th>
@@ -57,9 +49,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="pagination_usuarios mt-2">
-
-                                    </div>
                                     <?php else: ?>
                                         <div class="text-center">
                                             <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
@@ -76,9 +65,47 @@
                 </div>
             </div>
         </div>
+		<div class="modal fade" id="ModalGenerarPDF" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Generar pdf</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="fecha_ingreso" class="col-form-label">Fecha de ingreso</label>
+                            <input type="date" id="fecha_ingreso" class="form-control">
+                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                        </div>
+                        
+                        <div class="form-group ocultar">
+                            <label for="salario_aux" class="col-form-label">Salario</label>
+                            <input type="number" id="salario_aux" class="form-control">
+                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary btn_registrar_valores">Registrar</button>
+                        <a class="btn btn-primary btn_generar_pdf">Generar PDF</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 <script>
     $(document).ready(function() {
+
+		$(".btn_registrar_valores").click(function (e) { 
+			e.preventDefault();
+			id_persona = $(this).data('id_persona')
+			actualizarUsuario(id_persona);
+		});
+		
         $('.search_usuarios').on('keyup' , function() {
             var search = $(this).val();
             load_usuarios(search , 1);
@@ -90,6 +117,28 @@
                 load_usuarios('' , link);
         });
     });
+
+	function actualizarUsuario(id_persona){
+		fecha_ingreso = $("#fecha_ingreso").val()
+		salario_aux = $("#salario_aux").val()
+		tipo_cuenta = $(".btn_registrar_valores").data('tipo_cuenta')
+
+		$.ajax({
+            url      : '<?= base_url('admin/home/actualizarDatosUsuario') ?>',
+            method   : 'POST',
+            data     : {fecha_ingreso : fecha_ingreso , salario_aux : salario_aux, id_persona : id_persona, tipo_cuenta: tipo_cuenta},
+            success  : function(r){
+				if(r.status){
+					alertify.notify('Usuario actualizado', 'success', 2, function(){
+					window.location.href = '../Home/usuarios';
+					});
+					return;
+				}
+            },
+            dataType : 'json'
+        });
+	}
+
     function load_usuarios(valor , pagina) {
         $.ajax({
             url      : '<?= base_url('admin/home/viewusuarios') ?>',
@@ -110,37 +159,34 @@
                             <td class="align-middle text-capitalize">${r.data[k]['ciudad']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['correo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['tipo_cuenta']}</td>
-
                             <td class="align-middle ">
                                 <a href="<?php echo site_url('admin/Home/editarusuarios/') ?>${r.data[k]['id_persona']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-danger btn_deletepersonal" data-id_persona="${r.data[k]['id_persona']}" data-toggle="tooltip" title="Eliminar"><img src="<?php echo base_url('assets/iconos_menu/eliminar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
-								<a href="<?php echo base_url('Pdf/getInfPdf/') ?>${r.data[k]['id_persona']}" class="text-info"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
+								<a href="" class="text-info modalPdf" data-tipo_cuenta="${r.data[k]['tipo_cuenta']}" data-id_persona="${r.data[k]['id_persona']}" data-fecha_entrada="${r.data[k]['fecha_entrada']}" data-sueldo_aux="${r.data[k]['sueldo_aux']}"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                             </td>
                         </tr>`;
                     }
                     $('#tbodyusuarios').html(tbody);
-
-
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+					$('#empty').DataTable();
+					$(".modalPdf").click(function (e) { 
+						e.preventDefault();
+						
+						$("#fecha_ingreso").val($(this).data('fecha_entrada'))
+						$("#salario_aux").val($(this).data('sueldo_aux'))
+						$(".btn_registrar_valores").data('id_persona', $(this).data('id_persona'))
+						$(".btn_registrar_valores").data('tipo_cuenta', $(this).data('tipo_cuenta'))
+						$(".btn_generar_pdf").data('id_persona', $(this).data('id_persona'))
+						tipo_cuenta = $(".btn_registrar_valores").data('tipo_cuenta')
+						id_user = $(this).data('id_persona')
+						if(tipo_cuenta == "supervisor" || tipo_cuenta == "tecnico sistemas"){
+							$(".ocultar").show()
+						}else{
+							$(".ocultar").hide()
+						}
+						hred = "<?php echo base_url('Pdf/getInfPdf/') ?>"+id_user+""
+						$(".btn_generar_pdf").attr('href', hred);
+						$("#ModalGenerarPDF").modal('show')
+					});
                 }
             },
             dataType : 'json'

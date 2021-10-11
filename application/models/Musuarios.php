@@ -69,10 +69,6 @@ class Musuarios extends CI_Model {
 		$this->db->where('usuarios.estado', 'activo');
 		$this->db->where('tipo_cuenta !=', 'empleado');
 		$this->db->order_by('tipo_cuenta' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {
@@ -128,6 +124,11 @@ class Musuarios extends CI_Model {
 		return $this->db->update('usuarios' , $data2);
 	}
 
+	public function updatePersona($data){
+		$this->db->where('id_persona' , $data['id_persona']);
+		return $this->db->update('persona' , $data);
+	}
+
 	public function get_id($correo)	{
 		$this->db->select('id_usuario, estado');
 		$this->db->from('usuarios');
@@ -146,6 +147,24 @@ class Musuarios extends CI_Model {
 			if ($this->db->affected_rows()>0) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	public function verificarUsuario($correo){
+		$this->db->select('*')->from('usuarios')->where('correo', $correo);
+		$find = $this->db->get();
+		if($find->num_rows() > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public function verificarPersona($documento){
+		$this->db->select('*')->from('persona')->where('documento', $documento);
+		$find = $this->db->get();
+		if($find->num_rows() > 0) {
+			return true;
 		}
 		return false;
 	}

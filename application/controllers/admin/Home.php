@@ -561,6 +561,29 @@ class Home extends CI_Controller {
 		echo json_encode(['status' => true]);
 
 	}
+	public function actualizarDatosUsuario(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$data['fecha_entrada'] = $this->input->post('fecha_ingreso');
+		$data['id_persona'] = $this->input->post('id_persona');
+
+		if($this->input->post('tipo_cuenta') == "supervisor" || $this->input->post('tipo_cuenta') == "tecnico sistemas" || $this->input->post('tipo_cuenta') == "empleado"){
+			$data['sueldo_aux'] = $this->input->post('salario_aux');
+		}else{
+			$sueldo = $this->MsalarioEmpleados->getSalarioTipoCuenta($this->input->post('tipo_cuenta'));
+			$data['sueldo_aux'] = $sueldo[0]->sueldo;
+		}
+		$response = $this->Musuarios->updatePersona($data);
+		if(!$response){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return;
+		}
+		echo json_encode(['status' => true]);
+
+	}
 
 	public function viewusuarios() {
 		if(!$this->input->is_ajax_request()){
@@ -631,6 +654,17 @@ class Home extends CI_Controller {
 	 	$data2['tipo_cuenta'] = $this->input->post('tipo_cuenta');
 	 	$data2['correo'] = $this->input->post('correo');
 	 	$data2['clave'] = $this->input->post('clave');
+
+		$response = $this->Musuarios->verificarUsuario($data2['correo']);
+		if($response){
+			echo json_encode(['status' => false, 'msg' => 'El correo ya se encuentra registrado']);
+	 		return;
+		}
+		$response = $this->Musuarios->verificarPersona($data['documento']);
+		if($response){
+			echo json_encode(['status' => false, 'msg' => 'El documento ya se encuentra registrado']);
+	 		return;
+		}
 
 	 	/////  FOTO UPLOAD  /////
 		$config['upload_path']          = './assets/images/imagenes_usuario/';
@@ -889,6 +923,17 @@ class Home extends CI_Controller {
 	 	$data2['tipo_cuenta'] = 'empleado';
 	 	$data2['correo'] = $this->input->post('correo');
 	 	$data2['clave'] = $this->input->post('clave');
+		
+		$response = $this->Musuarios->verificarUsuario($data2['correo']);
+		if($response){
+			echo json_encode(['status' => false, 'msg' => 'El correo ya se encuentra registrado']);
+	 		return;
+		}
+		$response = $this->Musuarios->verificarPersona($data['documento']);
+		if($response){
+			echo json_encode(['status' => false, 'msg' => 'El documento ya se encuentra registrado']);
+	 		return;
+		}
 
 	 	
 		/////  FOTO UPLOAD  /////
@@ -1173,7 +1218,7 @@ class Home extends CI_Controller {
 	public function addasistencia(){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$this->load->view('includes_admin/header');
-			$this->load->view('admin/addasistencia');
+			$this->load->view('admin/addAsistencia');
 			$this->load->view('includes_admin/footer');
 		}else{
 			redirect('Home');
@@ -1591,7 +1636,7 @@ class Home extends CI_Controller {
 
 	/// METAS INICIO ///
 	public function metasSupervisor(){
-		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
 			$data['metas'] = $this->Mmetas->getMetas();
 			if(!$data['metas']) {
 				$data['metas'] = 0;
@@ -1610,7 +1655,7 @@ class Home extends CI_Controller {
 		
 	}
 	public function metas(){
-		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
 			$data['metas'] = $this->Mmetas->getMetas();
 			if(!$data['metas']) {
 				$data['metas'] = 0;
@@ -1618,6 +1663,8 @@ class Home extends CI_Controller {
 			else {
 				$data['metas'] = count($this->Mmetas->getMetas());
 			}
+
+			$data['tipo_cuenta'] = $this->session->userdata('usuario')['tipo'];
 
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/metas' , $data);
@@ -1673,6 +1720,11 @@ class Home extends CI_Controller {
 			$update_supervisor = $this->Mmetas->actualizarMetaSupervisor($data['id_empleado'], $data['id_administrador']);
 			if (!$update_supervisor) {
 				echo json_encode(['status' => false, 'msg' => 'Algo pasó, Supervisor']);
+				return;
+			}
+			$update_tecnico_sistemas = $this->Mmetas->actualizarMetaTecnicoSistemas($data['id_administrador']);
+			if (!$update_tecnico_sistemas) {
+				echo json_encode(['status' => false, 'msg' => 'Algo pasó, Tecnico sistema']);
 				return;
 			}
 		}
@@ -1873,6 +1925,9 @@ class Home extends CI_Controller {
 		$data['id_administrador'] = $this->session->userdata('usuario')['id_usuario'];
 
 		$respuesta = $this->MsalarioEmpleados->generarFacturaEmpleados($data);
+
+		echo json_encode($respuesta);
+		return;
 
 		if ($respuesta) {
 			echo json_encode(['status' => true]);

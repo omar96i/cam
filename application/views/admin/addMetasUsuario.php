@@ -159,7 +159,11 @@
 
                         alertify.alert('Ups :(' , r.msg);
 
-                    });
+                    }).fail( function(r) {
+
+						console.log(r);
+
+					})
 
                     return false;
 

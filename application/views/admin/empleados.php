@@ -108,8 +108,46 @@
             </div>
         </div>
 
+		<div class="modal fade" id="ModalGenerarPDF" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Generar pdf</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="fecha_ingreso" class="col-form-label">Fecha de ingreso</label>
+                            <input type="date" id="fecha_ingreso" class="form-control">
+                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="salario_aux" class="col-form-label">Salario</label>
+                            <input type="number" id="salario_aux" class="form-control">
+                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary btn_registrar_valores">Registrar</button>
+                        <a class="btn btn-primary btn_generar_pdf">Generar PDF</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
 <script>
     $(document).ready(function() {
+		$(".btn_registrar_valores").click(function (e) { 
+			e.preventDefault();
+			id_persona = $(this).data('id_persona')
+			actualizarUsuario(id_persona);
+		});
+
         $('.search_usuarios').on('keyup' , function() {
             var search = $(this).val();
             load_usuarios(search , 1);
@@ -121,6 +159,27 @@
                 load_usuarios('' , link);
         });
     });
+
+	function actualizarUsuario(id_persona){
+		fecha_ingreso = $("#fecha_ingreso").val()
+		salario_aux = $("#salario_aux").val()
+		$.ajax({
+            url      : '<?= base_url('admin/home/actualizarDatosUsuario') ?>',
+            method   : 'POST',
+            data     : {fecha_ingreso : fecha_ingreso , salario_aux : salario_aux, id_persona : id_persona, tipo_cuenta: 'empleado'},
+            success  : function(r){
+				if(r.status){
+					alertify.notify('Usuario actualizado', 'success', 2, function(){
+					window.location.href = '../Home/empleados';
+					});
+					return;
+				}
+                
+            },
+            dataType : 'json'
+        });
+	}
+
     function load_usuarios(valor , pagina) {
         $.ajax({
             url      : '<?= base_url('admin/home/viewempleados') ?>',
@@ -144,12 +203,24 @@
                                 <a href="<?php echo site_url('admin/Home/editarempleados/') ?>${r.data[k]['id_persona']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-danger btn_deletepersonal" data-id_persona="${r.data[k]['id_persona']}" data-toggle="tooltip" title="Eliminar"><img src="<?php echo base_url('assets/iconos_menu/eliminar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-info btn_modal_registros" data-id_persona="${r.data[k]['id_persona']}"><img src="<?php echo base_url('assets/iconos_menu/ojo.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
-								<a href="<?php echo base_url('Pdf/getInfPdf/') ?>${r.data[k]['id_persona']}" class="text-info"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
+								<a href="" class="text-info modalPdf" data-id_persona="${r.data[k]['id_persona']}" data-fecha_entrada="${r.data[k]['fecha_entrada']}" data-sueldo_aux="${r.data[k]['sueldo_aux']}"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="<?php echo base_url('supervisor/VerInformes/VerInformesEmpleado/') ?>${r.data[k]['id_persona']}" class="text-info"><img src="<?php echo base_url('assets/iconos_menu/reporte.png') ?>" alt=""></a>
                             </td>
                         </tr>`;
                     }
                     $('#tbodyusuarios').html(tbody);
+
+					$(".modalPdf").click(function (e) { 
+						e.preventDefault();
+						$("#ModalGenerarPDF").modal('show')
+						$("#fecha_ingreso").val($(this).data('fecha_entrada'))
+						$("#salario_aux").val($(this).data('sueldo_aux'))
+						$(".btn_registrar_valores").data('id_persona', $(this).data('id_persona'))
+						$(".btn_generar_pdf").data('id_persona', $(this).data('id_persona'))
+						id_user = $(this).data('id_persona')
+						hred = "<?php echo base_url('Pdf/getInfPdf/') ?>"+id_user+""
+						$(".btn_generar_pdf").attr('href', hred);
+					});
 
                     $(".btn_modal_registros").click(function(event) {
                         event.preventDefault();

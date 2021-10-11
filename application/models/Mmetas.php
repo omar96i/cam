@@ -221,6 +221,90 @@ class Mmetas extends CI_Model {
 		}
 	}
 
+	public function actualizarMetaTecnicoSistemas($id_administrador){
+		// Sacamos al tecnico en sistemas
+		$this->db->select('id_persona');
+		$this->db->where('estado', 'activo');
+		$this->db->where('tipo_cuenta', 'tecnico sistemas');
+		$this->db->from('usuarios');
+		$response = $this->db->get();
+		if($response->num_rows() > 0){
+			$datos = $response->result();
+			// Consultamos si tiene meta activa
+			$this->db->select('*');
+			$this->db->from('metas');
+			$this->db->where('id_empleado', $datos[0]->id_persona);
+			$this->db->where('estado', 'sin registrar');
+			$meta = $this->db->get();
+			////////////////////////////////////
+			// Consultamos los supervisores 
+			$this->db->select('id_persona');
+			$this->db->where('estado', 'activo');
+			$this->db->where('tipo_cuenta', 'supervisor');
+			$this->db->from('usuarios');
+			$supervisores = $this->db->get();
+			$supervisores_datos = $supervisores->result();
+			//////////////////////////////////////////////
+			if ($meta->num_rows() > 0) {
+				$datos_meta = $meta->result();
+
+				/// Consulta SUM para sumar cantidad horas Metas de los supervisores ///
+				$acum = 0;
+				foreach ($supervisores_datos as $key => $value) {
+					$this->db->select('num_horas');
+					$this->db->where('estado', 'sin registrar');
+					$this->db->where('id_empleado', $value->id_persona);
+					$this->db->from('metas');
+					/////////////////////////////////////////////////////////////////////////
+
+					$consulta_cantidad_horas = $this->db->get();
+					if ($consulta_cantidad_horas->num_rows() > 0) {
+						$datos_consulta_cantidad_horas = $consulta_cantidad_horas->result();
+						$acum = $acum + $datos_consulta_cantidad_horas[0]->num_horas;
+					}
+				}
+				$data['num_horas'] = $acum;
+
+				/// Update Meta supervisor ///
+				$this->db->where('id_meta', $datos_meta[0]->id_meta);
+				return $this->db->update('metas', $data);
+				/////////////////////////////
+			}else{
+				/// Consulta SUM para sumar cantidad horas Metas de los supervisores ///
+				$acum = 0;
+				foreach ($supervisores_datos as $key => $value) {
+					$this->db->select('num_horas');
+					$this->db->where('estado', 'sin registrar');
+					$this->db->where('id_empleado', $value->id_persona);
+					$this->db->from('metas');
+					/////////////////////////////////////////////////////////////////////////
+
+					$consulta_cantidad_horas = $this->db->get();
+					if ($consulta_cantidad_horas->num_rows() > 0) {
+						$datos_consulta_cantidad_horas = $consulta_cantidad_horas->result();
+						$acum = $acum + $datos_consulta_cantidad_horas[0]->num_horas;
+					}
+				}
+				/////////////////////////////////////////////////////////////////////////
+
+				/// Datos insert ///
+				$data['num_horas'] = $acum;
+				$data['id_empleado'] = $datos[0]->id_persona;
+				$data['id_administrador'] = $id_administrador;
+				$data['descripcion'] = "ninguna";
+				$data['estado'] = "sin registrar";
+				///////////////////
+
+				/// Insert Meta Supervisor ///
+				return $this->db->insert('metas', $data);
+				/////////////////////////////
+			}
+			
+		}else{
+			return false;
+		}
+	}
+
 	public function consultarMetasEmpleados($id_supervisor){
 		$this->db->select('id_empleado');
 		$this->db->from('empleado_supervisor');
