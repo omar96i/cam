@@ -33,17 +33,6 @@
 
                                         <a href="#" class="btn btn-info mb-2 ml-1 btn_verificar_nomina">Verificar Tokens</a>
                                     </div>
-
-                                    <div class="col-6">
-                                        <?php if(!empty($registro_horas)): ?>
-                                            <div class="input-group">
-                                                <input type="text"  class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search registro_horas">
-                                                <input type="date" id="fecha_inicial_buscar" class="form-control" name="s_fecha_buscar">
-                                                <input type="date" id="fecha_final_buscar" class="form-control" name="s_fecha_buscar">
-
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($registro_horas)): ?>
@@ -55,7 +44,6 @@
                                                     <th>Usuario</th>
                                                     <th>Contraseña</th>
                                                     <th>Cantidad Tokens</th>
-                                                    <th>Descripcion</th>
                                                     <th>Estado registro</th>
                                                     <th>Fecha registro</th>
                                                     <th></th>
@@ -66,10 +54,6 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
                                     <?php else: ?>
                                         <div class="text-center">
@@ -220,7 +204,7 @@
         $.ajax({
             url      : '<?= base_url('supervisor/home/gethoras') ?>',
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina, id_usuario: id_usuario, fecha_inicio: fecha_inicio, fecha_final: fecha_final},
+            data     : {id_usuario: id_usuario},
             success  : function(r){
                 if(r.status){
                     var tbody = '';
@@ -231,42 +215,22 @@
                             <td class="align-middle text-capitalize">${r.data[k]['correo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['clave']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['cantidad_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado_registro']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>`;
                         if (r.data[k]['estado_registro'] == 'sin registrar') {
                             tbody += `<td class="align-middle">
                                 <a href="<?php echo site_url('talento_humano/Home/edithoras/') ?>${r.data[k]['id_registro_horas']+'/'+<?= $this->uri->segment(4) ?>}" class="text-info"><i class="icon-pencil5"></i></a>
                             </td>`;
-                        }
-
-
-
+                        }else{
+							tbody += `<td class="align-middle"></td>`;
+						}
                         tbody += `</tr>`;
                     }
                     $('#tbodyregistro_horas').html(tbody);
+					$('#empty').DataTable();
 
 
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+                   
                 }
             },
             dataType : 'json'
@@ -335,11 +299,5 @@
             alertify.confirm().close();
         });
             
-    });
-
-    
-
-
-    
-    
+    }); 
 </script>

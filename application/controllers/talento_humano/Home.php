@@ -137,12 +137,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Musuarios->t_h_ver_empleados($valor ,  $inicio, $cantidad);
-		$total_registros  = count($this->Musuarios->t_h_ver_empleados($valor)); 
+		$usuarios = $this->Musuarios->t_h_ver_empleados();
 		
 
 		if(!$usuarios) {
@@ -158,8 +153,6 @@ class Home extends CI_Controller {
 			[
 				'status'          => true, 
 				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros,
 				'can_registros'	  => $data
 			]);
 	}

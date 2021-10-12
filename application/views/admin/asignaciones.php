@@ -100,25 +100,7 @@
 
 
                     // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+                    $("#empty").DataTable()
                 }
             },
             dataType : 'json'

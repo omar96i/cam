@@ -45,11 +45,24 @@
                                                 <input type="number" id="valor" class="form-control" name="valor">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+											<div class="form-group">
+                                                <label for="valor_multiplicar" class="col-form-label">Valor a multiplicar</label>
+                                                <input type="number" id="valor_multiplicar" class="form-control" name="valor_multiplicar">
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="estado_meta" class="col-form-label">Estado meta</label>
                                                 <select name="estado_meta" id="estado_meta" class="form-control">
                                                     <option value="completa">completa</option>
                                                     <option value="incompleta">incompleta</option>
+                                                </select>
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
+											<div class="form-group">
+                                                <label for="tipo" class="col-form-label">Paginas</label>
+                                                <select name="tipo" id="tipo" class="form-control">
+                                                    <option value="general">General</option>
+                                                    <option value="bongacams">Bongacams</option>
                                                 </select>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
@@ -81,6 +94,9 @@
                 dias = $("#dias").val();
                 valor = $("#valor").val();
                 estado_meta = $("#estado_meta").val();
+                valor_multiplicar = $("#valor_multiplicar").val();
+                tipo = $("#tipo").val();
+
 
                 if ($("#dias").val() == '') {
                     $("#dias").addClass('is-invalid');
@@ -97,14 +113,24 @@
                 }else{
                     $("#estado_meta").removeClass('is-invalid');
                 }
+				if ($("#valor_multiplicar").val() == '') {
+                    $("#valor_multiplicar").addClass('is-invalid');
+                }else{
+                    $("#valor_multiplicar").removeClass('is-invalid');
+                }
+				if ($("#tipo").val() == '') {
+                    $("#tipo").addClass('is-invalid');
+                }else{
+                    $("#tipo").removeClass('is-invalid');
+                }
 
-                if( $("#dias").val() != '' && $("#valor").val() != '' && $("#estado_meta").val() != '') {
+                if( $("#dias").val() != '' && $("#valor").val() != '' && $("#estado_meta").val() != '' && $("#valor_multiplicar").val() != '' && $("#tipo").val() != '') {
 
                     $.ajax({
                         url: ruta,
                         type: 'POST',
                         dataType: 'json',
-                        data: {dias: dias, valor: valor, estado_meta:estado_meta},
+                        data: {dias: dias, valor: valor, estado_meta:estado_meta, valor_multiplicar: valor_multiplicar, tipo: tipo},
                     })
                     .done(function(r) {
 

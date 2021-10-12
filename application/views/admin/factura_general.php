@@ -50,6 +50,8 @@
                                                     <th>Fecha de registro</th>
                                                     <th>Fecha inicio</th>
                                                     <th>Fecha final</th>
+													<th>Descripcion</th>
+													<th></th>
                                                 </tr>
                                             </thead>
 
@@ -139,11 +141,20 @@
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['tipo_cuenta']}</td>
 
-                            <td class="align-middle text-capitalize">${r.data[k]['descuentos']}</td>
-                            <td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['total_a_pagar'])}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['descuentos']}</td>`
+							if(r.data[k]['nuevo_valor'] != null){
+								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['nuevo_valor'])}</td>`
+							}else{
+								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['total_a_pagar'])}</td>`
+							}
+						tbody+=	`
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registrado']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_inicial']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_final']}</td>
+							<td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
+							<td class="align-middle">
+								<a href="<?php echo site_url('admin/Home/editarFacturaGeneral/') ?>${r.data[k]['id_factura_general']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; "> </a>
+                            </td>
                             </tr>`;
                     }
                     $('#tbodyfactura').html(tbody);

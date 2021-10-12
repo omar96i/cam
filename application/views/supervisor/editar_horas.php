@@ -41,11 +41,6 @@
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="descripcion" class="col-form-label">Descripcion: </label>
-                                                <input type="text" id="descripcion" class="form-control" name="descripcion" value="<?php echo $registro_horas[0]->descripcion ?>">
-                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                                            </div>
-                                            <div class="form-group">
                                                 <label for="fecha_registro" class="col-form-label">Fecha Registro: </label>
                                                 <input type="date" id="fecha_registro" class="form-control" name="fecha_registro" value="<?php echo $registro_horas[0]->fecha_registro ?>">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
@@ -115,7 +110,7 @@
             .done(function(r) {
                 if(r.status){
                     alertify.notify('Registro actualizado', 'success', 2, function(){
-                        window.location.href = '../empleados';
+                        window.location.href = '../../empleados';
                     });
                     return;
                 }

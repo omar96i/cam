@@ -30,14 +30,6 @@
                                     <div class="col-8">
                                         <h2 class="d-inline">Pagina</h2>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($paginas)): ?>
-                                            <div class="input-group">
-                                                <input type="text"  class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search paginas">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($paginas)): ?>
@@ -47,7 +39,6 @@
                                                 <tr>
                                                     <th>Id pagina</th>
                                                     <th>Url pagina</th>
-                                                    <th>Tokens</th>
                                                     <th>Usuario</th>
                                                     <th>Contraseña</th>
                                                 </tr>
@@ -57,10 +48,6 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
                                     <?php else: ?>
                                         <div class="text-center">
@@ -85,9 +72,8 @@
         $.ajax({
             url      : '<?= base_url('supervisor/Home/getpages') ?>',
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina, id_usuario: id_usuario},
+            data     : {id_usuario: id_usuario},
             success  : function(r){
-                console.log(r.data);
                 if(r.status){
                     var tbody = '';
                     
@@ -95,36 +81,17 @@
                         tbody += `<tr>
                             <td class="align-middle text-capitalize">${r.data[k]['id_pagina']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['url_pagina']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['tokens']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['correo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['clave']}</td>
                         </tr>`;
                     }
                     $('#tbodypaginas').html(tbody);
-
-
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+					$('#empty').DataTable();
                 }
             },
+			error: function (error) {
+				console.log(error)
+			},
             dataType : 'json'
         });
 

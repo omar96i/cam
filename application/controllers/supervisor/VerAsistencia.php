@@ -61,14 +61,8 @@ class VerAsistencia extends CI_Controller {
 			return; 
 		}
 
-		$fecha_inicial    = $this->input->post('fecha_inicio');    
-		$fecha_final 	  = $this->input->post('fecha_final');
 		$id_usuario 	  = $this->session->userdata('usuario')['id_usuario'];
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$asistencia         = $this->Masistencia->getDataAsistencia($id_usuario, $fecha_inicial, $fecha_final, $inicio, $cantidad);
-		$total_registros  = count($this->Masistencia->getDataAsistencia($id_usuario, $fecha_inicial, $fecha_final)); 
+		$asistencia         = $this->Masistencia->getDataAsistencia($id_usuario);
 
 		if(!$asistencia) {
 			echo json_encode(['status' => false]);
@@ -78,9 +72,7 @@ class VerAsistencia extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $asistencia,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $asistencia
 			]);
 	}
 }

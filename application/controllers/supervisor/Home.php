@@ -68,12 +68,7 @@ class Home extends CI_Controller {
 
 
 		$id_usuario 	  = $this->session->userdata('usuario')['id_usuario'];
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Masignaciones->getAllUsuarios($valor , $id_usuario,  $inicio, $cantidad);
-		$total_registros  = count($this->Masignaciones->getAllUsuarios($valor, $id_usuario)); 
+		$usuarios         = $this->Masignaciones->getAllUsuarios($id_usuario);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -83,9 +78,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 	}
 
@@ -131,7 +124,6 @@ class Home extends CI_Controller {
 		$data['id_supervisor'] = $this->session->userdata('usuario')['id_usuario'];
 
 		$data['cantidad_horas'] = $this->input->post('cantidad_horas');
-		$data['descripcion'] = $this->input->post('descripcion');
 		$data['fecha_registro'] = $this->input->post('fecha');
 		$data['estado_registro'] = "sin registrar";
 
@@ -172,12 +164,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 		$id_usuario 	  = $this->input->post('id_usuario');
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Mpaginas->getPagesUsuarios($valor , $id_usuario,  $inicio, $cantidad);
-		$total_registros  = count($this->Mpaginas->getPagesUsuarios($valor, $id_usuario)); 
+		$usuarios         = $this->Mpaginas->getPagesUsuarios($id_usuario);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -187,9 +174,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 	}
 
@@ -219,15 +204,8 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$fecha_inicial    = $this->input->post('fecha_inicio');    
-		$fecha_final 	  = $this->input->post('fecha_final');
 		$id_usuario 	  = $this->input->post('id_usuario');
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Mregistrohoras->getHorasUsuario($valor , $id_usuario, $fecha_inicial, $fecha_final, $inicio, $cantidad);
-		$total_registros  = count($this->Mregistrohoras->getHorasUsuario($valor, $id_usuario, $fecha_inicial, $fecha_final)); 
+		$usuarios         = $this->Mregistrohoras->getHorasUsuario($id_usuario);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -237,9 +215,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 	}
 
@@ -264,7 +240,6 @@ class Home extends CI_Controller {
 		}
 		$data['fecha_registro'] = $this->input->post('fecha_registro');
 		$data['cantidad_horas'] = $this->input->post('cantidad_horas');
-		$data['descripcion'] = $this->input->post('descripcion');
 		$id_registro_horas = $this->input->post('id_registro_horas');
 
 		$respuesta = $this->Mregistrohoras->editarregistro($data, $id_registro_horas);

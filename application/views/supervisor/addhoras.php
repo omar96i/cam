@@ -54,21 +54,17 @@
 	                                            </select>
 	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
 	                                        </div>
-                                            <div class="form-group">
-                                                <label for="cantidad_horas" class="col-form-label">Cantidad Tokens:</label>
-                                                <input type="number" id="cantidad_horas" class="form-control" name="cantidad_horas">
-                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                                            </div>
+                                            
                                         </div>
                                         <div class="col-sm-12 col-md-4">
                                             <div class="form-group">
-                                                <label for="descripcion" class="col-form-label">Descripcion:</label>
-                                                <input type="text" id="descripcion" class="form-control" name="descripcion">
-                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                                            </div>
-                                            <div class="form-group">
                                                 <label for="fecha" class="col-form-label">Fecha:</label>
                                                 <input type="date" id="fecha" class="form-control" name="fecha">
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
+											<div class="form-group">
+                                                <label for="cantidad_horas" class="col-form-label">Cantidad Tokens:</label>
+                                                <input type="number" id="cantidad_horas" class="form-control" name="cantidad_horas">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
                                         </div>
@@ -99,7 +95,6 @@
                 usuarios = $("#usuarios").val();
                 paginas = $("#paginas").val();
                 cantidad_horas = $("#cantidad_horas").val();
-                descripcion = $("#descripcion").val();
                 fecha = $("#fecha").val();
 
                 if ($("#paginas").val() == 0) {
@@ -117,11 +112,6 @@
                 }else{
                     $("#cantidad_horas").removeClass('is-invalid');
                 }
-                if ($("#descripcion").val() == '') {
-                    $("#descripcion").addClass('is-invalid');
-                }else{
-                    $("#descripcion").removeClass('is-invalid');
-                }
                 if ($("#fecha").val() == '') {
                     $("#fecha").addClass('is-invalid');
                 }else{
@@ -131,7 +121,6 @@
                 if( $("#paginas").val() != 0 &&
                 	$("#usuarios").val() != 0 &&
                 	$("#cantidad_horas").val() != '' &&
-                    $("#descripcion").val() != '' &&
                     $("#fecha").val() != ''
                 ) {
 
@@ -139,7 +128,7 @@
                         url: ruta,
                         type: 'POST',
                         dataType: 'json',
-                        data: {paginas: paginas, usuarios: usuarios, cantidad_horas: cantidad_horas, descripcion: descripcion, fecha: fecha},
+                        data: {paginas: paginas, usuarios: usuarios, cantidad_horas: cantidad_horas, fecha: fecha},
                     })
                     .done(function(r) {
 

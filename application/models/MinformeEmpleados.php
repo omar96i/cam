@@ -38,17 +38,8 @@ class MinformeEmpleados extends CI_Model {
 		return false;
 	}
 
-	public function getDataInformes($id_usuario, $fecha_inicio, $fecha_final, $inicio = FALSE, $registros_pagina = FALSE) {
+	public function getDataInformes($id_usuario) {
 		$this->db->select('*')->from('informe_empleados')->join('persona', 'persona.id_persona = informe_empleados.id_empleado')->where('id_empleado', $id_usuario);
-		if ($fecha_inicio != "") {
-			$this->db->where('fecha >=', $fecha_inicio);
-		}
-		if ($fecha_final != "") {
-			$this->db->where('fecha <=', $fecha_final);
-		}
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$informes = $this->db->get();
 
 		if($informes->num_rows() > 0) {

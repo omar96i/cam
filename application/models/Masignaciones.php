@@ -18,17 +18,15 @@ class Masignaciones extends CI_Model {
 		return false;
 	}
 
-	public function getsupervisor($valor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function getsupervisor() {
 		$this->db->select('persona.*, correo, tipo_cuenta');
 		$this->db->from('persona');
 		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
-		$this->db->like('nombres' , $valor);
 		$this->db->where('tipo_cuenta', 'supervisor');
+		$this->db->where('usuarios.estado', 'activo');
+
 		$this->db->order_by('id_persona' , 'DESC');
 
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {
@@ -194,18 +192,13 @@ class Masignaciones extends CI_Model {
 
 	}
 
-	public function getAllUsuarios($valor , $id_usuario , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function getAllUsuarios($id_usuario) {
 		$this->db->select('persona.*');
 		$this->db->from('empleado_supervisor');
 		$this->db->join('persona', 'persona.id_persona = empleado_supervisor.id_empleado');
-		$this->db->like('persona.id_persona' , $valor);
 		$this->db->where('empleado_supervisor.estado', 'activo');
 		$this->db->where('empleado_supervisor.id_supervisor', $id_usuario);
 		$this->db->order_by('persona.id_persona' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {

@@ -102,12 +102,8 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Masignaciones->getsupervisor($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Masignaciones->getsupervisor($valor)); 
+	
+		$usuarios         = $this->Masignaciones->getsupervisor();
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -117,9 +113,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 
 	}
@@ -241,12 +235,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$paginas         = $this->Mpaginas->getpages($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Mpaginas->getpages($valor)); 
+		$paginas         = $this->Mpaginas->getpages(); 
 
 		if(!$paginas) {
 			echo json_encode(['status' => false]);
@@ -256,9 +245,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 		[
 			'status'          => true, 
-			'data'            => $paginas,
-			'cantidad'        => $cantidad,
-			'total_registros' => $total_registros
+			'data'            => $paginas
 		]);
 	}
 
@@ -880,13 +867,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 20;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Musuarios->get_empleados($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Musuarios->get_empleados($valor)); 
-
+		$usuarios         = $this->Musuarios->get_empleados();
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
 			return;
@@ -895,9 +876,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 	}
 
@@ -1409,18 +1388,33 @@ class Home extends CI_Controller {
 
 	/// PORCENTAJES INICIO ///
 		/// DIAS INICIO ///
-	public function diasPorcentajes(){
+	public function diasPorcentajes($tipo = "general"){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$data['porcentajes'] = $this->MporcentajeDias->getPorcentajes();
-			if(!$data['porcentajes']) {
-				$data['porcentajes'] = 0;
-			} 
-			else {
-				$data['porcentajes'] = count($this->MporcentajeDias->getPorcentajes());
-			}
-			$this->load->view('includes_admin/header');
-			$this->load->view('admin/porcentajeDias' , $data);
-			$this->load->view('includes_admin/footer');
+			if($tipo == "general"){
+				$data['porcentajes'] = $this->MporcentajeDias->getPorcentajes();
+				if(!$data['porcentajes']) {
+					$data['porcentajes'] = 0;
+				} 
+				else {
+					$data['porcentajes'] = count($this->MporcentajeDias->getPorcentajes());
+				}
+				$data['tittle'] = "General";
+				$this->load->view('includes_admin/header');
+				$this->load->view('admin/porcentajeDias' , $data);
+				$this->load->view('includes_admin/footer');
+			}else{
+				$data['porcentajes'] = $this->MporcentajeDias->getPorcentajesBonga();
+				if(!$data['porcentajes']) {
+					$data['porcentajes'] = 0;
+				} 
+				else {
+					$data['porcentajes'] = count($this->MporcentajeDias->getPorcentajesBonga());
+				}
+				$data['tittle'] = "Bongacams";
+				$this->load->view('includes_admin/header');
+				$this->load->view('admin/porcentajeDias' , $data);
+				$this->load->view('includes_admin/footer');
+			}	
 		}else{
 			redirect('Home');
 		}
@@ -1430,13 +1424,7 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$porcentaje         = $this->MporcentajeDias->get_porcentaje($valor , $inicio , $cantidad);
-		$total_registros  = count($this->MporcentajeDias->get_porcentaje($valor)); 
+		$porcentaje       = $this->MporcentajeDias->get_porcentaje();
 
 		if(!$porcentaje) {
 			echo json_encode(['status' => false]);
@@ -1446,11 +1434,31 @@ class Home extends CI_Controller {
 		echo json_encode(
 		[
 			'status'          => true, 
-			'data'            => $porcentaje,
-			'cantidad'        => $cantidad,
-			'total_registros' => $total_registros
+			'data'            => $porcentaje
 		]);
 	}
+
+	public function verPorcentajeDiasBomga(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$porcentaje       = $this->MporcentajeDias->get_porcentaje_bonga();
+
+		if(!$porcentaje) {
+			echo json_encode(['status' => false]);
+			return;
+		}
+
+		echo json_encode(
+		[
+			'status'          => true, 
+			'data'            => $porcentaje
+		]);
+	}
+
+
 	public function addPorcentajesDias(){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$this->load->view('includes_admin/header');
@@ -1470,6 +1478,8 @@ class Home extends CI_Controller {
 		$data['cantidad_dias'] = $this->input->post('dias');
 		$data['valor'] = $this->input->post('valor');
 		$data['estado_meta'] = $this->input->post('estado_meta');
+		$data['valor_multiplicar'] = $this->input->post('valor_multiplicar');
+		$data['tipo'] = $this->input->post('tipo');
 		$data['estado'] = "activo";
 
 		$insert_porcentaje_dias = $this->MporcentajeDias->addPorcentajeDias($data);
@@ -1504,6 +1514,8 @@ class Home extends CI_Controller {
 		$data['valor'] = $this->input->post('valor');
 		$data['estado'] = $this->input->post('estado');
 		$data['estado_meta'] = $this->input->post('estado_meta');
+		$data['valor_multiplicar'] = $this->input->post('valor_multiplicar');
+		$data['tipo'] = $this->input->post('tipo');
 
 		$data['id_porcentajes_dias'] = $this->input->post('id_porcentajes');
 
@@ -1739,12 +1751,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$metas            = $this->Mmetas->verMetas($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Mmetas->verMetas($valor)); 
+		$metas            = $this->Mmetas->verMetas();
 
 		if(!$metas) {
 			echo json_encode(['status' => false]);
@@ -1754,9 +1761,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 		[
 			'status'          => true, 
-			'data'            => $metas,
-			'cantidad'        => $cantidad,
-			'total_registros' => $total_registros
+			'data'            => $metas
 		]);
 
 	}
@@ -1766,12 +1771,8 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$metas            = $this->Mmetas->verMetasSupervisor($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Mmetas->verMetasSupervisor($valor)); 
+		
+		$metas            = $this->Mmetas->verMetasSupervisor();
 
 		if(!$metas) {
 			echo json_encode(['status' => false]);
@@ -1781,15 +1782,13 @@ class Home extends CI_Controller {
 		echo json_encode(
 		[
 			'status'          => true, 
-			'data'            => $metas,
-			'cantidad'        => $cantidad,
-			'total_registros' => $total_registros
+			'data'            => $metas
 		]);
 
 	}
 
 	public function editarmetas($id){
-		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
 			$data['meta'] = $this->Mmetas->dataMetas($id);
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/editarMetas' , $data);
@@ -1925,9 +1924,6 @@ class Home extends CI_Controller {
 		$data['id_administrador'] = $this->session->userdata('usuario')['id_usuario'];
 
 		$respuesta = $this->MsalarioEmpleados->generarFacturaEmpleados($data);
-
-		echo json_encode($respuesta);
-		return;
 
 		if ($respuesta) {
 			echo json_encode(['status' => true]);
@@ -2090,6 +2086,134 @@ class Home extends CI_Controller {
 		$respuesta = $this->Mpaginas->graficaConsulta($data);
 
 		echo json_encode($respuesta);
+	}
+
+	public function editarFactura($id){
+		if($this->session->userdata('usuario')['tipo']=='administrador') {
+			$data['factura'] = $this->Mregistronomina->getFactura($id);
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarFactura' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
+			redirect('Home');
+		}
+	}
+
+	public function editarFacturaMonitor($id){
+		if($this->session->userdata('usuario')['tipo']=='administrador') {
+			$data['factura'] = $this->Mregistronomina->getFacturaMonitor($id);
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarFacturaMonitor' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
+			redirect('Home');
+		}
+	}
+
+	public function editarFacturaSupervisor($id){
+		if($this->session->userdata('usuario')['tipo']=='administrador') {
+			$data['factura'] = $this->Mregistronomina->getFacturaSupervisor($id);
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarFacturaSupervisor' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
+			redirect('Home');
+		}
+	}
+
+	public function editarFacturaGeneral($id){
+		if($this->session->userdata('usuario')['tipo']=='administrador') {
+			$data['factura'] = $this->Mregistronomina->getFacturaGeneral($id);
+
+			$this->load->view('includes_admin/header');
+			$this->load->view('admin/editarFacturaGeneral' , $data);
+			$this->load->view('includes_admin/footer');
+		}else{
+			redirect('Home');
+		}
+	}
+
+	public function editFactura(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+		$data['id_factura'] = $this->input->post('id_factura');
+		$data['descripcion'] = $this->input->post('descripcion');
+		$data['total_a_pagar'] = $this->input->post('total_a_pagar');
+		$data['nuevo_valor'] = $this->input->post('nuevo_valor');
+
+		$respuesta = $this->Mregistronomina->editFactura($data);
+
+		if(!$respuesta) {
+			echo json_encode(['status' => false, 'msg' => 'Algo pasó, Editar']);
+			return;
+		}
+
+		echo json_encode(['status' => true]);	
+	}
+
+	public function editFacturaMonitor(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+		$data['id_factura_supervisor'] = $this->input->post('id_factura_supervisor');
+		$data['descripcion'] = $this->input->post('descripcion');
+		$data['total_paga'] = $this->input->post('total_paga');
+		$data['nuevo_valor'] = $this->input->post('nuevo_valor');
+
+		$respuesta = $this->Mregistronomina->editFacturaMonitor($data);
+
+		if(!$respuesta) {
+			echo json_encode(['status' => false, 'msg' => 'Algo pasó, Editar']);
+			return;
+		}
+
+		echo json_encode(['status' => true]);	
+	}
+
+	public function editFacturaSupervisor(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+		$data['id'] = $this->input->post('id');
+		$data['descripcion'] = $this->input->post('descripcion');
+		$data['total_paga'] = $this->input->post('total_paga');
+		$data['nuevo_valor'] = $this->input->post('nuevo_valor');
+
+		$respuesta = $this->Mregistronomina->editFacturaSupervisor($data);
+
+		if(!$respuesta) {
+			echo json_encode(['status' => false, 'msg' => 'Algo pasó, Editar']);
+			return;
+		}
+
+		echo json_encode(['status' => true]);	
+	}
+
+	public function editFacturaGeneral(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+		$data['id_factura_general'] = $this->input->post('id_factura_general');
+		$data['descripcion'] = $this->input->post('descripcion');
+		$data['total_a_pagar'] = $this->input->post('total_a_pagar');
+		$data['nuevo_valor'] = $this->input->post('nuevo_valor');
+
+		$respuesta = $this->Mregistronomina->editFacturaGeneral($data);
+
+		if(!$respuesta) {
+			echo json_encode(['status' => false, 'msg' => 'Algo pasó, Editar']);
+			return;
+		}
+
+		echo json_encode(['status' => true]);	
 	}
 
 	public function logout() {

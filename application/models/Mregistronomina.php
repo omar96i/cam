@@ -2,6 +2,21 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mregistronomina extends CI_Model {
+
+	public function getFactura($id){
+		return $this->db->select('*')->from('factura')->where('id_factura', $id)->get()->result();
+	}
+	public function getFacturaMonitor($id){
+		return $this->db->select('*')->from('factura_supervisor')->where('id_factura_supervisor', $id)->get()->result();
+	}
+
+	public function getFacturaSupervisor($id){
+		return $this->db->select('*')->from('factura_tecnico')->where('id', $id)->get()->result();
+	}
+
+	public function getFacturaGeneral($id){
+		return $this->db->select('*')->from('factura_general')->where('id_factura_general', $id)->get()->result();
+	}
 	
 	public function registrarNomina($data){
 
@@ -18,44 +33,107 @@ class Mregistronomina extends CI_Model {
 		
 
 		/// CONSULTAMOS PENALIZACIONES ///
-		$consulta_penalizaciones = $this->db->select_sum('puntos')->from('empleado_penalizacion')->where('estado', 'sin registrar')->where('id_empleado', $data['id_persona'])->where('fecha_registrado <=', $data['fecha_final'])->where('fecha_registrado >=', $data['fecha_inicial'])->get()->result();
-		$num_penalizacion = $consulta_penalizaciones[0]->puntos;
-		if (empty($consulta_penalizaciones[0]->puntos)) {
+		$consulta_penalizaciones = $this->db->select_sum('puntos')->from('empleado_penalizacion')
+										->where('estado', 'sin registrar')
+										->where('id_empleado', $data['id_persona'])
+										->where('fecha_registrado <=', $data['fecha_final'])
+										->where('fecha_registrado >=', $data['fecha_inicial'])
+										->get()->result();
+		if($consulta_penalizaciones[0]->puntos == null){
 			$num_penalizacion = 0;
+		}else{
+			$num_penalizacion = $consulta_penalizaciones[0]->puntos;
 		}
+
 		/////////////////////////////////
 
-		/// CONSULTAMOS LAS HORAS DEL EMPLEADO ///
-		$consulta_registro_horas = $this->db->select_sum('cantidad_horas')->from('registro_horas')->where('id_empleado', $data['id_persona'])->where('estado_registro', 'verificado')->where('fecha_registro <=', $data['fecha_final'])->where('fecha_registro >=', $data['fecha_inicial'])->get()->result();
+		/// CONSULTAMOS LOS TOKENS DE LOS EMPLEADOS /////
+		$consulta_bonga = 0;
+		$tokens_general = 0;
+		$tokens_bonga = 0;
+		$response =	$this->db->select('paginas.id_pagina')->from('persona_pagina')
+							->join('paginas', 'persona_pagina.id_pagina = paginas.id_pagina')
+							->where('url_pagina', 'bongacams')
+							->where('id_persona', $data['id_persona'])
+							->get();
+		if($response->num_rows() > 0) {
+			$consulta_bonga = $response->result();
+			$tokens_bonga = $this->db->select_sum('cantidad_horas')
+							->from('registro_horas')
+							->where('id_empleado', $data['id_persona'])
+							->where('estado_registro', 'verificado')
+							->where('fecha_registro <=', $data['fecha_final'])
+							->where('fecha_registro >=', $data['fecha_inicial'])
+							->where('id_pagina', $consulta_bonga[0]->id_pagina)
+							->get()->result();
+			if($tokens_bonga[0]->cantidad_horas == null){
+				$tokens_bonga[0]->cantidad_horas = 0;
+			}
+		}
+			
+	
 
+		$tokens_general = $this->db->select_sum('cantidad_horas')->from('registro_horas')
+									->where('id_empleado', $data['id_persona'])
+									->where('estado_registro', 'verificado')
+									->where('fecha_registro <=', $data['fecha_final'])
+									->where('fecha_registro >=', $data['fecha_inicial'])
+									->where('id_pagina !=', $consulta_bonga[0]->id_pagina)
+									->get()->result();
+		if($tokens_general[0]->cantidad_horas == null){
+			$tokens_general[0]->cantidad_horas = 0;
+		}
 
-		$cantidad_horas = $consulta_registro_horas[0]->cantidad_horas-$num_penalizacion;
+		$cantidad_horas = $tokens_general[0]->cantidad_horas-$num_penalizacion;
+		$total_horas = $tokens_general[0]->cantidad_horas+$tokens_bonga[0]->cantidad_horas;
+		$tokens_subtotal = $cantidad_horas+$tokens_bonga[0]->cantidad_horas;
 		/////////////////////////////////////////
 		/// CONSULTAMOS LA META DEL EMPLEADO Y VERIFICAMOS SI CUMPLIO LA META ///
 		$consulta_meta = $this->db->select('num_horas, id_meta')->from('metas')->where('id_empleado', $data['id_persona'])->where('estado', 'sin registrar')->get()->result();
 		$estado_meta = "incompleta";
-		if ($cantidad_horas>=$consulta_meta[0]->num_horas) {
+		if ($tokens_subtotal>=$consulta_meta[0]->num_horas) {
 			$estado_meta = "completa";
 		}
 		/////////////////////////////////////////////////////////////////////////
 
-		/// CONSULTAMOS EL PORCENTAJE DE LOS DIAS ///
-		$consulta_porcentaje_dias = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta')->from('porcentajes_dias')->where('estado', 'activo')->order_by('cantidad_dias', 'desc')->get()->result();
+		/// CONSULTAMOS EL PORCENTAJE DE LOS DIAS GENERAL///
+		$consulta_porcentaje_dias = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
+											->where('estado', 'activo')
+											->where('tipo', 'general')
+											->order_by('cantidad_dias', 'desc')
+											->get()->result();
+		$consulta_porcentaje_dias_bonga = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
+											->where('estado', 'activo')
+											->where('tipo', 'bongacams')
+											->order_by('cantidad_dias', 'desc')
+											->get()->result();
 		$porcentaje_dias = 0;
+		$porcentaje_dias_bonga = 0;
+		$porcentaje_dias_porcentaje = 0;
 		$id_porcentaje_dias = null;
 		////////////////////////////////////////////
 
-		/// VERIFICAMOS SI CUMPLE CON EL MINIMO DE DIAS ///
+		/// VERIFICAMOS SI CUMPLE CON EL MINIMO DE DIAS GENERAL ///
 		foreach ($consulta_porcentaje_dias as $key => $value) {
 			if ($numero_dias >= $value->cantidad_dias && $value->estado_meta == $estado_meta) {
 				/// ASIGNAMOS EL VALOR DEL % SI CuMPLE CON LOS DIAS Y META ///
-				$porcentaje_dias = $value->valor;
+				$porcentaje_dias_porcentaje = $value->valor;
+				$porcentaje_dias = $value->valor_multiplicar;
 				$id_porcentaje_dias = $consulta_porcentaje_dias[$key]->id_porcentajes_dias;
 				break;
 			}
 		}
 		///////////////////////////////////////////////////
 
+		/// VERIFICAMOS SI CUMPLE CON EL MINIMO DE DIAS BONGACAMS ///
+		foreach ($consulta_porcentaje_dias_bonga as $key => $value) {
+			if ($numero_dias >= $value->cantidad_dias && $value->estado_meta == $estado_meta) {
+				/// ASIGNAMOS EL VALOR DEL % SI CuMPLE CON LOS DIAS Y META ///
+				$porcentaje_dias_bonga = $value->valor_multiplicar;
+				break;
+			}
+		}
+		///////////////////////////////////////////////////
 		/// CONSULTAMOS ADELANTOS ///
 		$consulta_adelantos = $this->db->select_sum('valor')->from('adelanto')->where('id_empleado', $data['id_persona'])->where('estado', 'sin registrar')->get()->result();
 		$adelanto = 0;
@@ -73,17 +151,22 @@ class Mregistronomina extends CI_Model {
 
 		/// CALCULOS EMPLEADOS ///
 
-		$sub_total = $valor_dolar*$cantidad_horas;
+		// CALCULOS PAGINAS GENERALES //
+		$sub_total_generales = ($cantidad_horas*$porcentaje_dias)*$valor_dolar;
+		// CALCULOS PAGINAS BONGACAMS
+		$sub_total_bongacams = ($tokens_bonga[0]->cantidad_horas*$porcentaje_dias_bonga)*$valor_dolar;
 
-		$total = (($sub_total+(($sub_total/100)*$porcentaje_dias))-$adelanto);
+		$sub_total = $sub_total_generales+$sub_total_bongacams;
+
+		$total = $sub_total-$adelanto;
 
 		///////////////
 
 		/// CALCULOS INGRESOS ///
 
-		$porcentaje_ingreso = 100-$porcentaje_dias;
+		// $porcentaje_ingreso = 100-$porcentaje_dias;
 
-		$total_ingreso = ($sub_total/100)*$porcentaje_ingreso;
+		//  $total_ingreso = ($sub_total/100)*$porcentaje_ingreso;
 
 		//////////////////////////
 
@@ -97,28 +180,26 @@ class Mregistronomina extends CI_Model {
 		$datos['id_dolar'] = $consulta_valor_dolar[0]->id_dolar;
 		$datos['id_porcentaje_dias'] = $id_porcentaje_dias;
 		$datos['descuento'] = $adelanto;
-		$datos['total_horas'] = $cantidad_horas;
+		$datos['total_horas'] = $total_horas;
 		$datos['total_a_pagar'] = $total;
 		$datos['estado_factura'] = "sin registrar";
 		$datos['penalizacion_horas'] = $num_penalizacion;
-		$datos['porcentaje_paga'] = $porcentaje_dias;
+		$datos['porcentaje_paga'] = $porcentaje_dias_porcentaje;
 		$datos['cant_dias'] = $numero_dias;
 		$datos['fecha_inicio'] = $data['fecha_inicial'];
 		$datos['fecha_final'] = $data['fecha_final'];
-
 		$this->db->insert('factura', $datos);
-
 		$id = $this->db->insert_id();
 
 		/// DATOS INSERT INGRESOS ///
 
-		$data_ingreso['id_factura'] = $id;
-		$data_ingreso['valor'] = $total_ingreso;
-		$data_ingreso['porcentaje'] = $porcentaje_ingreso;
+		//$data_ingreso['id_factura'] = $id;
+		//$data_ingreso['valor'] = $total_ingreso;
+		//$data_ingreso['porcentaje'] = $porcentaje_ingreso;
 
 		////////////////////////////
 
-		$this->db->insert('ingresos', $data_ingreso);
+		//$this->db->insert('ingresos', $data_ingreso);
 
 		$this->db->set('id_factura', $id)->set('estado', 'registrado')->where('id_empleado', $datos['id_usuario'])->where('estado', 'sin registrar')->update('adelanto');
 
@@ -129,6 +210,25 @@ class Mregistronomina extends CI_Model {
 		return $this->db->set('id_factura', $id)->set('estado_registro', 'registrado')->where('id_empleado', $datos['id_usuario'])->where('fecha_registro >=', $data['fecha_inicial'])->where('fecha_registro <=', $data['fecha_final'])->where('estado_registro', 'verificado')->update('registro_horas');
 	}
 
+	public function editFactura($data){
+		$this->db->where('id_factura', $data['id_factura']);
+		return $this->db->update('factura', $data);
+	}
+
+	public function editFacturaMonitor($data){
+		$this->db->where('id_factura_supervisor', $data['id_factura_supervisor']);
+		return $this->db->update('factura_supervisor', $data);
+	}
+
+	public function editFacturaSupervisor($data){
+		$this->db->where('id', $data['id']);
+		return $this->db->update('factura_tecnico', $data);
+	}
+
+	public function editFacturaGeneral($data){
+		$this->db->where('id_factura_general', $data['id_factura_general']);
+		return $this->db->update('factura_general', $data);
+	}
 
 	public function verRegistrosAdmin(){
 		$this->db->select('*');

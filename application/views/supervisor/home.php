@@ -14,7 +14,7 @@
 					<div class="card-body">
 						<div class="row">
 							<div class="col-sm-12">
-								<p style="font-size: 16px">Este es supervisor de la plataforma.</p>
+								<p style="font-size: 16px">Este es Monitor de la plataforma.</p>
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -24,7 +24,9 @@
                                         <div class="card text-center bg-success">
                                             <div class="card-body">
                                                 <h5 class="card-title">TOKENS FALTANTES PARA COMPLETAR TU META !!</h5>
-                                                <p class="card-text"><?php echo $total; ?></p>
+                                                <p class="card-text"><?php echo ($total > 0)? $total: "Meta completa"; ?></p>
+												<h5 class="card-title">Tokens actuales</h5>
+                                                <p class="card-text"><?php echo ($total > 0)? "" : $num_horas[0]->cantidad_horas; ?></p>
                                             </div>
                                         </div>
                                     </div>

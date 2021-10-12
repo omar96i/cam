@@ -22,17 +22,14 @@
                                     <div class="col-8">
                                         <h2 class="d-inline">Porcentajes Dias</h2>
                                         <a href="<?php echo base_url('admin/Home/addPorcentajesDias') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
-                                    </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($porcentajes)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search porcentajes">
-                                            </div>
-                                        <?php endif; ?>
+										<a href="<?php echo base_url('admin/Home/diasPorcentajes/general') ?>" class="btn <?php echo ($tittle == "General")? "btn-success": "btn-info"; ?> mb-2 ml-1">General</a>
+										<a href="<?php echo base_url('admin/Home/diasPorcentajes/bomgacams') ?>" class="btn <?php echo ($tittle == "Bongacams")? "btn-success": "btn-info"; ?> mb-2 ml-1">Bongacams</a>
                                     </div>
                                 </div>
-
+								<div class="text-center">
+									<h2 class="d-inline"><?php echo $tittle ?></h2>
+								</div>
+								
                                 <?php if(!empty($porcentajes)): ?>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
@@ -41,9 +38,9 @@
                                                     <!--<th>Id Porcentaje</th>-->
                                                     <th>Dias</th>
                                                     <th>%</th>
+                                                    <th>Valor a mulplicar</th>
                                                     <th>Estado Meta</th>
                                                     <th>Fecha de registro</th>
-                                                    <th>estado</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -53,14 +50,11 @@
                                             </tbody>
                                         </table>
 
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
                                     <?php else: ?>
                                         <div class="text-center">
                                             <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay porcentajes</span></p>
+                                            <p><span class="text-muted">No hay registros</span></p>
                                         </div>
                                     <?php endif; ?>
 
@@ -77,9 +71,9 @@
 <script>
     function load_porcentajes(valor , pagina) {
         $.ajax({
-            url      : '<?= base_url('admin/home/verPorcentajeDias') ?>',
+            url      : '<?= ($tittle == "General") ? base_url('admin/home/verPorcentajeDias') : base_url('admin/home/verPorcentajeDiasBomga'); ?>',
+
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina},
             success  : function(r){
                 if(r.status){
                     var tbody = '';
@@ -89,10 +83,10 @@
                             <!--<td class="align-middle text-capitalize">${r.data[k]['id_porcentajes_dias']}</td>-->
                             <td class="align-middle text-capitalize">${r.data[k]['cantidad_dias']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['valor']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['valor_multiplicar']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado_meta']}</td>
 
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
                             <td class="align-middle">
                                 <a href="<?php echo site_url('admin/Home/editarPorcentajesDias/') ?>${r.data[k]['id_porcentajes_dias']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                             </td>
@@ -101,26 +95,7 @@
                     $('#tbodyporcentajes').html(tbody);
 
 
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+					$('#empty').DataTable();
                 }
             },
             dataType : 'json'

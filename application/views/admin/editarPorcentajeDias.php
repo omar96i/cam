@@ -41,8 +41,13 @@
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="valor" class="col-form-label">Valor % :</label>
+                                                <label for="valor" class="col-form-label">% :</label>
                                                 <input type="number" id="valor" value="<?php echo $porcentaje[0]->valor ?>" class="form-control" name="valor">
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
+											<div class="form-group">
+                                                <label for="valor_multiplicar" class="col-form-label">Valor a multiplicar :</label>
+                                                <input type="number" id="valor_multiplicar" value="<?php echo $porcentaje[0]->valor_multiplicar ?>" class="form-control" name="valor_multiplicar">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
                                             <div class="form-group">
@@ -50,6 +55,14 @@
                                                 <select name="estado_meta" id="estado_meta" class="form-control">
                                                     <option value="completa" <?php echo ($porcentaje[0]->estado_meta=='completa')?'selected':''; ?>>completa</option>
                                                     <option value="incompleta" <?php echo ($porcentaje[0]->estado_meta=='incompleta')?'selected':''; ?>>incompleta</option>
+                                                </select>
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
+											<div class="form-group">
+                                                <label for="tipo" class="col-form-label">Tipo</label>
+                                                <select name="tipo" id="tipo" class="form-control">
+                                                    <option value="general" <?php echo ($porcentaje[0]->tipo=='general')?'selected':''; ?>>General</option>
+                                                    <option value="bomgacams" <?php echo ($porcentaje[0]->tipo=='bomgacams')?'selected':''; ?>>Bomgacams</option>
                                                 </select>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
@@ -90,6 +103,9 @@
     	valor = $("#valor").val();
     	estado = $("#estado").val();
         estado_meta = $("#estado_meta").val();
+        valor_multiplicar = $("#valor_multiplicar").val();
+        tipo = $("#tipo").val();
+
 
     	id_porcentajes = <?php echo $porcentaje[0]->id_porcentajes_dias; ?>;
 
@@ -119,19 +135,32 @@
         }else{
             $("#estado_meta").removeClass('is-invalid');
         }
+		if ($("#valor_multiplicar").val() == '') {
+			$("#valor_multiplicar").addClass('is-invalid');
+		}else{
+			$("#valor_multiplicar").removeClass('is-invalid');
+		}
+		if ($("#tipo").val() == '') {
+			$("#tipo").addClass('is-invalid');
+		}else{
+			$("#tipo").removeClass('is-invalid');
+		}
+
 
                    
         if( $("#dias").val() != '' &&
 			$("#valor").val() != '' &&
 			$("#estado").val() != '' &&
-            $("#estado_meta").val() != ''
+            $("#estado_meta").val() != '' && 
+			$("#valor_multiplicar").val() != '' &&
+			$("#tipo").val() != ''
         ){
             
             $.ajax({
                 url: ruta,
                 type: 'POST',
                 dataType: 'json',
-                data: {dias : dias , valor : valor, estado : estado, id_porcentajes: id_porcentajes, estado_meta:estado_meta},
+                data: {dias : dias , valor : valor, estado : estado, id_porcentajes: id_porcentajes, estado_meta:estado_meta, valor_multiplicar: valor_multiplicar, tipo: tipo},
             })
             .done(function(r) {
                 if(r.status){

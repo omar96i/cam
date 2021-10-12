@@ -42,11 +42,6 @@
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="descripcion" class="col-form-label">Descripcion: </label>
-                                                <input type="text" id="descripcion" class="form-control" name="descripcion" value="<?php echo $registro_horas[0]->descripcion ?>">
-                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                                            </div>
-                                            <div class="form-group">
                                                 <label for="fecha_registro" class="col-form-label">Fecha Registro: </label>
                                                 <input type="date" id="fecha_registro" class="form-control" name="fecha_registro" value="<?php echo $registro_horas[0]->fecha_registro ?>">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
@@ -77,7 +72,6 @@
         e.preventDefault();
         var cantidad_horas = $("#cantidad_horas").val()
         var fecha_registro = $("#fecha_registro").val()
-        var descripcion = $("#descripcion").val(),
 
             ruta         = "<?php echo base_url('supervisor/home/editRegistroHoras') ?>",
             id_registro_horas = $(this).data('id_usuario');

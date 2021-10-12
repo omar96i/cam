@@ -21,7 +21,7 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <h2 class="d-inline">Nomina</h2>
-                                        <a href="#" class="btn btn-info mb-2 ml-1 btn_registrar_nomina_supervisor">Generar Nomina Supervisor</a>
+                                        <a href="#" class="btn btn-info mb-2 ml-1 btn_registrar_nomina_supervisor">Generar Nomina Monitor</a>
                                     </div>
 
                                     <div class="col-6">
@@ -52,6 +52,8 @@
                                                     <th>Fecha de registro</th>
                                                     <th>Fecha inicio</th>
                                                     <th>Fecha final</th>
+													<th>Descripcion</th>
+													<th></th>
                                                 </tr>
                                             </thead>
 
@@ -145,11 +147,20 @@
                             <td class="align-middle text-capitalize">${r.data[k]['estado_meta']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['num_horas']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['cant_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['total_comision']}</td>
-                            <td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['total_paga'])}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['total_comision']}</td>`
+							if(r.data[k]['nuevo_valor'] != null){
+								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['nuevo_valor'])}</td>`
+							}else{
+								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['total_paga'])}</td>`
+							}
+						tbody+=	`
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_inicial']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_final']}</td>
+							<td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
+							<td class="align-middle">
+								<a href="<?php echo site_url('admin/Home/editarFacturaMonitor/') ?>${r.data[k]['id_factura_supervisor']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; "> </a>
+                            </td>
                             </tr>`;
                     }
                     $('#tbodyfactura').html(tbody);

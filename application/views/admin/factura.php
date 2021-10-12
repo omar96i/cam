@@ -50,10 +50,10 @@
                                                     <th>Descuento</th>
                                                     <th>Penalizaciones Tokens</th>
                                                     <th>Total Tokens</th>
+													<th>Descripcion</th>
                                                     <th>Total Pago</th>
                                                     <th>Fecha de registro</th>
                                                     <th>imprimir</th>
-
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -119,7 +119,14 @@
                             <td class="align-middle text-capitalize">${r.data[k]['descuento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['penalizacion_horas']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['total_horas']}</td>
-                            <td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['total_a_pagar'])}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>`
+
+							if(r.data[k]['nuevo_valor'] != null){
+								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['nuevo_valor'])}</td>`
+							}else{
+								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['total_a_pagar'])}</td>`
+							}
+						tbody += `
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registrado']}</td>
                             <td class="align-middle text-capitalize">
                                 <a href="<?php echo base_url('Imprimir_factura/getFacturaInf/') ?>${r.data[k]['id_factura']}" target="_blank"><img src="<?php echo base_url('assets/iconos_menu/impresora.png') ?>" alt="" style="width: 20px; height: 20px;"> </a>
@@ -127,6 +134,7 @@
 
                             <td class="align-middle">
                                 <a href="<?php echo site_url('admin/Home/verRegistrosFactura/') ?>${r.data[k]['id_factura']}" class="text-dark"><img src="<?php echo base_url('assets/iconos_menu/verificar.png') ?>" alt="" style="width: 20px; height: 20px;"> </a>
+								<a href="<?php echo site_url('admin/Home/editarFactura/') ?>${r.data[k]['id_factura']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; "> </a>
                             </td>
                             </tr>`;
                     }

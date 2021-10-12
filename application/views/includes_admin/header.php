@@ -224,7 +224,13 @@
 													<a href="<?php echo base_url('admin/Home/metas') ?>" class="nav-link">Modelos</a>
 												</li>
 												<li class="nav-item">
-													<a href="<?php echo base_url('admin/Home/metasSupervisor') ?>" class="nav-link">Supervisor</a>
+													<a href="<?php echo base_url('admin/Home/metasSupervisor') ?>" class="nav-link">Monitor</a>
+												</li>
+												<li class="nav-item">
+													<a href="<?php echo base_url('admin/MetasSupervisor') ?>" class="nav-link">Supervisor</a>
+												</li>
+												<li class="nav-item">
+													<a href="<?php echo base_url('admin/DefaultMetas') ?>" class="nav-link">Metas por defecto</a>
 												</li>
 											</ul>
 										</li>
@@ -237,7 +243,10 @@
 													<a href="<?php echo base_url('admin/Home/nomina') ?>" class="nav-link">Modelos</a>
 												</li>
 												<li class="nav-item">
-													<a href="<?php echo base_url('admin/Home/factura_supervisor') ?>" class="nav-link">Supervisor</a>
+													<a href="<?php echo base_url('admin/Home/factura_supervisor') ?>" class="nav-link">Monitor</a>
+												</li>
+												<li class="nav-item">
+													<a href="<?php echo base_url('admin/FacturaMonitor') ?>" class="nav-link">Supervisor</a>
 												</li>
 												<li class="nav-item">
 													<a href="<?php echo base_url('admin/Home/factura_general') ?>" class="nav-link">General</a>
@@ -277,6 +286,9 @@
 									</li>
 									<li class="nav-item">
 										<a href="<?php echo base_url('admin/Citas') ?>" class="nav-link">Citas</a>
+									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('admin/DescuentosDias') ?>" class="nav-link">Descuentos de dias</a>
 									</li>
 								</ul>
 							</li>
@@ -388,7 +400,10 @@
 													<a href="<?php echo base_url('admin/Home/metas') ?>" class="nav-link">Modelos</a>
 												</li>
 												<li class="nav-item">
-													<a href="<?php echo base_url('admin/Home/metasSupervisor') ?>" class="nav-link">Supervisor</a>
+													<a href="<?php echo base_url('admin/Home/metasSupervisor') ?>" class="nav-link">Monitor</a>
+												</li>
+												<li class="nav-item">
+													<a href="<?php echo base_url('admin/MetasSupervisor') ?>" class="nav-link">Supervisor</a>
 												</li>
 												
 											</ul>

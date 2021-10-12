@@ -76,7 +76,7 @@
                                                 <td><?php echo $consulta1[0]->cant_dias; ?></td>
                                                 <td><?php echo $consulta1[0]->descuento; ?></td>
                                                 <td><?php echo $consulta1[0]->penalizacion_horas; ?></td>
-                                                <td><?php echo "$ ".number_format($consulta1[0]->total_a_pagar); ?></td>
+                                                <td><?php echo "$ ".number_format(($consulta1[0]->nuevo_valor == null)?$consulta1[0]->total_a_pagar : $consulta1[0]->nuevo_valor); ?></td>
                                             </tr>
 							            </tbody>
 							        </table>

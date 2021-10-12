@@ -16,16 +16,11 @@ class Mpaginas extends CI_Model {
 		return false;
 	}
 	
-	public function getpages($valor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function getpages() {
 		$this->db->select('*');
 		$this->db->from('paginas');
-		$this->db->like('url_pagina' , $valor);
 		$this->db->where('estado', 'activo');
 		$this->db->order_by('url_pagina' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$paginas = $this->db->get();
 
 		if($paginas->num_rows() > 0) {
@@ -163,22 +158,14 @@ class Mpaginas extends CI_Model {
 		return false;
 	}
 
-	public function getPagesUsuarios($valor , $id_persona, $inicio = FALSE , $registros_pagina = FALSE) {
-		$this->db->select("paginas.*, persona_pagina.*, SUM(registro_horas.cantidad_horas) AS tokens", false);
+	public function getPagesUsuarios($id_persona) {
+		$this->db->select("paginas.*, persona_pagina.*");
 		$this->db->from('persona_pagina');
 		$this->db->join('paginas', 'paginas.id_pagina = persona_pagina.id_pagina');
-		$this->db->join('registro_horas', 'registro_horas.id_pagina = paginas.id_pagina', 'left');
 		$this->db->where('persona_pagina.id_persona', $id_persona);
 		$this->db->where('persona_pagina.estado', 'activo');
-		$this->db->where('registro_horas.estado_registro', 'verificado');
-		$this->db->where('registro_horas.id_factura', null);
-		$this->db->like('paginas.url_pagina' , $valor);
 		$this->db->group_by('paginas.id_pagina');
 		$this->db->order_by('paginas.url_pagina' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 
 		$paginas = $this->db->get();
 

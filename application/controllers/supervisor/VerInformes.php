@@ -38,14 +38,8 @@ class VerInformes extends CI_Controller {
 			return; 
 		}
 
-		$fecha_inicial    = $this->input->post('fecha_inicio');    
-		$fecha_final 	  = $this->input->post('fecha_final');
 		$id_usuario 	  = $this->input->post('id_usuario');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$informes       = $this->MinformeEmpleados->getDataInformes($id_usuario, $fecha_inicial, $fecha_final, $inicio, $cantidad);
-		$total_registros  = count($this->MinformeEmpleados->getDataInformes($id_usuario, $fecha_inicial, $fecha_final)); 
+		$informes       = $this->MinformeEmpleados->getDataInformes($id_usuario);
 
 		if(!$informes) {
 			echo json_encode(['status' => false]);
@@ -55,9 +49,7 @@ class VerInformes extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $informes,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $informes
 			]);
 	}
 

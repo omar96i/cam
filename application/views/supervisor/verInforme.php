@@ -30,15 +30,6 @@
                                     <div class="col-4">
                                         <h2 class="d-inline">Informes</h2>
                                     </div>
-
-                                    <div class="col-8">
-                                        <?php if(!empty($lista_informes)): ?>
-                                            <div class="input-group">
-                                                <input type="date" id="fecha_inicial" class="form-control">
-                                                <input type="date" id="fecha_final" class="form-control">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($lista_informes)): ?>
@@ -57,10 +48,6 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_informes mt-2">
-
-                                        </div>
                                     </div>
                                     <?php else: ?>
                                         <div class="text-center">
@@ -83,14 +70,12 @@
 
 <script>
     function load_informes(pagina) {
-        fecha_inicial = $("#fecha_inicial").val();
-        fecha_final = $("#fecha_final").val();
         
         id_usuario = <?php echo $id_empleado; ?>;
         $.ajax({
             url      : '<?= base_url('supervisor/VerInformes/getInformes') ?>',
             method   : 'POST',
-            data     : {pagina : pagina, id_usuario: id_usuario, fecha_inicio:fecha_inicial, fecha_final: fecha_final},
+            data     : {id_usuario: id_usuario},
             success  : function(r){
                 if(r.status){
                     var tbody = '';
@@ -111,26 +96,9 @@
                     }
                     $('#tbodyinformes').html(tbody);
 
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
+					$('#empty').DataTable();
 
-                        pagination = '<nav aria-label="Paginador informes"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_informes').html(pagination);
-                    false;
+                   
                 }
             },
             dataType : 'json'

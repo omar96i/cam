@@ -6,10 +6,46 @@ class Mmetas extends CI_Model {
 	public function getMetas() {
 		$this->db->select('*');
 		$this->db->from('metas');
-		$paginas = $this->db->get();
+		$metas = $this->db->get();
 
-		if($paginas->num_rows() > 0) {
-			return $paginas->result();
+		if($metas->num_rows() > 0) {
+			return $metas->result();
+		}
+
+		return false;
+	}
+
+	public function getMetasMonitor(){
+		$this->db->select('persona.*, metas.*, usuarios.tipo_cuenta');
+		$this->db->from('metas');
+		$this->db->join('persona', 'persona.id_persona = metas.id_empleado');
+		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
+		$this->db->where('usuarios.tipo_cuenta', 'tecnico sistemas');
+		$this->db->where('metas.estado !=', 'eliminado');
+		$this->db->order_by('metas.estado' , 'DESC');
+		$response =  $this->db->get();
+
+		if($response->num_rows() > 0) {
+			return $response->result();
+		}
+
+		return false;
+	}
+
+	public function verMetasMonitor(){
+		$this->db->select('persona.*, metas.*, usuarios.tipo_cuenta');
+		$this->db->from('metas');
+		$this->db->join('persona', 'persona.id_persona = metas.id_empleado');
+		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
+		$this->db->where('usuarios.tipo_cuenta', 'tecnico sistemas');
+
+		$this->db->where('metas.estado !=', 'eliminado');
+		$this->db->order_by('metas.estado' , 'DESC');
+
+		$metas = $this->db->get();
+
+		if($metas->num_rows() > 0) {
+			return $metas->result();
 		}
 
 		return false;
@@ -49,20 +85,15 @@ class Mmetas extends CI_Model {
 		return $usuarios->row();
 	}
 
-	public function verMetas($valor , $inicio = FALSE , $registros_pagina = FALSE){
+	public function verMetas(){
 		$this->db->select('persona.*, metas.*, usuarios.tipo_cuenta');
 		$this->db->from('metas');
 		$this->db->join('persona', 'persona.id_persona = metas.id_empleado');
 		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
-		$this->db->like('documento' , $valor);
 		$this->db->where('usuarios.tipo_cuenta', 'empleado');
 
 		$this->db->where('metas.estado !=', 'eliminado');
 		$this->db->order_by('metas.estado' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$paginas = $this->db->get();
 
 		if($paginas->num_rows() > 0) {
@@ -71,19 +102,14 @@ class Mmetas extends CI_Model {
 
 		return false;
 	}
-	public function verMetasSupervisor($valor , $inicio = FALSE , $registros_pagina = FALSE){
+	public function verMetasSupervisor(){
 		$this->db->select('persona.*, metas.*, usuarios.tipo_cuenta');
 		$this->db->from('metas');
 		$this->db->join('persona', 'persona.id_persona = metas.id_empleado');
 		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
-		$this->db->like('documento' , $valor);
 		$this->db->where('usuarios.tipo_cuenta', 'supervisor');
 		$this->db->where('metas.estado !=', 'eliminado');
 		$this->db->order_by('metas.estado' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$paginas = $this->db->get();
 
 		if($paginas->num_rows() > 0) {

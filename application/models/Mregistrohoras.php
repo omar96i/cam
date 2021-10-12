@@ -73,28 +73,16 @@ class Mregistrohoras extends CI_Model {
 		return false;
 	}
 
-	public function getHorasUsuario($valor, $id_usuario, $fecha_inicial, $fecha_final, $inicio = FALSE, $registros_pagina = FALSE) {
+	public function getHorasUsuario($id_usuario) {
 		$this->db->select('paginas.url_pagina, registro_horas.*, persona_pagina.*');
 		$this->db->from('registro_horas');
 		$this->db->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina');
-		$this->db->join('persona_pagina', 'persona_pagina.id_pagina = paginas.id_pagina');		
-		$this->db->like('paginas.url_pagina' , $valor);
+		$this->db->join('persona_pagina', 'persona_pagina.id_pagina = paginas.id_pagina');
 		$this->db->where('persona_pagina.estado', 'activo');
 		$this->db->where('persona_pagina.id_persona', $id_usuario);
 		$this->db->where('registro_horas.id_empleado', $id_usuario);
-		if ($fecha_inicial != null) {
-			$this->db->where('registro_horas.fecha_registro >=', $fecha_inicial);
-		}
-		if ($fecha_final != null) {
-			$this->db->where('registro_horas.fecha_registro <=', $fecha_final);
-		}
 		
 		$this->db->order_by('estado_registro' , 'DESC');
-
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {

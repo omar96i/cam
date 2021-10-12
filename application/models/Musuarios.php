@@ -78,19 +78,14 @@ class Musuarios extends CI_Model {
 		return false;
 	}
 
-	public function get_empleados($valor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function get_empleados() {
 		$this->db->select('persona.*, correo, tipo_cuenta');
 		$this->db->from('persona');
 		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
-		$this->db->like('nombres' , $valor);
-
 		$this->db->where('usuarios.estado', 'activo');
 		$this->db->where('tipo_cuenta', 'empleado');
 		$this->db->order_by('documento' , 'DESC');
 
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {
@@ -196,18 +191,13 @@ class Musuarios extends CI_Model {
 		return false;
 	}
 
-	public function t_h_ver_empleados($valor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function t_h_ver_empleados() {
 		$this->db->select('persona.*');
 		$this->db->from('usuarios');
 		$this->db->join('persona', 'persona.id_persona = usuarios.id_persona');
 		$this->db->where('usuarios.tipo_cuenta', 'empleado');
 		$this->db->where('usuarios.estado', 'activo');
-		$this->db->like('nombres' , $valor);
 		$this->db->order_by('id_persona' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {
@@ -239,6 +229,15 @@ class Musuarios extends CI_Model {
 		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
 		$this->db->where('persona.id_persona', $id_usuario);
 		$datos=$this->db->get();
+		return $datos->result();
+	}
+
+	public function getDatosDescuentos(){
+		$datos = $this->db->select('persona.*')->from('usuarios')
+							->join('persona', 'persona.id_persona = usuarios.id_persona')
+							->where('tipo_cuenta !=', 'empleado')
+							->where('estado', 'activo')
+							->get();
 		return $datos->result();
 	}
 }

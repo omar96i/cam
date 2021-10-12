@@ -25,13 +25,6 @@
                                         <a href="<?php echo base_url('admin/Home/addMetas') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                     </div>
 									<?php }?>
-                                    <div class="col-4">
-                                        <?php if(!empty($metas)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search metas">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($metas)): ?>
@@ -100,11 +93,10 @@
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>
                             <td class="align-middle">`
-							<?php if($tipo_cuenta != "tecnico sistemas"){ ?>
-								if (r.data[k]['estado'] == "sin registrar") {
-									tbody += `<a href="<?php echo site_url('admin/Home/editarmetas/') ?>${r.data[k]['id_meta']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
-								}
-							<?php }?>
+							
+							if (r.data[k]['estado'] == "sin registrar") {
+								tbody += `<a href="<?php echo site_url('admin/Home/editarmetas/') ?>${r.data[k]['id_meta']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
+							}
                             
                         tbody += `</td>
                         </tr>`;
@@ -112,27 +104,7 @@
                     }
                     $('#tbodymetas').html(tbody);
 
-
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+					$("#empty").DataTable();
                 }
             },
             dataType : 'json'
@@ -153,36 +125,4 @@
         var link = $(this).attr('href');
             load_metas('' , link);
     });
-
-    // $('body').on('click' , '.btn_deletepersonal' , function(e){
-    //     e.preventDefault();
-
-    //     var id_meta     = $(this).data('id_meta'),
-    //         ruta        = "<?php echo base_url('admin/home/deteleMeta') ?>";
-
-    //         alertify.confirm("Nomina" , "¿Está seguro que quiere eliminar el registro?",
-    //         function(){
-    //             $.ajax({
-    //                 url      : ruta,
-    //                 method   : 'POST',
-    //                 data     : {id_meta : id_meta},
-    //                 success  : function(r){
-    //                     if(r.status){
-    //                         alertify.success('Registro eliminado');
-    //                         alertify.confirm().close();
-    //                         load_metas('', 1);
-    //                         return;
-    //                     }
-
-    //                     alertify.alert(r.msg);
-    //                 },
-    //                 dataType : 'json'
-    //             });
-
-    //             return false;
-    //         },
-    //         function(){
-    //             alertify.confirm().close();
-    //         }); 
-    // });
 </script>
