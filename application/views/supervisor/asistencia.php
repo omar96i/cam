@@ -189,6 +189,7 @@
     $("#btn_abrir_asistencia").on('click', function(e) {
         e.preventDefault();
 		fecha_asistencia = $("#fecha_asistencia").val()
+		
         alertify.confirm("Nomina" , "¿Abrir nueva asistencia?",
         function(){
 			if(fecha_asistencia == ""){

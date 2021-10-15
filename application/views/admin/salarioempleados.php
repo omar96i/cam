@@ -130,6 +130,12 @@
                 if(r.status){
                     var tbody = '';
                     for(var k=0; k<r.data.length; k++) {
+						if(r.data[k]['tipo_usuario'] == "supervisor"){
+							r.data[k]['tipo_usuario'] = "monitor"
+						}else if(r.data[k]['tipo_usuario'] == "tecnico sistemas"){
+							r.data[k]['tipo_usuario'] = "supervisor"
+
+						}
                         tbody += `<tr>
                             <td class="align-middle text-capitalize">${r.data[k]['tipo_usuario']}</td>
                             <td class="align-middle text-capitalize">${"$ "+new Intl.NumberFormat().format(r.data[k]['sueldo'])}</td>

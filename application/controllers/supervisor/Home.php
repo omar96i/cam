@@ -289,7 +289,7 @@ class Home extends CI_Controller {
 		$fecha = $this->input->post('fecha_asistencia');
 		$bandera = $this->Masistencia->verificarAsistenciaFecha($fecha, $id_supervisor);
 		if (!$bandera) {
-			$respuesta = $this->Masistencia->insertAsistencia($id_supervisor, $tipo_usuario);
+			$respuesta = $this->Masistencia->insertAsistencia($id_supervisor, $tipo_usuario, $fecha);
 			if ($respuesta) {
 				echo json_encode(['status' => true]);
 			}else{

@@ -149,6 +149,11 @@
                     console.log(r);
                     var tbody = '';
                     for(var k=0; k<r.data.length; k++) {
+						if(r.data[k]['tipo_cuenta'] == "tecnico sistemas"){
+							r.data[k]['tipo_cuenta'] = "supervisor"
+						}else if(r.data[k]['tipo_cuenta'] == "supervisor"){
+							r.data[k]['tipo_cuenta'] = "monitor"
+						}
                         tbody += `<tr>
                             <td class="align-middle text-capitalize">${r.data[k]['id_persona']}</td>
                             <td class="align-middle text-capitalize"><img style="width: 50px; height: 50px; border-radius: 50%;" src="<?php echo base_url('assets/images/imagenes_usuario/'); ?>${r.data[k]['foto']}"></td>

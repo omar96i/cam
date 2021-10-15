@@ -121,7 +121,7 @@ class Masistencia extends CI_Model {
 		}
 	}
 
-	public function insertAsistencia($id_supervisor, $tipo_usuario){
+	public function insertAsistencia($id_supervisor, $tipo_usuario, $fecha){
 		if($tipo_usuario == "tecnico sistemas"){
 			$this->db->select('id_usuario');
 			$this->db->from('usuarios');
@@ -138,6 +138,7 @@ class Masistencia extends CI_Model {
 
 		if($consulta_items_empleados->num_rows() > 0) {
 			$datos_consulta_items_empleados = $consulta_items_empleados->result();	
+			$data['fecha'] = $fecha;
 			$data['id_supervisor'] = $id_supervisor;
 			$data['estado'] = "activo";
 			$this->db->insert('asistencia', $data);

@@ -85,6 +85,7 @@
                     var tbody = '';
                     
                     for(var k=0; k<r.data.length; k++) {
+						r.data[k]['tipo_cuenta'] = "monitor"
                         tbody += `<tr>
                             <td class="align-middle text-capitalize">${r.data[k]['id_persona']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>

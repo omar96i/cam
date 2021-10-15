@@ -99,6 +99,8 @@ class MporcentajeDias extends CI_Model {
 		$this->db->from('porcentajes_dias');
 		$this->db->where('cantidad_dias', $data['cantidad_dias']);
 		$this->db->where('estado_meta', $data['estado_meta']);
+		$this->db->where('tipo', $data['tipo']);
+		
 		$this->db->where('id_porcentajes_dias !=', $data['id_porcentajes_dias']);
 		$this->db->where('estado', 'activo');
 		$porcentajes = $this->db->get();

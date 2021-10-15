@@ -130,7 +130,7 @@ class MsalarioEmpleados extends CI_Model {
 				// SI CUMPLE LA META SE LE DA COMISION
 				if ($datos_insert['estado_meta'] == "completada") {
 					$valor_dolar = $this->db->select('valor_dolar')->where('estado', 'activo')->from('dolar')->get()->result();
-					$datos_insert['total_comision'] = ((($aux_horas_total*0.6)*1.5)*0.03)*$valor_dolar[0]->valor_dolar;
+					$datos_insert['total_comision'] = ((($aux_horas_total*1.5)/100)*0.03)*$valor_dolar[0]->valor_dolar;
 				}else{
 					$datos_insert['total_comision'] = 0;
 				}
