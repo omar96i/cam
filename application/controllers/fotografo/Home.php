@@ -17,11 +17,12 @@ class Home extends CI_Controller {
 		}
 		
 		$fecha = date("Y-m-d");
+		$data['user'] = $this->Musuarios->getUser($this->session->userdata('usuario')['id_usuario']);
 
         $this->Mcitas->actualizarCita($fecha);
         
         $this->load->view('includes_admin/header');
-		$this->load->view('fotografo/home');
+		$this->load->view('fotografo/home', $data);
 		$this->load->view('includes_admin/footer');
 	}
 

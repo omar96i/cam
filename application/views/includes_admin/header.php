@@ -54,7 +54,7 @@
 	<div class="navbar navbar-expand-md navbar-dark">
 		<div class="navbar-brand">
 			 <a href="<?php echo base_url() ?>" class="d-inline-block">
-				<img src="<?php echo base_url('assets/images/logo.jpg') ?>" alt="logotipo">
+				<img src="<?php echo base_url('assets/images/logo.jpg') ?>" style="width: 40px; height: 35px;" alt="logotipo">
 			</a>
 		</div>
 
@@ -162,22 +162,22 @@
 				<div class="sidebar-user">
 					<div class="card-body">
 						<div class="media">
-							<div class="mr-3">
+							<div class="mr-3 mt-2">
 								<a href="<?= $this->session->userdata('usuario')['tipo']=='administrador'?base_url():'#' ?>">
 									<?php if ($this->session->userdata('usuario')["tipo"]=='empleado'): ?>
 										<img id="imagen_perfil" src="<?php echo base_url('assets/images/imagenes_empleado/').$_SESSION['usuario']['foto']; ?>" width="38" height="38" class="rounded-circle" alt="">
 									<?php endif ?>
 									<?php if ($this->session->userdata('usuario')["tipo"]!='empleado'): ?>
-									<!--	<img src="<?php echo base_url('assets/images/imagenes_usuario/').$_SESSION['usuario']['foto']; ?>" width="38" height="38" class="rounded-circle" alt="">-->
+										<img src="<?php echo base_url('assets/images/imagenes_usuario/').$_SESSION['usuario']['foto']; ?>" width="38" height="38" class="rounded-circle" alt="">
 									<?php endif ?>
 									
 								</a>
 							</div>
 
-							<div class="media-body mt-2">
+							<div class="media-body">
 							<img >
 								<div class="media-title font-weight-semibold">
-									<?= $this->session->userdata('usuario')['tipo']=='administrador'?'Admin | Nomina':'Nomina' ?>
+									<?= $this->session->userdata('usuario')['tipo']=='administrador' ? 'Admin | Gz Studios': 'Gz Studios' ?>
 								</div>
 							</div>
 						</div>

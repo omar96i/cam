@@ -14,7 +14,7 @@
 							<div class="card-body">
 								<div class="row">
 									<div class="col-sm-12">
-										<p style="font-size: 16px">Este es el administrador de la plataforma. Desde este apartado usted podrá visualizar un resumen de su negocio actual.</p>
+										<p style="font-size: 16px"><?php echo $user[0]->nombres." ".$user[0]->apellidos." Administrador de la plataforma" ?>. Desde este apartado usted podrá visualizar un resumen de su negocio actual.</p>
 									</div>
 									<div id="colores">
 									  
@@ -46,6 +46,7 @@
 										                <th>TOTAL NOMINA</th>
 										                <th>RANGO DE FECHA INICIO</th>
 										                <th>RANGO DE FECHA FINAL</th>
+					
 										            </tr>
 										        </thead>
 

@@ -31,6 +31,8 @@ class Home extends CI_Controller {
 			}
 			$data['total'] = $data['meta']->num_horas-$data['num_horas'][0]->cantidad_horas;
 		}
+
+		$data['user'] = $this->Musuarios->getUser($this->session->userdata('usuario')['id_usuario']);
 		
 		$this->load->view('includes_admin/header');
 		$this->load->view('supervisor/home', $data);

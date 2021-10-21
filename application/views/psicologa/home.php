@@ -14,7 +14,7 @@
 					<div class="card-body">
 						<div class="row">
 							<div class="col-sm-12">
-								<p style="font-size: 16px">Psicologa de la plataforma</p>
+								<p style="font-size: 16px"><p style="font-size: 16px"><?php echo $user[0]->nombres." ".$user[0]->apellidos." Psicologa de la plataforma" ?></p></p>
 							</div>
 						</div>
 					</div>

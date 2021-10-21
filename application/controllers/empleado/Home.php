@@ -33,6 +33,7 @@ class Home extends CI_Controller {
         $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
         $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
 		$data['estado'] = true;
+		$datos['user'] = $this->Musuarios->getUser($this->session->userdata('usuario')['id_usuario']);
 
 		if (!$data['supervisor']) {
 			$data['supervisor'] = 0;
@@ -55,7 +56,7 @@ class Home extends CI_Controller {
         }
 
 		$this->load->view('includes_admin/header', $data);
-		$this->load->view('empleado/home');
+		$this->load->view('empleado/home', $datos);
 		$this->load->view('includes_admin/footer');
 	}
 

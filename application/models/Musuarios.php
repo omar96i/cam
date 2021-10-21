@@ -15,6 +15,9 @@ class Musuarios extends CI_Model {
 
 		return false;
 	}
+	public function getUser($id){
+		return $this->db->select('persona.*')->from('persona')->where('id_persona', $id)->get()->result();
+	}
 
 	public function getUsuariosAdelantos(){
 		$this->db->select('persona.*, usuarios.*');
