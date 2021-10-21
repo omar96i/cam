@@ -154,7 +154,12 @@ class Home extends CI_Controller {
 			return;
 		}
 
-		echo json_encode(['status' => true]);
+		if($this->ActualizarMetas()){
+			echo json_encode(['status' => true]);
+			return;
+		}
+
+		echo json_encode(['status' => false, 'msg' => 'No se pudo Actualizar metas']);
 		
 	}
 
@@ -203,7 +208,13 @@ class Home extends CI_Controller {
 			return;
 		}
 
-		echo json_encode(['status' => true]);
+		
+		if($this->ActualizarMetas()){
+			echo json_encode(['status' => true]);
+			return;
+		}
+		echo json_encode(['status' => false, 'msg' => 'No se pudo actualizar las metas']);
+		
 	}
 
 	/// ASIGNACIONES SUPERVISOR FIN ///
@@ -1710,6 +1721,20 @@ class Home extends CI_Controller {
 
 		echo json_encode($bandera);
 
+	}
+
+	public function ActualizarMetas(){
+		$respuesta = $this->Mmetas->actualizarMetasGeneral($this->session->userdata('usuario')['id_usuario']);
+		if($respuesta){
+			$respuesta = $this->Mmetas->actualizarMetaTecnicoSistemas($this->session->userdata('usuario')['id_usuario']);
+			if($respuesta){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
 	}
 
 	public function agregarMetas(){

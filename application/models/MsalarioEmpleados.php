@@ -105,17 +105,43 @@ class MsalarioEmpleados extends CI_Model {
 				}
 				
 				$aux_horas_total = 0;
+				$aux_horas_bonga = 0;
+				$aux_horas_general = 0;
 				// CONSULTAMOS LAS HORAS DE LAS MODELOS
 				$modelos = $this->db->select('id_empleado')->from('empleado_supervisor')->where('id_supervisor', $valor_s->id_persona)->where('estado', 'activo')->get();
 				if($modelos->num_rows() > 0){
 					foreach ($modelos->result() as $key => $modelo) {
-						$nomina_modelo = $this->db->select('total_horas')->from('factura')->where('id_usuario', $modelo->id_empleado)->where('fecha_inicio >=', $data['fecha_inicial'])->where('fecha_inicio <=', $data['fecha_final'])->where('id_factura_supervisor', null)->get();
-						if($nomina_modelo->num_rows()>0){
-							$nomina_modelo = $nomina_modelo->result();
-							$aux_horas_total = $aux_horas_total+$nomina_modelo[0]->total_horas;
+						$nomina_modelo_bonga = $this->db->select_sum('cantidad_horas')->from('factura')
+													->join('registro_horas', 'registro_horas.id_factura = factura.id_factura')
+													->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina')
+													->where('paginas.url_pagina', 'bongacams')
+													->where('id_usuario', $modelo->id_empleado)
+													->where('fecha_inicio >=', $data['fecha_inicial'])
+													->where('fecha_inicio <=', $data['fecha_final'])
+													->where('id_factura_supervisor', null)->get();
+						$nomina_modelo_general = $this->db->select_sum('cantidad_horas')->from('factura')
+													->join('registro_horas', 'registro_horas.id_factura = factura.id_factura')
+													->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina')
+													->where('paginas.url_pagina !=', 'bongacams')
+													->where('id_usuario', $modelo->id_empleado)
+													->where('fecha_inicio >=', $data['fecha_inicial'])
+													->where('fecha_inicio <=', $data['fecha_final'])
+													->where('id_factura_supervisor', null)->get();
+						if($nomina_modelo_general->num_rows()>0){
+							$nomina_modelo_general = $nomina_modelo_general->result();
+							$aux_horas_general = $aux_horas_general+$nomina_modelo_general[0]->cantidad_horas;
+						}
+						if($nomina_modelo_bonga->num_rows()>0){
+							$nomina_modelo_bonga = $nomina_modelo_bonga->result();
+							$aux_horas_bonga = $aux_horas_bonga+$nomina_modelo_bonga[0]->cantidad_horas;
 						}
 					}
 				}
+
+				$aux_horas_bonga = round($aux_horas_bonga/2);
+
+				$aux_horas_total = $aux_horas_bonga+$aux_horas_general;
+
 				
 				// VERIFICAMOS SI EL SUPERVISOR CUMPLE LAS METAS DE HORAS
 

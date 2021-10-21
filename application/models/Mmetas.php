@@ -154,6 +154,111 @@ class Mmetas extends CI_Model {
 		return $consulta->result();
 	}
 
+	public function actualizarMetasGeneral($id_administrador){
+
+		$id_supervisores = $this->db->select('id_supervisor')->from('empleado_supervisor')->where('estado', 'activo')->group_by('id_supervisor')->get();
+		if($id_supervisores->num_rows() > 0){
+			$id_supervisores = $id_supervisores->result();
+			foreach ($id_supervisores as $key => $value) {
+				$this->db->select('*');
+				$this->db->from('metas');
+				$this->db->where('id_empleado', $value->id_supervisor);
+				$this->db->where('estado', 'sin registrar');
+				///////////////////////////////////////////////////////////
+
+				$consulta_supervisor_metas = $this->db->get();
+
+				/// Consulta para sacar ID de empleados del supervisor ///
+				$this->db->select('id_empleado');
+				$this->db->where('id_supervisor', $value->id_supervisor);
+				$this->db->where('estado', 'activo');
+				$this->db->from('empleado_supervisor');
+				/////////////////////////////////////////////////////////
+
+				$consulta_id_empleados = $this->db->get();
+
+				if ($consulta_supervisor_metas->num_rows() > 0) {
+
+					$consulta_supervisor_metas = $consulta_supervisor_metas->result();
+
+					if($consulta_id_empleados->num_rows() > 0){
+
+						$consulta_id_empleados = $consulta_id_empleados->result();
+						$acum = 0;
+						foreach ($consulta_id_empleados as $key => $id_empleado) {
+
+							$this->db->select('num_horas');
+							$this->db->where('estado', 'sin registrar');
+							$this->db->where('id_empleado', $id_empleado->id_empleado);
+							$this->db->from('metas');
+		
+							$consulta_cantidad_horas = $this->db->get();
+							if ($consulta_cantidad_horas->num_rows() > 0) {
+								$consulta_cantidad_horas = $consulta_cantidad_horas->result();
+								$acum = $acum + $consulta_cantidad_horas[0]->num_horas;
+							}
+						}
+
+						$data['num_horas'] = $acum;
+		
+						/// Update Meta supervisor ///
+						$this->db->where('id_meta', $consulta_supervisor_metas[0]->id_meta);
+						$this->db->update('metas', $data);
+						/////////////////////////////
+
+					}else{
+						$data['num_horas'] = 0;
+		
+						/// Update Meta supervisor ///
+						$this->db->where('id_meta', $consulta_supervisor_metas[0]->id_meta);
+						$this->db->update('metas', $data);
+
+					}
+
+				}else{
+					/// Consulta SUM para sumar cantidad horas Metas Empleados-supervisor ///
+					if($consulta_id_empleados->num_rows() > 0){
+						$consulta_id_empleados = $consulta_id_empleados->result();
+						$acum = 0;
+						foreach ($consulta_id_empleados as $key => $id_empleado) {
+							$this->db->select('num_horas');
+							$this->db->where('estado', 'sin registrar');
+							$this->db->where('id_empleado', $id_empleado->id_empleado);
+							$this->db->from('metas');
+							/////////////////////////////////////////////////////////////////////////
+		
+							$consulta_cantidad_horas = $this->db->get();
+							if ($consulta_cantidad_horas->num_rows() > 0) {
+								$datos_consulta_cantidad_horas = $consulta_cantidad_horas->result();
+								$acum = $acum + $datos_consulta_cantidad_horas[0]->num_horas;
+							}
+						}
+						/////////////////////////////////////////////////////////////////////////
+		
+						/// Datos insert ///
+						$data['num_horas'] = $acum;
+						$data['id_empleado'] = $value->id_supervisor;
+						$data['id_administrador'] = $id_administrador;
+						$data['descripcion'] = "ninguna";
+						$data['estado'] = "sin registrar";
+						///////////////////
+		
+						/// Insert Meta Supervisor ///
+						$this->db->insert('metas', $data);
+						/////////////////////////////
+					}else{
+						continue;
+					}
+				}
+			}
+			return true;
+		}else{
+			return false;
+		}
+		
+
+	}
+
 	public function actualizarMetaSupervisor($id_empleado, $id_administrador){
 
 		/// Consulta Si existe relacion con supervisor  ////
