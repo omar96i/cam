@@ -24,14 +24,6 @@
                                         <a href="<?php echo base_url('admin/Home/addpaginas') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                         <a href="<?php echo base_url('admin/Home/asignarpaginas') ?>" class="btn btn-info mb-2 ml-1">Asignar</a>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($paginas)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search paginas">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($paginas)): ?>

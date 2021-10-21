@@ -38,10 +38,9 @@
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>Documento</th>
                                                     <th>Foto</th>
                                                     <th>Nombre</th>
-                                                    <th>Documento</th>
                                                     <th>Fecha de Nacimiento</th>
                                                     <th>Sexo</th>
                                                     <th>Ciudad</th>
@@ -190,10 +189,10 @@
                     var tbody = '';
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['id_persona']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize"><img style="width: 50px; height: 50px; border-radius: 50%;" src="<?php echo base_url('assets/images/imagenes_empleado/'); ?>${r.data[k]['foto']}"></td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>}
-                            <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_nacimiento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['sexo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['ciudad']}</td>

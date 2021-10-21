@@ -30,16 +30,15 @@
                                         <table id="empty" class="table table-striped table-bordered" style="border-radius: 50%;">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>Documento</th>
                                                     <th>Foto</th>
                                                     <th>Nombre</th>
-                                                    <th>Documento</th>
+                                                    <th>Apellidos</th>
                                                     <th>Fecha de Nacimiento</th>
                                                     <th>Sexo</th>
                                                     <th>Ciudad</th>
                                                     <th>Email</th>
                                                     <th>Tipo usuario</th>
-
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -155,10 +154,12 @@
 							r.data[k]['tipo_cuenta'] = "monitor"
 						}
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['id_persona']}</td>
+							<td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize"><img style="width: 50px; height: 50px; border-radius: 50%;" src="<?php echo base_url('assets/images/imagenes_usuario/'); ?>${r.data[k]['foto']}"></td>
-                            <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>}
-                            <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
+
+                           
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_nacimiento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['sexo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['ciudad']}</td>

@@ -215,10 +215,6 @@
 			    		data: {fecha_inicial: fecha_inicial, fecha_final: fecha_final},
 			    	})
 			    	.done(function(r) {
-
-
-			    		console.log("success");
-			    		console.log(r);
 			    		nombre_paginas = [];
 			    		cantidad_horas = [];
 			    		colores = [];
@@ -235,7 +231,7 @@
 			    			data:{
 			    				labels:nombre_paginas,
 			    				datasets:[{
-			    					label:'Horas', 
+			    					label:'Tokens', 
 			    					data: cantidad_horas,
 			    					backgroundColor: colores
 			    				}]
