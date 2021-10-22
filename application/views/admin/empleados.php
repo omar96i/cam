@@ -24,13 +24,6 @@
                                         <a href="<?php echo base_url('admin/Home/addempleados'); ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                     </div>
 
-                                    <div class="col-4">
-                                        <?php if(!empty($usuarios)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search usuarios">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($usuarios)): ?>
@@ -41,6 +34,7 @@
                                                     <th>Documento</th>
                                                     <th>Foto</th>
                                                     <th>Nombre</th>
+                                                    <th>Apellidos</th>
                                                     <th>Fecha de Nacimiento</th>
                                                     <th>Sexo</th>
                                                     <th>Ciudad</th>
