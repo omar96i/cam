@@ -159,6 +159,7 @@
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_final']}</td>
 							<td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
 							<td class="align-middle">
+                                <a href="<?php echo base_url('Imprimir_factura/getFacturaInfMonitor/') ?>${r.data[k]['id_factura_supervisor']}" target="_blank"><img src="<?php echo base_url('assets/iconos_menu/impresora.png') ?>" alt="" style="width: 20px; height: 20px;"> </a>
 								<a href="<?php echo site_url('admin/Home/editarFacturaMonitor/') ?>${r.data[k]['id_factura_supervisor']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; "> </a>
                             </td>
                             </tr>`;

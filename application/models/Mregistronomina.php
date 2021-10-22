@@ -362,6 +362,24 @@ class Mregistronomina extends CI_Model {
 		return $consulta;
 	}
 
+	public function getDatosFacturaImprimirMonitor($id){
+
+		$consulta = $this->db->select('factura_supervisor.*, usuarios.tipo_cuenta, persona.documento, persona.nombres, persona.apellidos, EXTRACT(MONTH FROM factura_supervisor.fecha_registro) as mes, EXTRACT(DAY FROM factura_supervisor.fecha_inicial) as dia1, EXTRACT(DAY FROM factura_supervisor.fecha_final) as dia2, EXTRACT(YEAR FROM factura_supervisor.fecha_inicial) as year')->from('factura_supervisor')->join('persona', 'persona.id_persona = factura_supervisor.id_empleado')->join('usuarios', 'persona.id_persona = usuarios.id_persona')->where('factura_supervisor.id_factura_supervisor', $id)->get()->result();
+		return $consulta;
+	}
+
+	public function getDatosFacturaImprimirSupervisor($id){
+
+		$consulta = $this->db->select('factura_tecnico.*, usuarios.tipo_cuenta, persona.documento, persona.nombres, persona.apellidos, EXTRACT(MONTH FROM factura_tecnico.created_at) as mes, EXTRACT(DAY FROM factura_tecnico.fecha_inicial) as dia1, EXTRACT(DAY FROM factura_tecnico.fecha_final) as dia2, EXTRACT(YEAR FROM factura_tecnico.fecha_inicial) as year')->from('factura_tecnico')->join('persona', 'persona.id_persona = factura_tecnico.id_empleado')->join('usuarios', 'persona.id_persona = usuarios.id_persona')->where('factura_tecnico.id', $id)->get()->result();
+		return $consulta;
+	}
+
+	public function getDatosFacturaImprimirGeneral($id){
+
+		$consulta = $this->db->select('factura_general.*, usuarios.tipo_cuenta, persona.documento, persona.nombres, persona.apellidos, EXTRACT(MONTH FROM factura_general.fecha_registrado) as mes, EXTRACT(DAY FROM factura_general.fecha_inicial) as dia1, EXTRACT(DAY FROM factura_general.fecha_final) as dia2, EXTRACT(YEAR FROM factura_general.fecha_inicial) as year')->from('factura_general')->join('persona', 'persona.id_persona = factura_general.id_empleado')->join('usuarios', 'persona.id_persona = usuarios.id_persona')->where('factura_general.id_factura_general', $id)->get()->result();
+		return $consulta;
+	}
+	
 	public function get_fecha_incialNomina($empleada){
 		$this->db->select('DATE_ADD(MAX(`fecha_final`), INTERVAL 1 DAY) AS fecha', false);
 		$this->db->where('id_usuario', $empleada);

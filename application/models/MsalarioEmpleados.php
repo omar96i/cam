@@ -209,7 +209,6 @@ class MsalarioEmpleados extends CI_Model {
 			->where('estado', 'activo')
 			->where('tipo_cuenta', 'administrador')
 			->or_where('tipo_cuenta', 'talento humano')
-			->or_where('tipo_cuenta', 'tecnico sistemas')
 			->or_where('tipo_cuenta', 'servicios generales')
 			->or_where('tipo_cuenta', 'psicologa')
 			->or_where('tipo_cuenta', 'operario de mantenimiento')

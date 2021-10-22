@@ -19,6 +19,10 @@ class Musuarios extends CI_Model {
 		return $this->db->select('persona.*')->from('persona')->where('id_persona', $id)->get()->result();
 	}
 
+	public function getTypeUser($id){
+		return $this->db->select('tipo_cuenta')->from('usuarios')->where('id_usuario', $id)->get()->result();
+	}
+
 	public function getUsuariosAdelantos(){
 		$this->db->select('persona.*, usuarios.*');
 		$this->db->from('persona');
