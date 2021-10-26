@@ -49,9 +49,6 @@
 							    </div>
 							</div>
 
-							
-							
-
 							<div class="col-sm-12">
 								<h1 class="card-title">Meta Actual</h1>
 							    <div  class="table-responsive mt-1">
@@ -88,7 +85,12 @@
                                         <div class="card text-center bg-success">
                                             <div class="card-body">
                                                 <h5 class="card-title">TOKENS FALTANTES PARA COMPLETAR TU META !!</h5>
-                                                <p class="card-text"><?php echo $total; ?></p>
+                                                <p class="card-text"><?php echo ($total > 0)? $total : "Meta completa"; ?></p>
+
+												<h5 class="card-title">Tokens actuales</h5>
+                                                <p class="card-text"><?php echo $num_horas['verificados']->cantidad_horas ?></p>
+
+												
                                             </div>
                                         </div>
                                     </div>
@@ -143,9 +145,37 @@
 							        </table>
 							    </div>
 								<br>
-								<div class="container">
+								<div class="container text-center">
 									<a href="<?php echo base_url('Imprimir_factura/getFacturaInf/').$factura[0]->id_factura; ?>" target="_blank"><button class="btn btn-success" >Imprimir</button></a>
 								</div>
+							</div>
+
+							<div class="col-sm-12">
+								<h1 class="card-title">Adelanto sin verificar</h1>
+							    <div  class="table-responsive mt-1">
+							        <table id="empty" class="table table-sm table-striped table-bordered">
+							            <thead class="text-center">
+							                <tr>
+							                    <th>Descripcion</th>
+							                    <th>Valor</th>
+							                </tr>
+							            </thead>
+
+							            <tbody class="text-center">	
+							            	<?php if (!$adelanto): ?>
+							            		<tr>
+							            			<td colspan="2">Sin asignar</td>
+							            		</tr>										            			
+							            	<?php else: ?>						            		
+							            		<tr>
+							            			<td><?php echo $adelanto[0]->descripcion ?></td>
+							            			<td><?php echo $adelanto[0]->valor ?></td>
+
+							            		</tr>
+							            	<?php endif ?>
+							            </tbody>
+							        </table>
+							    </div>
 							</div>
 						</div>
 					</div>

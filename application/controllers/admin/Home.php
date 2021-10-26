@@ -1282,16 +1282,22 @@ class Home extends CI_Controller {
 
 	/// ADELANTOS INICIO ///
 
-	public function adelantos(){
+	public function adelantos($tittle = "general"){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$data['adelantos'] = $this->Madelantos->getAdelantos();
 
+			if($tittle == "sin_verificar"){
+				$data['adelantos'] = $this->Madelantos->getAdelantosSinVerificar();
+			}else{
+				$data['adelantos'] = $this->Madelantos->getAdelantos();
+			}
 			if(!$data['adelantos']) {
 				$data['adelantos'] = 0;
 			} 
 			else {
 				$data['adelantos'] = count($this->Madelantos->getAdelantos());
 			}
+
+			$data['tittle'] = $tittle;
 
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/adelantos' , $data);
@@ -1341,12 +1347,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$adelantos         = $this->Madelantos->get_adelantos($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Madelantos->get_adelantos($valor)); 
+		$adelantos         = $this->Madelantos->get_adelantos();
 
 		if(!$adelantos) {
 			echo json_encode(['status' => false]);
@@ -1356,16 +1357,35 @@ class Home extends CI_Controller {
 		echo json_encode(
 		[
 			'status'          => true, 
-			'data'            => $adelantos,
-			'cantidad'        => $cantidad,
-			'total_registros' => $total_registros
+			'data'            => $adelantos
 		]);
 	}
 
-	public function editaradelantos($id_adelanto){
+	public function veradelantosSinVerificar(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$adelantos         = $this->Madelantos->get_adelantos_sin_verificar();
+
+		if(!$adelantos) {
+			echo json_encode(['status' => false]);
+			return;
+		}
+
+		echo json_encode(
+		[
+			'status'          => true, 
+			'data'            => $adelantos
+		]);
+	}
+
+	public function editaradelantos($id_adelanto, $tittle = "general"){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$data['adelantos'] = $this->Madelantos->dataAdelantos($id_adelanto);
 			$data['personas'] = $this->Musuarios->getUsuariosAdelantos();
+			$data['tittle'] = $tittle;
 
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/editarAdelantos' , $data);
@@ -1373,6 +1393,51 @@ class Home extends CI_Controller {
 		}else{
 			redirect('Home');
 		}
+	}
+
+	public function verificarAdelantos(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó!']);
+			return; 
+		}
+
+		$data['id_adelanto'] = $this->input->post('id_adelanto');
+		$data['id_empleado'] = $this->input->post('usuario');
+		$data['id_administrador'] = $this->session->userdata('usuario')['id_usuario'];
+		$data['descripcion'] = $this->input->post('descripcion');
+		$data['valor'] = $this->input->post('valor');
+		$data['estado'] = "sin registrar";
+		$update_adelanto = $this->Madelantos->updateAdelanto($data);
+
+		if(!$update_adelanto) {
+			echo json_encode(['status' => false, 'msg' => 'Algo pasó, Update']);
+			return;
+		}
+
+		echo json_encode(['status' => true]);
+	}
+
+	public function cancelarAdelanto(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó!']);
+			return; 
+		}
+
+		$data['id_adelanto'] = $this->input->post('id_adelanto');
+		$data['id_empleado'] = $this->input->post('usuario');
+		$data['id_administrador'] = $this->session->userdata('usuario')['id_usuario'];
+		$data['descripcion'] = $this->input->post('descripcion');
+		$data['valor'] = $this->input->post('valor');
+		$data['estado'] = "cancelado";
+		$update_adelanto = $this->Madelantos->updateAdelanto($data);
+
+
+		if(!$update_adelanto) {
+			echo json_encode(['status' => false, 'msg' => 'Algo pasó, Update']);
+			return;
+		}
+
+		echo json_encode(['status' => true]);
 	}
 
 	public function storeAdelantos(){
@@ -1843,6 +1908,8 @@ class Home extends CI_Controller {
 			return;
 		}
 		$this->Mmetas->actualizarMetaSupervisor($datos_usuario[0]->id_empleado, $datos_usuario[0]->id_administrador);
+		$this->Mmetas->actualizarMetaTecnicoSistemas($datos_usuario[0]->id_administrador);
+
 		echo json_encode(['status' => true]);
 
 	}

@@ -131,6 +131,7 @@
                                         <th>Descripcion</th>
                                         <th>Valor</th>
                                         <th>Fecha</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </thead>
 
@@ -268,7 +269,6 @@
             url      : '<?php echo base_url('empleado/Home/getAdelanto') ?>',
             method   : 'POST',
             success  : function(r){
-                console.log(r);
                 if(r.status){
                     var tbody = '';
                     

@@ -26,7 +26,7 @@
                                                 <h5 class="card-title">TOKENS FALTANTES PARA COMPLETAR TU META !!</h5>
                                                 <p class="card-text"><?php echo ($total > 0)? $total: "Meta completa"; ?></p>
 												<h5 class="card-title">Tokens actuales</h5>
-                                                <p class="card-text"><?php echo ($total > 0)? "" : $num_horas[0]->cantidad_horas; ?></p>
+                                                <p class="card-text"><?php echo $num_horas ?></p>
                                             </div>
                                         </div>
                                     </div>

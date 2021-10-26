@@ -22,14 +22,8 @@
                                     <div class="col-8">
                                         <h2 class="d-inline">Adelantos</h2>
                                         <a href="<?php echo base_url('admin/Home/addAdelanto') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
-                                    </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($adelantos)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search adelantos">
-                                            </div>
-                                        <?php endif; ?>
+										<a href="<?php echo base_url('admin/Home/adelantos/general') ?>" class="btn <?php echo ($tittle == "general")? "btn-success": "btn-info"; ?> mb-2 ml-1">General</a>
+										<a href="<?php echo base_url('admin/Home/adelantos/sin_verificar') ?>" class="btn <?php echo ($tittle == "sin_verificar")? "btn-success": "btn-info"; ?> mb-2 ml-1">Sin verificar</a>
                                     </div>
                                 </div>
 
@@ -79,11 +73,9 @@
 <script>
     function load_adelantos(valor , pagina) {
         $.ajax({
-            url      : '<?= base_url('admin/home/veradelantos') ?>',
+            url      : '<?= ($tittle == "general") ? base_url('admin/home/veradelantos') :base_url('admin/home/veradelantosSinVerificar'); ?>',
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina},
             success  : function(r){
-                console.log(r)
                 if(r.status){
                     var tbody = '';
                     
@@ -102,34 +94,16 @@
                             if (r.data[k]['estado'] == "sin registrar") {
                                 tbody += `<a href="<?php echo site_url('admin/Home/editaradelantos/') ?>${r.data[k]['id_adelanto']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
                             }
+							if (r.data[k]['estado'] == "por verificar") {
+                                tbody += `<a href="<?php echo site_url('admin/Home/editaradelantos/') ?>${r.data[k]['id_adelanto']}/por_verificar" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
+                            }
                         tbody += `</td>
                         </tr>`;
                                 
                             
                     }
                     $('#tbodyadelantos').html(tbody);
-
-
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+					$("#empty").DataTable();
                 }
             },
             dataType : 'json'

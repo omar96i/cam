@@ -15,6 +15,8 @@ class Home extends CI_Controller {
 		$this->load->model('Madelantos');
 		$this->load->model('Mregistronomina');
 		$this->load->model('Mcitas');
+		$this->load->model('Madelantos');
+
 	}
 
 	public function index() {
@@ -34,6 +36,7 @@ class Home extends CI_Controller {
         $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
 		$data['estado'] = true;
 		$datos['user'] = $this->Musuarios->getUser($this->session->userdata('usuario')['id_usuario']);
+		$datos['adelanto'] = $this->Madelantos->getLastAdelanto($this->session->userdata('usuario')['id_usuario']);
 
 		if (!$data['supervisor']) {
 			$data['supervisor'] = 0;

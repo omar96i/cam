@@ -11,7 +11,7 @@
 	<meta http-equiv='expires' content='0'>
 	<meta http-equiv='pragma' content='no-cache'>
 	<title>Admin</title>
-	<link href="<?php echo base_url('assets/images/favicon.png') ?>" rel="shortcut icon" type="image/x-icon">
+	<link href="<?php echo base_url('assets/images/logo.jpg') ?>" rel="shortcut icon" type="image/x-icon">
 	<!-- Global stylesheets -->
 
 	<link rel="stylesheet" href="<?php echo base_url('assets/admin/css/css.css') ?>">
@@ -53,9 +53,6 @@
 	<!-- Main navbar -->
 	<div class="navbar navbar-expand-md navbar-dark">
 		<div class="navbar-brand">
-			 <a href="<?php echo base_url() ?>" class="d-inline-block">
-				<img src="<?php echo base_url('assets/images/logo.jpg') ?>" style="width: 40px; height: 35px;" alt="logotipo">
-			</a>
 		</div>
 
 		<div class="d-md-none">
@@ -161,22 +158,24 @@
 				<!-- User menu -->
 				<div class="sidebar-user">
 					<div class="card-body">
-						<div class="media">
-							<div class="mr-3 mt-2">
+						<div class="card-tittle mb-4">
+							<a href="<?php echo base_url() ?>" class="d-inline-block">
+								<img src="<?php echo base_url('assets/iconos_menu/Logo GZ Studios.png') ?>" class="w-100 h-20" alt="logotipo">
+							</a>
+						</div>
+						<div class="">
+							<div class="text-center">
 								<a href="<?= $this->session->userdata('usuario')['tipo']=='administrador'?base_url():'#' ?>">
 									<?php if ($this->session->userdata('usuario')["tipo"]=='empleado'): ?>
-										<img id="imagen_perfil" src="<?php echo base_url('assets/images/imagenes_empleado/').$_SESSION['usuario']['foto']; ?>" width="38" height="38" class="rounded-circle" alt="">
+										<img id="imagen_perfil" src="<?php echo base_url('assets/images/imagenes_empleado/').$_SESSION['usuario']['foto']; ?>" class="w-100" style="border-radius: 50px;" class="rounded-circle" alt="">
 									<?php endif ?>
 									<?php if ($this->session->userdata('usuario')["tipo"]!='empleado'): ?>
-										<img src="<?php echo base_url('assets/images/imagenes_usuario/').$_SESSION['usuario']['foto']; ?>" width="38" height="38" class="rounded-circle" alt="">
+										<img id="imagen_perfil" src="<?php echo base_url('assets/images/imagenes_usuario/').$_SESSION['usuario']['foto']; ?>" class="w-100" style="border-radius: 50px;" class="rounded-circle" alt="">
 									<?php endif ?>
-									
 								</a>
 							</div>
-
-							<div class="media-body">
-							<img >
-								<div class="media-title font-weight-semibold">
+							<div class="media-body mt-2">
+								<div class="media-title font-weight-semibold text-center">
 									<?= $this->session->userdata('usuario')['tipo']=='administrador' ? 'Admin | Gz Studios': 'Gz Studios' ?>
 								</div>
 							</div>
@@ -349,6 +348,9 @@
 									<li class="nav-item">
 										<a href="<?php echo base_url('supervisor/VerAsistencia/index') ?>" class="nav-link">Ver Asistencia</a>
 									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
+									</li>
 								</ul>
 							</li>
 							
@@ -371,6 +373,10 @@
 									</li>
 									<li class="nav-item">
 										<a href="<?php echo base_url('talento_humano/Gastos') ?>" class="nav-link">Gastos</a>
+									</li>
+									
+									<li class="nav-item">
+										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
 									</li>
 								</ul>
 							</li>
@@ -415,6 +421,9 @@
 									<li class="nav-item">
 										<a href="<?php echo base_url('supervisor/VerAsistencia/index') ?>" class="nav-link">Ver Asistencia</a>
 									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
+									</li>
 								</ul>
 							</li>
 
@@ -436,6 +445,9 @@
 									<li class="nav-item">
 										<a href="<?php echo base_url('fotografo/Citas') ?>" class="nav-link">Citas</a>
 									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
+									</li>
 								</ul>
 							</li>
 									
@@ -456,6 +468,9 @@
 									<li class="nav-item">
 										<a href="<?php echo base_url('psicologa/Citas') ?>" class="nav-link">Citas</a>
 									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
+									</li>
 								</ul>
 							</li>
 						<?php } 
@@ -475,6 +490,9 @@
 									<li class="nav-item">
 										<a href="<?php echo base_url('empleado/Home/consultarhoras') ?>" class="nav-link">Consultar Horas</a>
 									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('empleado/SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
+									</li>
 								</ul>
 							</li>
 									
@@ -487,3 +505,4 @@
 			<!-- /sidebar content -->
 		</div>
 		<!-- /main sidebar -->
+

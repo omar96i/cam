@@ -234,7 +234,8 @@
 			    					label:'Tokens', 
 			    					data: cantidad_horas,
 			    					backgroundColor: colores
-			    				}]
+			    				}],
+								
 			    			},
 			    			options:{
 			    				scales:{

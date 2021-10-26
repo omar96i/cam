@@ -42,22 +42,29 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="usuario" class="col-form-label">Empleados:</label>
-                                                <select name="usuario" id="usuario" class="form-control">
-                                                    <option value="0">Sin seleccionar</option>
-                                                    <?php foreach ($personas as $key => $value) {?>
-                                                        <?php  
-                                                            if ($value->id_persona == $adelantos[0]->id_empleado) {?>
-                                                                <option selected value="<?php echo $value->id_persona ?>"><?php echo $value->documento." / ".$value->nombres." / ".$value->tipo_cuenta; ?></option>
-                                                        <?php 
-                                                            }else{?>
-                                                                <option value="<?php echo $value->id_persona ?>"><?php echo $value->documento." / ".$value->nombres." / ".$value->tipo_cuenta; ?></option>
-                                                            <?php
-                                                            }
-                                                        ?>
-                                                        
-                                                    <?php
-                                                    } ?>
-                                                </select>
+												<?php if($tittle == "por_verificar"){?>
+													<input type="text" name="usuario" class="form-control" readonly value="<?php echo $adelantos[0]->id_empleado ?>">
+												<?php
+												}else{ ?>
+													<select name="usuario" id="usuario"  class="form-control">
+														<option value="0">Sin seleccionar</option>
+														<?php foreach ($personas as $key => $value) {?>
+															<?php  
+																if ($value->id_persona == $adelantos[0]->id_empleado) {?>
+																	<option selected value="<?php echo $value->id_persona ?>"><?php echo $value->documento." / ".$value->nombres." / ".$value->tipo_cuenta; ?></option>
+															<?php 
+																}else{?>
+																	<option value="<?php echo $value->id_persona ?>"><?php echo $value->documento." / ".$value->nombres." / ".$value->tipo_cuenta; ?></option>
+																<?php
+																}
+															?>
+															
+														<?php
+														} ?>
+													</select>
+												<?php
+												} ?>
+                                                
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
                                             <div class="form-group">
@@ -75,7 +82,13 @@
                                     <div class="row">
                                         <div class="col-4">
                                             <div class="form-group mt-2">
-                                                <button class="btn btn-success btn-block btn_agregar_asignacion">Aceptar</button>
+                                                <button class="btn btn-success btn-block btn_agregar_asignacion"><?php echo ($tittle == "por_verificar")? "Verificar": "Guardar"; ?></button>
+												<?php
+													if($tittle == "por_verificar"){ ?>
+														<button class="btn btn-danger btn-block btn_rechazar_asignacion">Rechazar</button>
+												<?php
+													}
+												?>
                                             </div>
                                         </div>
                                     </div>
@@ -95,7 +108,7 @@
 
         $('.btn_agregar_asignacion').on('click' , function(e){
             e.preventDefault();
-            var ruta      = "<?php echo base_url('admin/home/storeAdelantos') ?>";
+            var ruta      = "<?php echo ($tittle == "por_verificar") ? base_url('admin/home/verificarAdelantos'):base_url('admin/home/storeAdelantos'); ?>";
             var form_data = new FormData($('#form_add_adelanto')[0]);
 
             if ($("#usuario").val() == 0) {
@@ -133,7 +146,69 @@
                     if(r.status){
                         $('#form_addproduct').trigger('reset');
                         alertify.notify('Registro agregado con éxito', 'success', 2, function(){
-                           window.location.href = '../adelantos';
+                           window.location.href = '../../adelantos';
+                        });
+                        return;
+                    }
+
+                    alertify.alert('Ups :(' , r.msg);
+
+                })
+                .fail(function(r) {
+                    console.log("error");
+                    console.log(r);
+                });
+
+                return false;
+
+            }
+
+            return false;
+
+        });
+
+		$('.btn_rechazar_asignacion').on('click' , function(e){
+            e.preventDefault();
+            var ruta      = "<?php echo base_url('admin/home/cancelarAdelanto') ?>";
+            var form_data = new FormData($('#form_add_adelanto')[0]);
+
+
+            if ($("#usuario").val() == 0) {
+                $("#usuario").addClass('is-invalid');
+            }else{
+                $("#usuario").removeClass('is-invalid');
+            }
+            if ($("#descripcion").val() == 0) {
+                $("#descripcion").addClass('is-invalid');
+            }else{
+                $("#descripcion").removeClass('is-invalid');
+            }
+            if ($("#valor").val() == '') {
+                $("#valor").addClass('is-invalid');
+            }else{
+                $("#valor").removeClass('is-invalid');
+            }
+
+            if( $("#usuario").val() != 0 &&
+                $("#descripcion").val() != '' &&
+                $("#valor").val() != '' 
+            ) {
+
+                $.ajax({
+                    url: ruta,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    cache       : false,
+                    processData : false,
+                    contentType : false,
+                })
+                .done(function(r) {
+					console.log(r)
+                    if(r.status){
+                        $('#form_addproduct').trigger('reset');
+                        alertify.notify('Adelanto rechazado', 'danger', 2, function(){
+                           window.location.href = '../../adelantos';
                         });
                         return;
                     }

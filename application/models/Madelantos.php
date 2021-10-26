@@ -14,28 +14,67 @@ class Madelantos extends CI_Model {
 		return false;
 	}
 
+	public function getAdelantosSinVerificar() {
+		$this->db->select('*');
+		$this->db->from('adelanto');
+		$this->db->where('estado', 'por verificar');
+		$adelantos = $this->db->get();
+
+		if($adelantos->num_rows() > 0) {
+			return $adelantos->result();
+		}
+
+		return false;
+	}
+
 	public function addAdelanto($data){
 		return $this->db->insert('adelanto', $data);
 	}
 
-	public function get_adelantos($valor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function verificarAdelanto($data){
+		$respuesta = $this->db->select('*')->from('adelanto')->where('id_empleado', $data['id_empleado'])->where('estado', 'por verificar')->get();
+		if($respuesta->num_rows() > 0){
+			return true;
+		}
+		return false;
+	}
+
+	public function getLastAdelanto($id_empleado){
+		$respuesta = $this->db->select('*')->from('adelanto')->where('id_empleado', $id_empleado)->where('estado', 'por verificar')->get();
+		if($respuesta->num_rows() > 0){
+			return $respuesta->result();
+		}
+		return false;
+	}
+
+	public function get_adelantos() {
 		$this->db->select('adelanto.*, persona.*');
 		$this->db->from('adelanto');
 		$this->db->join('persona', 'persona.id_persona = adelanto.id_empleado');
-		$this->db->like('persona.nombres' , $valor);
+		$this->db->where('adelanto.estado !=', 'por verificar');
 		$this->db->order_by('adelanto.estado' , 'DESC');
 
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
-		$penalizaciones = $this->db->get();
+		$adelantos = $this->db->get();
 
-		if($penalizaciones->num_rows() > 0) {
-			return $penalizaciones->result();
+		if($adelantos->num_rows() > 0) {
+			return $adelantos->result();
 		}
-
 		return false;
+	}
 
+	public function get_adelantos_sin_verificar() {
+		$this->db->select('adelanto.*, persona.*');
+		$this->db->from('adelanto');
+		$this->db->join('persona', 'persona.id_persona = adelanto.id_empleado');
+		$this->db->where('adelanto.estado', 'por verificar');
+		$this->db->order_by('adelanto.estado' , 'DESC');
+
+		$adelantos = $this->db->get();
+
+		if($adelantos->num_rows() > 0) {
+			return $adelantos->result();
+		}
+		return false;
 	}
 
 	public function dataAdelantos($id_adelanto){

@@ -51,14 +51,29 @@ class Mmetas extends CI_Model {
 		return false;
 	}
 
-	public function getNumHorasSupervisor($id_supervisor){
-		$consulta = $this->db->select_sum('cantidad_horas')->from('registro_horas')->where(['id_supervisor' => $id_supervisor, 'estado_registro' => 'verificado'])->get();
+	public function getNumHorasSupervisorBonga($id_supervisor){
+		$consulta = $this->db->select_sum('cantidad_horas')->from('registro_horas')
+							 ->join('paginas', 'registro_horas.id_pagina = paginas.id_pagina')
+							 ->where(['id_supervisor' => $id_supervisor, 'estado_registro' => 'verificado', 'url_pagina' => 'bongacams'])
+							 ->get();
 		if($consulta->num_rows() > 0) {
 			return $consulta->result();
 		}
 
 		return false;
 
+	}
+
+	public function getNumHorasSupervisorGeneral($id_supervisor){
+		$consulta = $this->db->select_sum('cantidad_horas')->from('registro_horas')
+							 ->join('paginas', 'registro_horas.id_pagina = paginas.id_pagina')
+							 ->where('url_pagina !=', 'bongacams')
+							 ->where(['id_supervisor' => $id_supervisor, 'estado_registro' => 'verificado'])->get();
+		if($consulta->num_rows() > 0) {
+			return $consulta->result();
+		}
+
+		return false;
 	}
 
 	public function getEmpleadosNullMetas($id_persona){

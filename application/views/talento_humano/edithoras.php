@@ -88,25 +88,18 @@
             else {
                 $('#descuento').removeClass('is-invalid');
             }
-            if($('#descripcion').val() == '') {
-                $('#descripcion').addClass('is-invalid');
-            }
-            else {
-                $('#descripcion').removeClass('is-invalid');
-            }
             
 
                    
         if( $('#cantidad_horas').val() != '' &&
-			$('#descuento').val() != '' &&
-			$('#descripcion').val() != '' 
+			$('#descuento').val() != ''
         ){
             
             $.ajax({
                 url: ruta,
                 type: 'POST',
                 dataType: 'json',
-                data: {cantidad_horas: cantidad_horas, descripcion: descripcion, id_registro_horas: id_registro_horas, fecha_registro: fecha_registro},
+                data: {cantidad_horas: cantidad_horas, id_registro_horas: id_registro_horas, fecha_registro: fecha_registro},
             })
             .done(function(r) {
                 if(r.status){

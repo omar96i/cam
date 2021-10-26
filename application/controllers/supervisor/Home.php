@@ -23,13 +23,25 @@ class Home extends CI_Controller {
 		}
 		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
 		$data['meta'] = $this->Mmetas->getMetasOnlyEmpleado($id_usuario);
-		$data['num_horas'] = $this->Mmetas->getNumHorasSupervisor($id_usuario);
+		$aux_bonga = $this->Mmetas->getNumHorasSupervisorBonga($id_usuario);
+		
+		if(!$aux_bonga){
+			$aux_bonga = 0;
+		}else{
+			$aux_bonga = $aux_bonga[0]->cantidad_horas;
+		}
 
+		$aux_general = $this->Mmetas->getNumHorasSupervisorGeneral($id_usuario);
+
+		if(!$aux_general){
+			$aux_general = 0;
+		}else{
+			$aux_general = $aux_general[0]->cantidad_horas;
+		}
+
+		$data['num_horas'] = $aux_general+(round($aux_bonga/2));
 		if (!empty($data['meta'])) {
-			if ($data['num_horas'][0]->cantidad_horas == null) {
-				$data['num_horas'][0]->cantidad_horas = 0;
-			}
-			$data['total'] = $data['meta']->num_horas-$data['num_horas'][0]->cantidad_horas;
+			$data['total'] = $data['meta']->num_horas-$data['num_horas'];
 		}
 
 		$data['user'] = $this->Musuarios->getUser($this->session->userdata('usuario')['id_usuario']);
