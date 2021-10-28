@@ -2168,10 +2168,42 @@ class Home extends CI_Controller {
 
 		$data['fecha_inicial'] = $this->input->post('fecha_inicial');
 		$data['fecha_final'] = $this->input->post('fecha_final');
-
 		$respuesta = $this->Mpaginas->graficaConsulta($data);
 
 		echo json_encode($respuesta);
+	}
+
+	public function consultarGraficaMonitor(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+		$data_tokens = [];
+		$data = $this->Musuarios->getMonitorUsers();
+		if(!$data == false){
+			foreach ($data as $key => $persona){
+				$persona->id_persona;
+				$aux_bonga = $this->Mmetas->getNumHorasSupervisorBonga($persona->id_persona);
+		
+				if(!$aux_bonga){
+					$aux_bonga = 0;
+				}else{
+					$aux_bonga = $aux_bonga[0]->cantidad_horas;
+				}
+
+				$aux_general = $this->Mmetas->getNumHorasSupervisorGeneral($persona->id_persona);
+
+				if(!$aux_general){
+					$aux_general = 0;
+				}else{
+					$aux_general = $aux_general[0]->cantidad_horas;
+				}
+
+				$data_tokens[$key] = $aux_general+(round($aux_bonga/2));
+
+			}
+		}
+		echo json_encode(['data' => $data, 'tokens' => $data_tokens]);
 	}
 
 	public function editarFactura($id){

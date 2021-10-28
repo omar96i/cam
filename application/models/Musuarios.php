@@ -23,6 +23,22 @@ class Musuarios extends CI_Model {
 		return $this->db->select('tipo_cuenta')->from('usuarios')->where('id_usuario', $id)->get()->result();
 	}
 
+	public function getMonitorUsers(){
+		$this->db->select('persona.nombres, persona.apellidos, persona.id_persona, metas.*');
+		$this->db->from('persona');
+		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
+		$this->db->join('metas', 'persona.id_persona = metas.id_empleado');
+		$this->db->where('usuarios.estado', 'activo');
+		$this->db->where('metas.estado', 'sin registrar');
+		$this->db->where('usuarios.tipo_cuenta', 'supervisor');
+		$usuarios = $this->db->get();
+		if($usuarios->num_rows() > 0) {
+			return $usuarios->result();
+		}
+
+		return false;
+	}
+
 	public function getUsuariosAdelantos(){
 		$this->db->select('persona.*, usuarios.*');
 		$this->db->from('persona');

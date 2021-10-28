@@ -31,7 +31,7 @@
 	<!-- /global stylesheets -->
 
 	<!-- Core JS files -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="<?php echo base_url('assets/admin/global_assets/js/main/jquery.min.js') ?>"></script>
 	<script src="<?php echo base_url('assets/admin/global_assets/js/main/bootstrap.bundle.min.js') ?>"></script>
 	<script src="<?php echo base_url('assets/admin/global_assets/js/main/bootstrap.bundle.min.js') ?>"></script>

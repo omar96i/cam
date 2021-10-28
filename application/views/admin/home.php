@@ -86,7 +86,18 @@
 									<div class="col-sm-12">
 										<div class="row">
 											<div class="col-sm-12 imprimir_grafica">
-												<canvas id="grafica1" width="400" height="200"></canvas>
+												<canvas id="grafica1"></canvas>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="row">
+											<div class="col-sm-12">
+												<canvas id="grafica2"></canvas>
 											</div>
 										</div>
 									</div>
@@ -142,6 +153,7 @@
 			    	});
 
 			    	Getgrafica();
+					getGraficaMonitor();
 
 			        $("#id_consultar_nomina").click(function(event) {
 			        	event.preventDefault();
@@ -175,8 +187,6 @@
 			        e.preventDefault();
 			        fecha_inicial = $("#fecha_inicial_nomina").val();
 			        fecha_final = $("#fecha_final_nomina").val();
-
-					console.log(fecha_inicial)
 			    
 			        ruta = "<?php echo base_url('admin/Home/consultarNominaGeneral'); ?>";
 		            $.ajax({
@@ -198,6 +208,55 @@
 
 			        return false;
 			    });
+
+				function getGraficaMonitor(){
+					$.ajax({
+			    		url: '<?php echo base_url('admin/Home/consultarGraficaMonitor'); ?>',
+			    		type: 'POST',
+			    		dataType: 'json',
+			    	})
+			    	.done(function(r) {
+						grafica2 = $("#grafica2")
+						nombres = []
+						tokens_meta = []
+						tokens_actuales = []
+						for (var i = 0; i < r['data'].length; i++) {
+			    			nombres[i] = r['data'][i]['nombres']+" "+r['data'][i]['apellidos'];
+			    			tokens_meta[i] = r['data'][i]['num_horas'];
+							tokens_actuales[i] = r['tokens'][i]
+			    		}
+						var grafica = new Chart(grafica2,{
+							type:"bar",
+			    			data:{
+			    				labels:nombres,
+			    				datasets:[{
+			    					label:'Tokens meta', 
+			    					data: tokens_meta,
+			    					backgroundColor: 'rgb(255, 99, 132)'
+			    				},
+								{
+			    					label:'Tokens actuales', 
+			    					data: tokens_actuales,
+			    					backgroundColor: 'rgb(54, 162, 235)'
+			    				}],
+								
+			    			},
+			    			options:{
+			    				plugins: {
+									title: {
+										display: true,
+										text: 'Metas Monitor'
+									}
+								}
+			    			}
+			    		});
+
+			    	})
+			    	.fail(function(r) {
+			    		console.log("error");
+			    		console.log(r);
+			    	});
+				}
 
 
 			    function Getgrafica(){
@@ -237,16 +296,8 @@
 			    				}],
 								
 			    			},
-			    			options:{
-			    				scales:{
-			    					yAxes:[{
-			    						ticks:{
-			    							beginAtZero:true
-			    						}
-			    					}]
-			    				}
-			    			}
 			    		});
+
 			    	})
 			    	.fail(function(r) {
 			    		console.log("error");
