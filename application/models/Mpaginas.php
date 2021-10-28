@@ -119,19 +119,14 @@ class Mpaginas extends CI_Model {
 		return false;
 	}
 
-	public function getasignaciones($valor , $id_pagina, $inicio = FALSE , $registros_pagina = FALSE) {
+	public function getasignaciones($id_pagina) {
 		$this->db->select("persona.id_persona, persona.nombres, persona.apellidos, persona.documento, paginas.url_pagina, persona_pagina.*");
 		$this->db->from('paginas');
 		$this->db->join('persona_pagina', 'persona_pagina.id_pagina = paginas.id_pagina');
 		$this->db->join('persona', 'persona.id_persona = persona_pagina.id_persona');
 		$this->db->where('persona_pagina.estado', 'activo');
 		$this->db->where('persona_pagina.id_pagina', $id_pagina);
-		$this->db->like('persona.documento' , $valor);
 		$this->db->order_by('persona.id_persona' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 
 		$paginas = $this->db->get();
 

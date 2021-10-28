@@ -415,12 +415,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 		$id_pagina        = $this->input->post('id_pagina');
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$paginas         = $this->Mpaginas->getasignaciones($valor , $id_pagina, $inicio , $cantidad);
-		$total_registros  = count($this->Mpaginas->getasignaciones($valor, $id_pagina)); 
+		$paginas         = $this->Mpaginas->getasignaciones($id_pagina);
 
 		if(!$paginas) {
 			echo json_encode(['status' => false]);
@@ -430,9 +425,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 		[
 			'status'          => true, 
-			'data'            => $paginas,
-			'cantidad'        => $cantidad,
-			'total_registros' => $total_registros
+			'data'            => $paginas
 		]);
 	}
 
