@@ -71,35 +71,6 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="ModalRegistroNomina" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Generar Nomina</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="fecha_inicial" class="col-form-label">Fecha inicial:</label>
-                            <input type="date" id="fecha_inicial" class="form-control" name="fecha_inicial">
-                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="fecha_final" class="col-form-label">Fecha final:</label>
-                            <input type="date" id="fecha_final" class="form-control" name="fecha_final">
-                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary btn_generar_factura">Registrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 <script>
     $(document).ready(function() {
@@ -123,7 +94,6 @@
             url      : '<?= base_url('admin/FacturaMonitor/getFacturas') ?>',
             method   : 'POST',
             success  : function(r){
-				console.log(r)
                 if(r.status){
 					
                     var tbody = '';
@@ -131,9 +101,9 @@
                         tbody += `<tr>
                             <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['descuento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado_meta']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['tokens']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['cant_horas']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['comision']}</td>`
 							if(r.data[k]['nuevo_valor'] != null){

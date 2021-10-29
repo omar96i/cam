@@ -28,21 +28,11 @@ class MsalarioEmpleados extends CI_Model {
 		return false;
 	}
 
-	public function verSalarios($valor, $fecha_inicial, $fecha_final, $inicio = FALSE , $registros_pagina = FALSE){
+	public function verSalarios(){
 		$this->db->select('*');
 		$this->db->from('sueldos_empleados');
-		$this->db->like('tipo_usuario' , $valor);
-		if ($fecha_inicial != null) {
-			$this->db->where('fecha_registrado >=', $fecha_inicial);
-		}
-		if ($fecha_final != null) {
-			$this->db->where('fecha_registrado <=', $fecha_final);
-		}
+		$this->db->where('estado', 'activo');
 		$this->db->order_by('estado' , 'asc');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {

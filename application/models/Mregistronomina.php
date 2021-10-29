@@ -252,25 +252,14 @@ class Mregistronomina extends CI_Model {
 		return false;
 	}
 
-	public function getFacturasAdmin($valor, $fecha_inicial, $fecha_final, $inicio = FALSE, $registros_pagina = FALSE) {
+	public function getFacturasAdmin() {
 		$this->db->select('b.*, factura.*,dolar.*, metas.num_horas');
 		$this->db->from('factura');
 		$this->db->join('dolar', 'dolar.id_dolar = factura.id_dolar');
 		$this->db->join('persona as b', 'b.id_persona = factura.id_usuario');
 		$this->db->join('metas', 'metas.id_meta = factura.id_meta');
-
-		if ($fecha_inicial != null) {
-			$this->db->where('factura.fecha_registrado >=', $fecha_inicial);
-		}
-		if ($fecha_final != null) {
-			$this->db->where('factura.fecha_registrado <=', $fecha_final);
-		}
 		
 		$this->db->order_by('factura.fecha_registrado' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {
@@ -280,26 +269,14 @@ class Mregistronomina extends CI_Model {
 		return false;
 	}
 
-	public function getFacturas($valor, $id_usuario, $fecha_inicial, $fecha_final, $inicio = FALSE, $registros_pagina = FALSE) {
+	public function getFacturas() {
 		$this->db->select('b.*, factura.*,dolar.*');
 		$this->db->from('factura');
 		$this->db->join('dolar', 'dolar.id_dolar = factura.id_dolar');
 
 		$this->db->join('persona as b', 'b.id_persona = factura.id_usuario');
-		$this->db->where('factura.id_talento_humano', $id_usuario);
-
-		if ($fecha_inicial != null) {
-			$this->db->where('factura.fecha_registrado >=', $fecha_inicial);
-		}
-		if ($fecha_final != null) {
-			$this->db->where('factura.fecha_registrado <=', $fecha_final);
-		}
 		
 		$this->db->order_by('factura.fecha_registrado' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {

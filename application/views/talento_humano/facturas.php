@@ -4,7 +4,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="<?php echo base_url() ?>" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Inicio</a>
+                    <a href="<?php echo base_url() ?>" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>Inicio</a>
                 </div>
             </div>
         </div>
@@ -22,17 +22,6 @@
                                     <div class="col-6">
                                         <h2 class="d-inline">Nomina</h2>
                                     </div>
-
-                                    <div class="col-6">
-                                        <?php if(!empty($factura)): ?>
-                                            <div class="input-group">
-                                                <input type="text"  class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search factura">
-                                                <input type="date" id="fecha_inicial_buscar" class="form-control" name="s_fecha_buscar">
-                                                <input type="date" id="fecha_final_buscar" class="form-control" name="s_fecha_buscar">
-
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($factura)): ?>
@@ -40,8 +29,9 @@
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Documento Modelo</th>
-                                                    <th>Nombre Modelo</th>
+                                                    <th>Documento</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
                                                     <th>Valor Dolar</th>
                                                     <th>Dias asistidos</th>
                                                     <th>Porcentaje de paga</th>
@@ -58,10 +48,6 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
                                     <?php else: ?>
                                         <div class="text-center">
@@ -108,6 +94,7 @@
                         tbody += `<tr>
                             <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['valor_dolar']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['cant_dias']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['porcentaje_paga']}</td>
@@ -129,26 +116,7 @@
 
                     });
 
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+                   	$("#empty").DataTable()
                 }
             },
             dataType : 'json'

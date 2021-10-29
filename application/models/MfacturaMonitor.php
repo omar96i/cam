@@ -15,10 +15,9 @@ class MfacturaMonitor extends CI_Model {
 		return false;
 	}
 	public function getFacturasTable() {
-		$this->db->select('persona.*, factura_tecnico.*,metas_supervisor.tokens');
+		$this->db->select('persona.*, factura_tecnico.*');
 		$this->db->from('factura_tecnico');
 		$this->db->join('persona', 'persona.id_persona = factura_tecnico.id_empleado');
-		$this->db->join('metas_supervisor', 'factura_tecnico.id_meta_supervisor = metas_supervisor.id');
 
 		
 		$this->db->order_by('factura_tecnico.created_at' , 'DESC');

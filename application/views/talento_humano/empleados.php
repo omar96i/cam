@@ -19,18 +19,15 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-12">
                                         <h2 class="d-inline">Modelos</h2>
                                         <a href="#" class="btn btn-info mb-2 ml-1 btn_registrar_dolar">Ver / Registrar dolar</a>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($empleados)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search empleados">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
+									<div class="col-6">
+										<div class="alert alert-danger" role="alert">
+											Recuerda que antes de empezar a generar la nomina, Se debe establecer el valor del dolar!
+										</div>
+									</div>
                                 </div>
 
                                 <?php if(!empty($empleados)): ?>
@@ -78,10 +75,11 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <h6 class="valor_dolar">Valor dolar: </h6>
-                        <hr>
+						<div class="alert alert-success" role="alert">
+							<h6 class="valor_dolar">Valor dolar: </h6>
+						</div>
                         <div class="form-group">
-                            <label for="valor_dolar" class="col-form-label">Valor dolar:</label>
+                            <label for="valor_dolar" class="col-form-label">Nuevo valor del dolar:</label>
                             <input type="number" id="valor_dolar" class="form-control" name="valor_dolar">
                             <div class="invalid-feedback">El campo no debe quedar vacío</div>
                         </div>
