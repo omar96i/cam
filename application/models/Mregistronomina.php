@@ -65,10 +65,16 @@ class Mregistronomina extends CI_Model {
 							->where('fecha_registro <=', $data['fecha_final'])
 							->where('fecha_registro >=', $data['fecha_inicial'])
 							->where('id_pagina', $consulta_bonga[0]->id_pagina)
-							->get()->result();
-			if($tokens_bonga[0]->cantidad_horas == null){
-				$tokens_bonga[0]->cantidad_horas = 0;
+							->get();
+			if(!$tokens_bonga->num_rows() > 0){
+				$tokens_bonga = 0;
+			}else{
+				$tokens_bonga = $tokens_bonga->result();
+
+				$tokens_bonga = $tokens_bonga[0]->cantidad_horas;
 			}
+		}else{
+			$tokens_bonga = 0;
 		}
 			
 	
@@ -78,15 +84,15 @@ class Mregistronomina extends CI_Model {
 									->where('estado_registro', 'verificado')
 									->where('fecha_registro <=', $data['fecha_final'])
 									->where('fecha_registro >=', $data['fecha_inicial'])
-									->where('id_pagina !=', $consulta_bonga[0]->id_pagina)
+									->where('id_pagina !=', 6)
 									->get()->result();
 		if($tokens_general[0]->cantidad_horas == null){
 			$tokens_general[0]->cantidad_horas = 0;
 		}
 
 		$cantidad_horas = $tokens_general[0]->cantidad_horas-$num_penalizacion;
-		$total_horas = $tokens_general[0]->cantidad_horas+$tokens_bonga[0]->cantidad_horas;
-		$tokens_subtotal = $cantidad_horas+$tokens_bonga[0]->cantidad_horas;
+		$total_horas = $tokens_general[0]->cantidad_horas+$tokens_bonga;
+		$tokens_subtotal = $cantidad_horas+$tokens_bonga;
 		/////////////////////////////////////////
 		/// CONSULTAMOS LA META DEL EMPLEADO Y VERIFICAMOS SI CUMPLIO LA META ///
 		$consulta_meta = $this->db->select('num_horas, id_meta')->from('metas')->where('id_empleado', $data['id_persona'])->where('estado', 'sin registrar')->get()->result();
@@ -154,7 +160,7 @@ class Mregistronomina extends CI_Model {
 		// CALCULOS PAGINAS GENERALES //
 		$sub_total_generales = ($cantidad_horas*$porcentaje_dias)*$valor_dolar;
 		// CALCULOS PAGINAS BONGACAMS
-		$sub_total_bongacams = ($tokens_bonga[0]->cantidad_horas*$porcentaje_dias_bonga)*$valor_dolar;
+		$sub_total_bongacams = ($tokens_bonga*$porcentaje_dias_bonga)*$valor_dolar;
 
 		$sub_total = $sub_total_generales+$sub_total_bongacams;
 
@@ -189,6 +195,7 @@ class Mregistronomina extends CI_Model {
 		$datos['fecha_inicio'] = $data['fecha_inicial'];
 		$datos['fecha_final'] = $data['fecha_final'];
 		$this->db->insert('factura', $datos);
+
 		$id = $this->db->insert_id();
 
 		/// DATOS INSERT INGRESOS ///
@@ -287,25 +294,14 @@ class Mregistronomina extends CI_Model {
 		return false;
 	}
 
-	public function getRegistrosFacturas($valor, $id_factura, $fecha_inicial, $fecha_final, $inicio = FALSE, $registros_pagina = FALSE) {
+	public function getRegistrosFacturas($id_factura) {
 		$this->db->select('registro_horas.*,persona.*,paginas.*');
 		$this->db->from('registro_horas');
 		$this->db->join('persona', 'persona.id_persona = registro_horas.id_empleado');
 		$this->db->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina');
 		$this->db->where('registro_horas.id_factura', $id_factura);
-
-		if ($fecha_inicial != null) {
-			$this->db->where('registro_horas.fecha_registro >=', $fecha_inicial);
-		}
-		if ($fecha_final != null) {
-			$this->db->where('registro_horas.fecha_registro <=', $fecha_final);
-		}
 		
 		$this->db->order_by('registro_horas.fecha_registro' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {

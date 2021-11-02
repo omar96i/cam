@@ -153,7 +153,12 @@
                         $("#modalVerRegistros").modal('show');
 
                     });
-                    $("#empty").DataTable()
+                    $("#empty").DataTable( {
+						dom: 'Bfrtip',
+						buttons: [
+							'copy', 'excel'
+						]
+					} );
                 }
             },
             dataType : 'json'

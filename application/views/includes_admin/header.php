@@ -28,6 +28,9 @@
 	<link rel="stylesheet" href="<?php echo base_url('assets/alertifyjs/css/themes/bootstrap.min.css') ?>">
 	<link href="<?php echo base_url('assets/waitMe/waitMe.min.css') ?>" rel="stylesheet">
 	<link href="<?php echo base_url('assets/glDatePicker/styles/glDatePicker.default.css') ?>" rel="stylesheet">
+	<link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet">
+	<link href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css" rel="stylesheet">
+
 	<!-- /global stylesheets -->
 
 	<!-- Core JS files -->
@@ -44,6 +47,9 @@
 	<script src="<?php echo base_url('assets/waitMe/waitMe.min.js') ?>" type="text/javascript"></script>
 	<script src="<?php echo base_url('assets/glDatePicker/glDatePicker.min.js') ?>" type="text/javascript"></script>
 	<script src="<?php echo base_url('assets/js/datatables.min.js') ?>" type="text/javascript"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script> 
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
 
 
 

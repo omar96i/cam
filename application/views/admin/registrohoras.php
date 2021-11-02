@@ -32,17 +32,6 @@
 
                                         <a href="#" class="btn btn-info mb-2 ml-1 btn_consultar_asistencia">Asistencia</a>
                                     </div>
-
-                                    <div class="col-6">
-                                        <?php if(!empty($registro_horas)): ?>
-                                            <div class="input-group">
-                                                <input type="text"  class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search registro_horas">
-                                                <input type="date" id="fecha_inicial_buscar" class="form-control" name="s_fecha_buscar">
-                                                <input type="date" id="fecha_final_buscar" class="form-control" name="s_fecha_buscar">
-
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($registro_horas)): ?>
@@ -54,7 +43,6 @@
                                                     <th>Nombres</th>
                                                     <th>Apellidos</th>
                                                     <th>Cantidad Tokens</th>
-                                                    <th>Descripcion</th>
                                                     <th>Fecha registro</th>
                                                 </tr>
                                             </thead>
@@ -63,10 +51,6 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
                                     <?php else: ?>
                                         <div class="text-center">
@@ -117,44 +101,6 @@
                 </div>
             </div>
         </div>
-       <!--  <div class="modal fade" id="ModalEditRegistro" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Editar Registro</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="cantidad_horas" class="col-form-label">Cantidad Horas:</label>
-                            <input type="text" id="cantidad_horas" class="form-control" name="cantidad_horas" >
-                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="descuento" class="col-form-label">Descuento:</label>
-                            <input type="text" id="descuento" class="form-control" name="descuento" >
-                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="descripcion" class="col-form-label">Descripcion: </label>
-                            <input type="text" id="descripcion" class="form-control" name="descripcion" >
-                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha_registro" class="col-form-label">Fecha Registro: </label>
-                            <input type="date" id="fecha_registro" class="form-control" name="fecha_registro">
-                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary btn_modificar_registro">Registrar</button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
 
 <script>
     $(document).ready(function() {
@@ -228,7 +174,6 @@
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['cantidad_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>`;
                         tbody += `</tr>`;
                     }
@@ -240,27 +185,12 @@
                         traerDatosFactura(id_registro);
                     });
 
-
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+					$("#empty").DataTable( {
+						dom: 'Bfrtip',
+						buttons: [
+							'copy', 'excel'
+						]
+					} )
                 }
             },
             dataType : 'json'

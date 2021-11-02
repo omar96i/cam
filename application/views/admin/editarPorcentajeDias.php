@@ -62,7 +62,7 @@
                                                 <label for="tipo" class="col-form-label">Tipo</label>
                                                 <select name="tipo" id="tipo" class="form-control">
                                                     <option value="general" <?php echo ($porcentaje[0]->tipo=='general')?'selected':''; ?>>General</option>
-                                                    <option value="bomgacams" <?php echo ($porcentaje[0]->tipo=='bomgacams')?'selected':''; ?>>Bomgacams</option>
+                                                    <option value="bongacams" <?php echo ($porcentaje[0]->tipo=='bongacams')?'selected':''; ?>>Bongacams</option>
                                                 </select>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>

@@ -31,17 +31,6 @@
                                         <h2 class="d-inline">Registros</h2>
                                         <a href="#" class="btn btn-info mb-2 ml-1 btn_consultar_asistencia">Asistencia</a>
                                     </div>
-
-                                    <div class="col-6">
-                                        <?php if(!empty($registro_horas)): ?>
-                                            <div class="input-group">
-                                                <input type="text"  class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search registro_horas">
-                                                <input type="date" id="fecha_inicial_buscar" class="form-control" name="s_fecha_buscar">
-                                                <input type="date" id="fecha_final_buscar" class="form-control" name="s_fecha_buscar">
-
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($registro_horas)): ?>
@@ -53,7 +42,6 @@
                                                     <th>Nombres</th>
                                                     <th>Apellidos</th>
                                                     <th>Cantidad Tokens</th>
-                                                    <th>Descripcion</th>
                                                     <th>Fecha registro</th>
                                                 </tr>
                                             </thead>
@@ -185,33 +173,17 @@
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['cantidad_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>`;
                         tbody += `</tr>`;
                     }
                     $('#tbodyregistro_horas').html(tbody);
 
-
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+					$("#empty").DataTable( {
+						dom: 'Bfrtip',
+						buttons: [
+							'copy', 'excel'
+						]
+					} )
                 }
             },
             dataType : 'json'

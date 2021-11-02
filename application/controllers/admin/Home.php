@@ -2050,14 +2050,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$fecha_inicial    = ($this->input->post('fecha_inicio')=="")?"":$this->input->post('fecha_inicio')." 00:00:00";    
-		$fecha_final 	  = ($this->input->post('fecha_final')=="")?"":$this->input->post('fecha_final')." 23:59:59";
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->MfacturasSupervisor->getFacturasSupervisor($valor , $fecha_inicial, $fecha_final, $inicio, $cantidad);
-		$total_registros  = count($this->MfacturasSupervisor->getFacturasSupervisor($valor, $fecha_inicial, $fecha_final)); 
+		$usuarios         = $this->MfacturasSupervisor->getFacturasSupervisor();
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -2067,9 +2060,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 	}
 	/// FIN FACTURA SUPERVISOR ///

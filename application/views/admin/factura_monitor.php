@@ -30,11 +30,11 @@
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Documento Empleado</th>
-                                                    <th>Nombre Empleado</th>
+                                                    <th>Documento</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
                                                     <th>Descuento</th>
                                                     <th>Estado Meta</th>
-                                                    <th>Tokens Meta</th>
                                                     <th>Total Tokens</th>
                                                     <th>Comision</th>
                                                     <th>Total Pago</th>
@@ -67,6 +67,35 @@
                         </div>
 
                         <div class="chart position-relative" id="traffic-sources"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<div class="modal fade" id="ModalRegistroNomina" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Generar Nomina</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="fecha_inicial" class="col-form-label">Fecha inicial:</label>
+                            <input type="date" id="fecha_inicial" class="form-control" name="fecha_inicial">
+                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fecha_final" class="col-form-label">Fecha final:</label>
+                            <input type="date" id="fecha_final" class="form-control" name="fecha_final">
+                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary btn_generar_factura">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +152,12 @@
                             </tr>`;
                     }
                     $('#tbodyfactura').html(tbody);
-					$("#empty").DataTable();
+					$("#empty").DataTable( {
+						dom: 'Bfrtip',
+						buttons: [
+							'copy', 'excel'
+						]
+					} );
                     
                 }
             },
