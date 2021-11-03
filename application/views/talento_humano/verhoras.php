@@ -40,12 +40,12 @@
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
+													<th>Estado registro</th>
                                                     <th>Url pagina</th>
                                                     <th>Usuario</th>
                                                     <th>Contraseña</th>
                                                     <th>Cantidad Tokens</th>
-                                                    <th>Estado registro</th>
-                                                    <th>Fecha registro</th>
+													<th>Fecha registro</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -182,9 +182,10 @@
                     $("#fecha_inicial_v").val("");
                     $("#fecha_final_v").val("");
                     $("#ModalVerificarHoras").modal('hide');
-
-                    alertify.success('Verificacion exitosa');
-                    load_registro_horas('' , 1);
+					alertify.notify('Verificacion exitosa', 'success', 2, function(){
+						window.location.reload()
+					});
+					return;
                 }
             })
             .fail(function(r) {
@@ -211,11 +212,11 @@
                     
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
+							<td class="align-middle text-capitalize">${r.data[k]['estado_registro']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['url_pagina']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['correo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['clave']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['cantidad_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['estado_registro']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>`;
                         if (r.data[k]['estado_registro'] == 'sin registrar') {
                             tbody += `<td class="align-middle">
@@ -228,9 +229,6 @@
                     }
                     $('#tbodyregistro_horas').html(tbody);
 					$('#empty').DataTable();
-
-
-                   
                 }
             },
             dataType : 'json'
@@ -273,11 +271,10 @@
                 success: function(r) {
 					console.log(r);
                     if(r.status){
-                        alertify.success('Registro exitoso');
-                        load_registro_horas('' , 1);
-                        $(".feIn_nomina").text('Fecha inicial: '+r.fecha_inicial);
-                        
-                        return;
+						alertify.notify('Registro de nomina realizado', 'success', 2, function(){
+							window.location.reload()
+						});
+						return;
                     }else{
                         alertify.alert(r.msg);
                     }
