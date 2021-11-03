@@ -27,14 +27,6 @@
                                             <a href="" class="btn btn-info" id="btn_abrir_asistencia">Abrir asistencia</a>
                                         <?php } ?>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($asistencia)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search asistencia">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($asistencia)): ?>
@@ -81,8 +73,7 @@
                                                         </tr>
                                                     <?php } ?>
                                                     <tr>
-                                                        <td class="align-middle text-capitalize" colspan="3"><button type="submit" id="btn_registrar_asistencia" class="btn btn-info mb-2 ml-1">Registrar</button></td>
-                                                        <td class="align-middle text-capitalize" colspan="3"><button type="button" id="btn_finalizar_asistencia" class="btn btn-info mb-2 ml-1">Finalizar lista</button></td>
+                                                        <td class="align-middle text-capitalize" colspan="6"><button type="button" id="btn_registrar_asistencia" class="btn btn-info mb-2 ml-1">Registrar</button></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -106,84 +97,73 @@
         </div>
 
 <script>
-    $("#btn_finalizar_asistencia").on('click', function(e) {
-        e.preventDefault();
-
-
-        id_asistencia = <?php echo (isset($items_asistencia)) ? $items_asistencia[0]->id_asistencia : ''; ?>
-
-        $.ajax({
-            url: '<?= base_url('supervisor/Home/finalizarAsistencia') ?>',
-            type: 'POST',
-            dataType: 'json',
-            data: {id_asistencia: id_asistencia},
-        })
-        .done(function(r) {
-            if(r.status){
-                alertify.notify('Lista finalizada', 'success', 2, function(){
-                   window.location.href = '../Home/asistencia';
-                });
-                return;
-            }
-
-            alertify.alert("Ocurrio un error al finalizar lista");
-        })
-        .fail(function(r) {
-            console.log("error");
-            console.log(r);
-
-        });
-        
-    });
 
     $("#btn_registrar_asistencia").on('click', function(e) {
-        e.preventDefault();
-        datos = [];
-        filas = $("#tbodyasistencia tr");
-        for (var i = 0; i < filas.length-1; i++) {
-            items = [];
-            if($(filas[i]).find('.btn_chek').is(':checked')) {
-                items[0] = "registrado";
-                items[1] = '';
+        alertify.confirm("Nomina" , "Estas seguro de finalizar la asistencia?",
+        function(){
+			datos = [];
+			filas = $("#tbodyasistencia tr");
+			for (var i = 0; i < filas.length-1; i++) {
+				items = [];
+				if($(filas[i]).find('.btn_chek').is(':checked')) {
+					items[0] = "registrado";
+					items[1] = '';
 
-            }else{
-                items[0] = "sin registrar";
-                items[1] = $(filas[i]).find('select').val();
-            }
+				}else{
+					items[0] = "sin registrar";
+					items[1] = $(filas[i]).find('select').val();
+				}
 
-            items[2] = $(filas[i]).find('.btn_chek').data('id_empleado');
-            datos[i] = items;
-        }
+				items[2] = $(filas[i]).find('.btn_chek').data('id_empleado');
+				datos[i] = items;
+			}
 
-        items_usuario = JSON.stringify(datos);
-        id_asistencia = <?php echo (isset($items_asistencia))?$items_asistencia[0]->id_asistencia:''; ?>
+			items_usuario = JSON.stringify(datos);
+			id_asistencia = <?php echo (isset($items_asistencia))?$items_asistencia[0]->id_asistencia:''; ?>
 
-        $.ajax({
-            url: '<?= base_url('supervisor/Home/actualizarAsistencia') ?>',
-            type: 'POST',
-            dataType: 'json',
-            data: {items_usuario: items_usuario, id_asistencia: id_asistencia},
-        })
-        .done(function(r) {
-            if(r){
-                alertify.notify('Lista Actualizada', 'success', 2);
+			$.ajax({
+				url: '<?= base_url('supervisor/Home/actualizarAsistencia') ?>',
+				type: 'POST',
+				dataType: 'json',
+				data: {items_usuario: items_usuario, id_asistencia: id_asistencia},
+			})
+			.done(function(r) {
+				if(r){
+					id_asistencia = <?php echo (isset($items_asistencia)) ? $items_asistencia[0]->id_asistencia : ''; ?>
 
-                for (var i = 0; i < filas.length-1; i++) {
-                    if($(filas[i]).find('.btn_chek').is(':checked')) {
-                        $(filas[i]).find('select').val('0');
-                        $(filas[i]).find('.td_estado').text('Registrado');
-                        
-                    }else{
-                        $(filas[i]).find('.td_estado').text('Sin Registrar');
-                    }
-                }
-            }
-        })
-        .fail(function(r) {
-            console.log("error");
-            console.log(r);
+					$.ajax({
+						url: '<?= base_url('supervisor/Home/finalizarAsistencia') ?>',
+						type: 'POST',
+						dataType: 'json',
+						data: {id_asistencia: id_asistencia},
+					})
+					.done(function(r) {
+						if(r.status){
+							alertify.notify('Asistencia finalizada', 'success', 2, function(){
+							window.location.href = '../Home/asistencia';
+							});
+							return;
+						}
+
+						alertify.alert("Ocurrio un error al finalizar lista");
+					})
+					.fail(function(r) {
+						console.log("error");
+						console.log(r);
+
+					});
+				}
+			})
+			.fail(function(r) {
+				console.log("error");
+				console.log(r);
+			});
+			
+
+		},
+        function(){
+            alertify.confirm().close();
         });
-        
 
     });
     $("#btn_abrir_asistencia").on('click', function(e) {
@@ -205,7 +185,7 @@
 			.done(function(r) {
 					if(r.status){
 						alertify.notify('Lista creada', 'success', 2, function(){
-						window.location.href = '../Home/asistencia';
+							window.location.href = '../Home/asistencia';
 						});
 						return;
 					}

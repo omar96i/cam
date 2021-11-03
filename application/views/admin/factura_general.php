@@ -131,9 +131,9 @@
 
                             <td class="align-middle text-capitalize">${r.data[k]['descuentos']}</td>`
 							if(r.data[k]['nuevo_valor'] != null){
-								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['nuevo_valor'])}</td>`
+								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat('en-US').format(r.data[k]['nuevo_valor'])}</td>`
 							}else{
-								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat().format(r.data[k]['total_a_pagar'])}</td>`
+								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat('en-US').format(r.data[k]['total_a_pagar'])}</td>`
 							}
 						tbody+=	`
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registrado']}</td>

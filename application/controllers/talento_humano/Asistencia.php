@@ -44,15 +44,7 @@ class Asistencia extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-
-		$fecha_inicial    = $this->input->post('fecha_inicio');    
-		$fecha_final 	  = $this->input->post('fecha_final');
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Masistencia->t_h_getDataAsistencia($valor , $fecha_inicial, $fecha_final, $inicio, $cantidad);
-		$total_registros  = count($this->Masistencia->t_h_getDataAsistencia($valor, $fecha_inicial, $fecha_final)); 
+		$usuarios         = $this->Masistencia->t_h_getDataAsistencia();
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -62,9 +54,7 @@ class Asistencia extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 	}
 

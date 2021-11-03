@@ -195,8 +195,9 @@ class MsalarioEmpleados extends CI_Model {
 
 	public function generarFacturaGeneral($data){
 		$empleados = $this->db->select('persona.id_persona, usuarios.tipo_cuenta')
-		->from('persona')->join('usuarios', 'usuarios.id_persona = persona.id_persona')
-			->where('estado', 'activo')
+			->from('persona')->join('usuarios', 'usuarios.id_persona = persona.id_persona')
+			->where('usuarios.estado', 'activo')
+			->group_start()
 			->where('tipo_cuenta', 'administrador')
 			->or_where('tipo_cuenta', 'talento humano')
 			->or_where('tipo_cuenta', 'servicios generales')
@@ -206,9 +207,8 @@ class MsalarioEmpleados extends CI_Model {
 			->or_where('tipo_cuenta', 'fotografo')
 			->or_where('tipo_cuenta', 'community manager')
 			->or_where('tipo_cuenta', 'operativo')
-			->or_where('tipo_cuenta', 'supervisor de los monitores')
+			->group_end()
 			->get();
-
 		if ($empleados->num_rows() > 0) {
 			$adelantos_general = [];
 			$metas_supervisor = [];

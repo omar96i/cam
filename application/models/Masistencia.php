@@ -30,21 +30,11 @@ class Masistencia extends CI_Model {
 		return false;
 	}
 
-	public function t_h_getDataAsistencia($valor , $fecha_inicial, $fecha_final, $inicio = FALSE , $registros_pagina = FALSE){
+	public function t_h_getDataAsistencia(){
 		$this->db->select('*');
 		$this->db->from('asistencia')->join('persona', 'persona.id_persona = asistencia.id_supervisor');
-		if ($fecha_inicial != null) {
-			$this->db->where('fecha >=', $fecha_inicial);
-		}
-		if ($fecha_final != null) {
-			$this->db->where('fecha <=', $fecha_final);
-		}
-		$this->db->like('persona.nombres', $valor);
 		$this->db->order_by('fecha' , 'DESC');
 
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$asistencia = $this->db->get();
 
 		if($asistencia->num_rows() > 0) {
