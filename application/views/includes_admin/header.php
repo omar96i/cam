@@ -7,9 +7,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta http-equiv='cache-control' content='no-cache'>
-	<meta http-equiv='expires' content='0'>
-	<meta http-equiv='pragma' content='no-cache'>
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
 	<title>Admin</title>
 	<link href="<?php echo base_url('assets/images/logo.jpg') ?>" rel="shortcut icon" type="image/x-icon">
 	<!-- Global stylesheets -->
@@ -356,6 +357,9 @@
 									</li>
 									<li class="nav-item">
 										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
+									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('talento_humano/Asistencia') ?>" class="nav-link">Modificar asistencia</a>
 									</li>
 								</ul>
 							</li>

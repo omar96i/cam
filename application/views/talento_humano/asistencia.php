@@ -19,9 +19,14 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <h2 class="d-inline">Asistencias</h2>
                                     </div>
+									<div class="col-12">
+										<div class="alert alert-danger" role="alert">
+											Esta opcion solo esta habilitada hasta el dia 05/11/2021 hasta las 23:59 <br> <strong>Importante!!</strong>  buscar tu nombre y modificar solo las asistencias que tienen tu nombre
+										</div>
+									</div>
                                 </div>
 
                                 <?php if(!empty($asistencia)): ?>
@@ -30,7 +35,7 @@
                                             <thead class="text-center">
                                                 <tr>
                                                     <th>Documento</th>
-                                                    <th>Nombre Supervisor</th>
+                                                    <th>Nombre</th>
                                                     <th>Fecha</th>
                                                     <th>Estado</th>
                                                     <th></th>

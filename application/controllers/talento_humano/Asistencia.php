@@ -18,25 +18,27 @@ class Asistencia extends CI_Controller {
 	}
 
 	public function index(){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='talento humano') {
+		if($this->session->userdata('usuario')['tipo']=='talento humano' || $this->session->userdata('usuario')['tipo']=='supervisor') {
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['asistencia']     = $this->Masistencia->t_h_getDatosAsistencia();
+
+			if(!$data['asistencia']) {
+				$data['asistencia'] = 0;
+			} 
+			else {
+				$data['asistencia'] = count($this->Masistencia->t_h_getDatosAsistencia());
+			}
+
+			
+			$this->load->view('includes_admin/header');
+			$this->load->view('talento_humano/asistencia', $data);
+			$this->load->view('includes_admin/footer');
+		}else{
 			redirect('Home');
 		}
 
-		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
-
-		$data['asistencia']     = $this->Masistencia->t_h_getDatosAsistencia();
-
-		if(!$data['asistencia']) {
-			$data['asistencia'] = 0;
-		} 
-		else {
-			$data['asistencia'] = count($this->Masistencia->t_h_getDatosAsistencia());
-		}
-
 		
-		$this->load->view('includes_admin/header');
-		$this->load->view('talento_humano/asistencia', $data);
-		$this->load->view('includes_admin/footer');
 	}
 
 	public function getAsistencia(){
