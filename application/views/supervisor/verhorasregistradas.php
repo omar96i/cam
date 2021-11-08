@@ -40,9 +40,9 @@
                                                     <th>Url pagina</th>
                                                     <th>Usuario</th>
                                                     <th>Contraseña</th>
-                                                    <th>Cantidad horas</th>
-                                                    <th>Estado registro</th>
-                                                    <th>Fecha registro</th>
+                                                    <th>Tokens</th>
+                                                    <th>Estado</th>
+                                                    <th>Fecha</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -86,30 +86,26 @@
     });
     function load_paginas(valor , pagina) {
         id_usuario = <?php echo $usuario; ?>;
-        fecha_inicio = $("#fecha_inicial_buscar").val();
-        fecha_final = $("#fecha_final_buscar").val();
-        console.log(fecha_inicio);
-        console.log(fecha_final);
         $.ajax({
             url      : '<?= base_url('supervisor/home/gethoras') ?>',
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina, id_usuario: id_usuario, fecha_inicio: fecha_inicio, fecha_final: fecha_final},
+            data     : {valor : valor , pagina : pagina, id_usuario: id_usuario},
             success  : function(r){
-                console.log(r.data);
                 if(r.status){
+					data = _.filter(r.data, ['estado_registro', 'sin registrar']);
                     var tbody = '';
                     
-                    for(var k=0; k<r.data.length; k++) {
+                    for(var k=0; k<data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['url_pagina']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['correo']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['clave']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['cantidad_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['estado_registro']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>`;
+                            <td class="align-middle text-capitalize">${data[k]['url_pagina']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['correo']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['clave']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['cantidad_horas']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['estado_registro']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['fecha_registro']}</td>`;
                         if (r.data[k]['estado_registro'] == 'sin registrar') {
                             tbody += `<td class="align-middle">
-                                <a href="<?php echo site_url('supervisor/Home/editarhoras/') ?>${r.data[k]['id_registro_horas']+'/'+<?= $this->uri->segment(4) ?>}" class="text-info"><i class="icon-pencil5"></i></a>
+                                <a href="<?php echo site_url('supervisor/Home/editarhoras/') ?>${data[k]['id_registro_horas']+'/'+<?= $this->uri->segment(4) ?>}" class="text-info"><i class="icon-pencil5"></i></a>
                             </td>`;
                         }else{
 							tbody += `<td class="align-middle">
@@ -122,7 +118,9 @@
                     }
                     $('#tbodypaginas').html(tbody);
 
-					$('#empty').DataTable();
+					$('#empty').DataTable( {
+						"order": [[ 5, "desc" ]]
+					} );
                 }
             },
             dataType : 'json'

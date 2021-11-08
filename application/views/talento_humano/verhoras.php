@@ -10,6 +10,8 @@
         </div>
     </div>
 
+	
+
     <div class="content-header mt-1 mr-3"> 
         <div class="row">
             <div class="col-md-12">
@@ -19,23 +21,53 @@
     </div>
     <!-- /page header -->
 
+	
+
     <div class="content pt-1">
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
+
+						<div class="row">
+							<div class="col-12 text-center my-2">
+									<h5><?php echo $datos_personales[0]->nombres." ".$datos_personales[0]->apellidos ?></h5>
+							</div>
+							<div class="col-4">
+								<div class="alert alert-success text-center" role="alert">
+									<h6>Tokens Verificados General</h6>
+									<p class="tokens_general"></p>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="alert alert-success text-center" role="alert">
+									<h6>Tokens Verificados Bongacams</h6>
+									<p class="tokens_bonga"></p>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="alert alert-success text-center" role="alert">
+									<h6>Total tokens verificados</h6>
+									<p class="tokens_total"></p>
+								</div>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-12 text-center">
+								<a href="<?php echo site_url('talento_humano/Home/verhoras/').$usuario.'/'.'sin_registrar' ?>" class="btn <?php echo ($tipo == "sin_registrar")? "btn-success": "btn-info"; ?> ">Sin verificar</a>
+								<a href="<?php echo site_url('talento_humano/Home/verhoras/').$usuario.'/'.'verificado' ?>" class="btn <?php echo ($tipo == "verificado")? "btn-success": "btn-info"; ?> ">Verificados</a>
+								<a href="<?php echo site_url('talento_humano/Home/verhoras/').$usuario.'/'.'registrado' ?>" class="btn <?php echo ($tipo == "registrado")? "btn-success": "btn-info"; ?> ">Registrados</a>
+							</div>
+						</div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="row">
                                     <div class="col-6">
                                         <h2 class="d-inline">Pagina</h2>
                                         <a href="#" class="btn btn-info mb-2 ml-1 btn_generar_nomina">Generar Nomina</a>
-
                                         <a href="#" class="btn btn-info mb-2 ml-1 btn_verificar_nomina">Verificar Tokens</a>
                                     </div>
                                 </div>
-
-                                <?php if(!empty($registro_horas)): ?>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
@@ -55,13 +87,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <?php else: ?>
-                                        <div class="text-center">
-                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay registro_horas</span></p>
-                                        </div>
-                                    <?php endif; ?>
-
                                 </div>
                             </div>
                         </div>
@@ -203,28 +228,51 @@
 
 
     function load_registro_horas(valor , pagina) {
+		tipo = "<?php echo $tipo; ?>";
         id_usuario = <?php echo $usuario; ?>;
         fecha_inicio = $("#fecha_inicial_buscar").val();
         fecha_final = $("#fecha_final_buscar").val();
         $.ajax({
             url      : '<?= base_url('supervisor/home/gethoras') ?>',
             method   : 'POST',
-            data     : {id_usuario: id_usuario},
+            data     : {id_usuario: id_usuario, tipo: tipo},
             success  : function(r){
                 if(r.status){
+					horas_general = 0;
+					horas_bonga = 0;
+					if(tipo == "sin_registrar"){
+						data = _.filter(r.data, ['estado_registro', 'sin registrar']);
+					}else if(tipo == "verificado"){
+						data = _.filter(r.data, ['estado_registro', 'verificado']);
+					}else if(tipo == "registrado"){
+						data = _.filter(r.data, ['estado_registro', 'registrado']);
+					}
+					tokens = _.filter(r.data, ['estado_registro', 'verificado']);
+					_.forEach(tokens, function(value, key) {
+						if(value['url_pagina'] == "BongaCams"){
+							horas_bonga = horas_bonga + parseInt(value['cantidad_horas']) 
+						}else{
+							horas_general = horas_general + parseInt(value['cantidad_horas']) 
+						}
+					});
+
+					$(".tokens_general").html(horas_general)
+					$(".tokens_bonga").html(horas_bonga)
+					$(".tokens_total").html(horas_bonga+horas_general)
+
                     var tbody = '';
                     
-                    for(var k=0; k<r.data.length; k++) {
+                    for(var k=0; k<data.length; k++) {
                         tbody += `<tr>
-							<td class="align-middle text-capitalize">${r.data[k]['estado_registro']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['url_pagina']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['correo']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['clave']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['cantidad_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>`;
-                        if (r.data[k]['estado_registro'] == 'sin registrar') {
+							<td class="align-middle text-capitalize">${(data[k]['estado_registro'] == 'sin registrar')? 'sin verificar': data[k]['estado_registro']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['url_pagina']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['correo']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['clave']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['cantidad_horas']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['fecha_registro']}</td>`;
+                        if (data[k]['estado_registro'] == 'sin registrar') {
                             tbody += `<td class="align-middle">
-                                <a href="<?php echo site_url('talento_humano/Home/edithoras/') ?>${r.data[k]['id_registro_horas']+'/'+<?= $this->uri->segment(4) ?>}" class="text-info"><i class="icon-pencil5"></i></a>
+                                <a href="<?php echo site_url('talento_humano/Home/edithoras/') ?>${data[k]['id_registro_horas']+'/'+<?= $this->uri->segment(4) ?>}" class="text-info"><i class="icon-pencil5"></i></a>
                             </td>`;
                         }else{
 							tbody += `<td class="align-middle"></td>`;
@@ -232,8 +280,17 @@
                         tbody += `</tr>`;
                     }
                     $('#tbodyregistro_horas').html(tbody);
+					$('#empty').DataTable( {
+						"order": [[ 5, "desc" ]]
+					} );
+                }else{
 					$('#empty').DataTable();
-                }
+					horas_general = 0;
+					horas_bonga = 0;
+					$(".tokens_general").html(horas_general)
+					$(".tokens_bonga").html(horas_bonga)
+					$(".tokens_total").html(horas_bonga+horas_general)
+				}
             },
             dataType : 'json'
         });

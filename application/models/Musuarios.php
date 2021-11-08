@@ -160,6 +160,7 @@ class Musuarios extends CI_Model {
 		$this->db->insert('persona', $data);
 		if ($this->db->affected_rows()>0) {
 			$data2['id_persona'] = $this->db->insert_id();
+			$data2['id_usuario'] = $this->db->insert_id();
 			$data2['estado'] = "activo";
 			$this->db->insert('usuarios', $data2);
 			if ($this->db->affected_rows()>0) {

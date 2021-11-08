@@ -19,7 +19,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-6">
                                         <h2 class="d-inline">Modelos</h2>
                                         <a href="#" class="btn btn-info mb-2 ml-1 btn_registrar_dolar">Ver / Registrar dolar</a>
                                     </div>
@@ -35,11 +35,10 @@
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Id</th>
                                                     <th>Documento</th>
                                                     <th>Nombres</th>
                                                     <th>Apellidos</th>
-                                                    <th>Registros</th>
+                                                    <th>Tokens sin verificar</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -152,7 +151,6 @@
                     
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['id_persona']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>

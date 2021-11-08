@@ -25,14 +25,6 @@
                                         <a href="<?php echo base_url('supervisor/Home/registrarPenalizacion') ?>" class="btn btn-info mb-2 ml-1">Registrar Penalizacion</a>
                                         <a href="<?php echo base_url('supervisor/AddInforme') ?>" class="btn btn-info mb-2 ml-1">Registrar Informe</a>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($empleados)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search empleados">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($empleados)): ?>

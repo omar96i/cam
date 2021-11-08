@@ -118,12 +118,19 @@ class Mregistrohoras extends CI_Model {
 		return $this->db->update('registro_horas', $data);
 	}
 
-	public function t_h_get_horas_usuario($id_usuario) {
+	public function t_h_get_horas_usuario($id_usuario, $tipo) {
 		$this->db->select('paginas.url_pagina, registro_horas.*, persona_pagina.*');
 		$this->db->from('registro_horas');
 		$this->db->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina');
 		$this->db->join('persona_pagina', 'persona_pagina.id_persona = registro_horas.id_empleado');
 		$this->db->where('persona_pagina.estado', 'activo');
+		if($tipo == "sin_registrar"){
+			$this->db->where('registro_horas.estado_registro', 'sin registrar');
+		}else if($tipo == "verificados"){
+			$this->db->where('registro_horas.estado_registro', 'verificado');
+		}else if($tipo == "registrados"){
+			$this->db->where('registro_horas.estado_registro', 'registrado');
+		}
 		$this->db->where('registro_horas.id_empleado', $id_usuario);
 		$this->db->order_by('estado_registro' , 'DESC');
 

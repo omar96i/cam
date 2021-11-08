@@ -94,20 +94,22 @@ class Home extends CI_Controller {
 		$this->load->view('includes_admin/footer');
 	}
 
-	public function verhoras($id_usuario){
+	public function verhoras($id_usuario, $tipo = "sin_registrar"){
 		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='talento humano') {
 			redirect('Home');
 		}
 
 		$data['fecha_inicial'] = $this->Mregistronomina->get_fecha_incialNomina($id_usuario);
-		$data['registro_horas'] = $this->Mregistrohoras->t_h_get_horas_usuario($id_usuario);
+		$data['registro_horas'] = $this->Mregistrohoras->t_h_get_horas_usuario($id_usuario, $tipo);
 		$data['usuario'] = $id_usuario;
+		$data['tipo'] = $tipo;
+		$data['datos_personales'] = $this->Musuarios->getUser($id_usuario);
 
 		if(!$data['registro_horas']) {
 			$data['registro_horas'] = 0;
 		}
 		else {
-			$data['registro_horas'] = count($this->Mregistrohoras->t_h_get_horas_usuario($id_usuario));
+			$data['registro_horas'] = count($this->Mregistrohoras->t_h_get_horas_usuario($id_usuario, $tipo));
 		}
 
 		$this->load->view('includes_admin/header');
