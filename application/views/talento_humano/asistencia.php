@@ -94,9 +94,9 @@
                             </table>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer ">
                         <button type="button" class="btn btn-success" id="modificar_asistencia">Registrar</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary cerrar-modal" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -132,6 +132,7 @@
     });
 
     function ModificarAsistencia(){
+		$("#modificar_asistencia").attr('disabled', true);
         datos = [];
         filas = $("#tbodyitems tr");
         for (var i = 0; i < filas.length; i++) {
@@ -160,12 +161,14 @@
         })
         .done(function(r) {
             if(r){
+				$("#modificar_asistencia").removeAttr("disabled");
                 alertify.notify('Asistencia actualizada', 'success');
                 $("#modalAsistencia").modal('hide');
                 return;
             }
         })
         .fail(function(r) {
+			$("#modificar_asistencia").removeAttr("disabled");
             console.log("error");
             console.log(r);
         });

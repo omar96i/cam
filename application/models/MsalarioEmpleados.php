@@ -159,7 +159,7 @@ class MsalarioEmpleados extends CI_Model {
 				$datos_insert['id_administrador'] = $data['id_administrador'];
 				$datos_insert['id_sueldo'] = $sueldo_supervisor[0]->id_sueldos_empleados;
 				$datos_insert['id_meta'] = $meta[0]->id_meta;
-				$datos_insert['total_paga'] = ($sueldo_supervisor[0]->sueldo+$datos_insert['total_comision'])-$datos_insert['descuento'];
+				$datos_insert['total_paga'] = (($sueldo_supervisor[0]->sueldo/2)+$datos_insert['total_comision'])-$datos_insert['descuento'];
 				$datos_insert['fecha_inicial'] = $data['fecha_inicial']; 
 				$datos_insert['fecha_final'] = $data['fecha_final'];
 				$datos_insert['estado_factura'] = "sin registrar";
@@ -276,7 +276,7 @@ class MsalarioEmpleados extends CI_Model {
 
 				$insert_data['id_empleado'] = $value->id_persona;
 				$insert_data['descuentos'] = $adelanto;
-				$insert_data['total_a_pagar'] = $sueldo_general-$adelanto;
+				$insert_data['total_a_pagar'] = ($sueldo_general/2)-$adelanto;
 				$insert_data['fecha_inicial'] = $data['fecha_inicial'];
 				$insert_data['fecha_final'] = $data['fecha_final'];
 				$insert_data['estado'] = "sin registrar";

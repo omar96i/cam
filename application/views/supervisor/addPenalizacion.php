@@ -125,7 +125,7 @@
                     $("#penalizacion").val() != '' &&
                     $("#fecha").val() != ''
                 ) {
-
+					$(".btn_agregar_asignacion").attr('disabled', true);
                     $.ajax({
                         url: ruta,
                         type: 'POST',
@@ -133,7 +133,7 @@
                         data: {empleado: empleado, penalizacion: penalizacion, descripcion: descripcion, fecha: fecha},
                     })
                     .done(function(r) {
-
+						$(".btn_agregar_asignacion").removeAttr("disabled");
                         if(r.status){
                             $('#form_addproduct').trigger('reset');
                             alertify.notify('Registro exitoso', 'success', 2);
@@ -144,6 +144,7 @@
 
                     })
                     .fail(function(r) {
+						$(".btn_agregar_asignacion").removeAttr("disabled");
                         console.log("error");
                         console.log(r);
                     });

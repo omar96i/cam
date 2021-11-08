@@ -45,6 +45,7 @@ class Mregistronomina extends CI_Model {
 			$num_penalizacion = $consulta_penalizaciones[0]->puntos;
 		}
 
+
 		/////////////////////////////////
 
 		/// CONSULTAMOS LOS TOKENS DE LOS EMPLEADOS /////
@@ -157,10 +158,12 @@ class Mregistronomina extends CI_Model {
 
 		/// CALCULOS EMPLEADOS ///
 
+
 		// CALCULOS PAGINAS GENERALES //
 		$sub_total_generales = ($cantidad_horas*$porcentaje_dias)*$valor_dolar;
 		// CALCULOS PAGINAS BONGACAMS
 		$sub_total_bongacams = ($tokens_bonga*$porcentaje_dias_bonga)*$valor_dolar;
+		
 
 		$sub_total = $sub_total_generales+$sub_total_bongacams;
 

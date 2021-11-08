@@ -119,7 +119,7 @@ class MfacturaMonitor extends CI_Model {
 				$datos_insert['id_administrador'] = $data['id_administrador'];
 				$datos_insert['id_sueldo'] = $sueldo_supervisor[0]->id_sueldos_empleados;
 				$datos_insert['id_meta'] = $meta[0]->id_meta;
-				$datos_insert['total_paga'] = ($sueldo_supervisor[0]->sueldo+$datos_insert['comision'])-$datos_insert['descuento'];
+				$datos_insert['total_paga'] = (($sueldo_supervisor[0]->sueldo/2)+$datos_insert['comision'])-$datos_insert['descuento'];
 				$datos_insert['fecha_inicial'] = $data['fecha_inicial']; 
 				$datos_insert['fecha_final'] = $data['fecha_final'];
 				$datos_insert['estado'] = "sin registrar";

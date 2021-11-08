@@ -123,7 +123,7 @@
                 	$("#cantidad_horas").val() != '' &&
                     $("#fecha").val() != ''
                 ) {
-
+					$(".btn_agregar_asignacion").attr('disabled', true);
                     $.ajax({
                         url: ruta,
                         type: 'POST',
@@ -131,8 +131,10 @@
                         data: {paginas: paginas, usuarios: usuarios, cantidad_horas: cantidad_horas, fecha: fecha},
                     })
                     .done(function(r) {
+						$(".btn_agregar_asignacion").removeAttr("disabled");
 
                         if(r.status){
+							
                             $('#form_addproduct').trigger('reset');
                             alertify.notify('Registro exitoso', 'success', 2);
                             return;
@@ -140,8 +142,12 @@
 
                         alertify.alert('Ups :(' , r.msg);
 
+						
+
                     })
                     .fail(function(r) {
+						$(".btn_agregar_asignacion").removeAttr("disabled");
+
                         console.log("error");
                         console.log(r);
                     });

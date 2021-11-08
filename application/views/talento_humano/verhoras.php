@@ -153,6 +153,7 @@
     });
 
     function verificarHoras(){
+		
         fecha_inicial_v = $("#fecha_inicial_v").val();
         fecha_final_v = $("#fecha_final_v").val();
         id_usuario = <?php echo $usuario; ?>;
@@ -171,6 +172,7 @@
 
         if ($('#fecha_inicial_v').val() != '' &&
             $('#fecha_final_v').val() != '') {
+			$(".btn_verificar_horas").attr('disabled', true);
             $.ajax({
                 url: '<?= base_url('talento_humano/Verhoras/verificarHoras') ?>',
                 type: 'POST',
@@ -178,6 +180,7 @@
                 data: {fecha_inicial_v: fecha_inicial_v, fecha_final_v:fecha_final_v, id_usuario:id_usuario},
             })
             .done(function(r) {
+				$(".btn_verificar_horas").removeAttr("disabled");
                 if (r.status) {
                     $("#fecha_inicial_v").val("");
                     $("#fecha_final_v").val("");
@@ -189,6 +192,7 @@
                 }
             })
             .fail(function(r) {
+				$(".btn_verificar_horas").removeAttr("disabled");
                 console.log("error");
                 console.log(r);
 

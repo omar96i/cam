@@ -170,7 +170,7 @@ class Musuarios extends CI_Model {
 	}
 
 	public function verificarUsuario($correo){
-		$this->db->select('*')->from('usuarios')->where('correo', $correo);
+		$this->db->select('*')->from('usuarios')->where('correo', $correo)->where('estado', 'activo');
 		$find = $this->db->get();
 		if($find->num_rows() > 0) {
 			return true;

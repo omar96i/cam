@@ -10,9 +10,9 @@ class Pruebas extends CI_Controller {
 	}
 	
 	public function pruebas(){
-		$respuesta = file_get_contents('https://chaturbate.com/statsapi/');
+		$respuesta = file_get_contents('https://chaturbate.com/statsapi/?username=hanna_rivera&token=GldMyGhMxjbIDew5AHK1Yvbz');
 
-		var_dump($respuesta);
+		return $respuesta;
 	}
 	
 }

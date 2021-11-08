@@ -64,6 +64,7 @@ class Verhoras extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'no se a podido realizar el registro.']);
 			return;
 		}
+
 		if (!$respuesta) {
 			echo json_encode(['status' => false, 'msg' => 'no se a podido realizar el registro.']);
 			return;
