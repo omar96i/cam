@@ -82,7 +82,7 @@ class Masistencia extends CI_Model {
 	}
 
 	public function get_regitroAsistencias($id_asistencia){
-		$this->db->select('asistencia_empleado.estado, persona.nombres, motivo_asistencia.nombre');
+		$this->db->select('asistencia_empleado.estado, persona.documento, persona.nombres, persona.apellidos, motivo_asistencia.nombre');
 		$this->db->from('asistencia_empleado');
 		$this->db->join('persona', 'persona.id_persona = asistencia_empleado.id_empleado');
 		$this->db->join('motivo_asistencia', 'motivo_asistencia.id_motivo = asistencia_empleado.motivo', 'left');

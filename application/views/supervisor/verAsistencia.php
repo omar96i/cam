@@ -58,10 +58,10 @@
         </div>
 
         <div class="modal fade" id="modalAsistencia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Metas</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modelos</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -71,9 +71,11 @@
                             <table id="empty" class="table table-sm table-striped table-bordered">
                                 <thead class="text-center">
                                     <tr>
-                                        <th>Nombre Modelo</th>
-                                        <th>Estado</th>
-                                        <th>Motivo inasistencia</th>
+										<th>Documento</th>
+										<th>Nombres</th>
+										<th>Apellidos</th>
+                                        <th>estado</th>
+                                        <th>motivo inasistencia</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyitems" class="text-center">
@@ -83,6 +85,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+						<button type="button" class="btn btn-success" id="modificar_asistencia">Registrar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -97,6 +100,11 @@
         $("#fecha_final_buscar").change(function(event) {
             load_asistencias(1);
         });
+
+		$("#modificar_asistencia").click(function(event) {
+            event.preventDefault();
+            ModificarAsistencia();
+        });
         load_asistencias(1);
         
     });
@@ -107,6 +115,7 @@
             url      : '<?= base_url('supervisor/VerAsistencia/getAsistencias') ?>',
             method   : 'POST',
             success  : function(r){
+				console.log(r)
                 if(r.status){
                     var tbody = '';
                     
@@ -121,25 +130,46 @@
                     }
                     $('#tbodyasistencia').html(tbody);
 
-                    $(".btn_asistencia").on('click', function(event) {
+                    $(".btn_asistencia").on("click", function(event) {
                         event.preventDefault();
                         id_asistencia = $(this).data('id_asistencia');
                         $.ajax({
-                            url: '<?= base_url('supervisor/VerAsistencia/getItemsAsistencia') ?>',
+                            url: '<?= base_url('talento_humano/Asistencia/getItemsAsistencia') ?>',
                             type: 'POST',
                             dataType: 'json',
                             data: {id_asistencia: id_asistencia},
                         })
                         .done(function(r) {
+                            console.log(r);
+
                             body = "";
-                            for (var i = 0; i < r.length; i++) {
+                            for (var i = 0; i < r[0].length; i++) {
                                 body += `<tr>
-                                    <td class="align-middle text-capitalize">${r[i]['nombres']}</td>
-                                    <td class="align-middle text-capitalize">${r[i]['estado']}</td>
-                                    <td class="align-middle text-capitalize">${r[i]['nombre']==null ? '' : r[i]['nombre']}</td>
+                                    <td class="align-middle text-capitalize">${r[0][i]['documento']}</td>
+									<td class="align-middle text-capitalize">${r[0][i]['nombres']}</td>
+									<td class="align-middle text-capitalize">${r[0][i]['apellidos']}</td>`;
+									
+
+                                    if (r[0][i]['estado'] == "registrado") {
+                                        body += "<td><input type='checkbox' data-id_empleado='"+r[0][i]['id_persona']+"' class='btn_chek' checked></td>";
+                                    }else if(r[0][i]['estado'] == "sin registrar"){
+                                        body += "<td><input type='checkbox' data-id_empleado='"+r[0][i]['id_persona']+"' class='btn_chek'></td>";
+                                    }
+
+                                    body+=`<td class="align-middle text-capitalize">
+                                        <select class="form-control" style="display:${r[0][i]['estado'] == "sin registrar" ? 'block' : 'none'}">
+                                            <option value="0" ${r[0][i]['motivo']==null ? 'selected' : ''} disabled>Seleccionar motivo</option>`
+                                            $.each(r['motivos'], function() {
+                                                body+=`<option ${this['id_motivo']==r[0][i]['motivo'] ? 'selected' : ''} value="${this['id_motivo']}">${this['nombre']}</option>`;
+                                            })
+                                        body+=`</select>
+                                    </td>`;
+
+                                    body += `<td class='id_asistencia'>${r[0][0]['id_asistencia']}</td>
                                 </tr>`;
                             }
                             $("#tbodyitems").html(body);
+                            $(".id_asistencia").hide();
                             $("#modalAsistencia").modal('show');
                         })
                         .fail(function(r) {
@@ -148,7 +178,6 @@
                         });
                         
                     });
-
 
 					$('#empty').DataTable();
                 }
@@ -159,9 +188,47 @@
         return false;
     }
 
-    $('body').on('click' , '.pagination li a' , function(e){
-        e.preventDefault();
-        var link = $(this).attr('href');
-            load_asistencias(link);
-    });
+	function ModificarAsistencia(){
+		$("#modificar_asistencia").attr('disabled', true);
+        datos = [];
+        filas = $("#tbodyitems tr");
+        for (var i = 0; i < filas.length; i++) {
+            items = [];
+            if($(filas[i]).find('.btn_chek').is(':checked')) {
+                items[0] = "registrado";
+                items[1] = '';
+
+            }else{
+                items[0] = "sin registrar";
+                items[1] = $(filas[i]).find('select').val();
+            }
+
+            items[2] = $(filas[i]).find('.btn_chek').data('id_empleado');
+            datos[i] = items;
+        }
+
+        items_usuario = JSON.stringify(datos);
+        id_asistencia = $(".id_asistencia").html();
+
+        $.ajax({
+            url: '<?= base_url('supervisor/Home/actualizarAsistencia') ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: {items_usuario: items_usuario, id_asistencia: id_asistencia},
+        })
+        .done(function(r) {
+            if(r){
+				$("#modificar_asistencia").removeAttr("disabled");
+                alertify.notify('Asistencia actualizada', 'success');
+                $("#modalAsistencia").modal('hide');
+                return;
+            }
+        })
+        .fail(function(r) {
+			$("#modificar_asistencia").removeAttr("disabled");
+            console.log("error");
+            console.log(r);
+        });
+    }
+
 </script>

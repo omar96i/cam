@@ -353,13 +353,10 @@
 										<a href="<?php echo base_url('supervisor/Home/asistencia') ?>" class="nav-link">Registrar Asistencia</a>
 									</li>
 									<li class="nav-item">
-										<a href="<?php echo base_url('supervisor/VerAsistencia/index') ?>" class="nav-link">Ver Asistencia</a>
+										<a href="<?php echo base_url('supervisor/VerAsistencia/index') ?>" class="nav-link">Asistencias</a>
 									</li>
 									<li class="nav-item">
 										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
-									</li>
-									<li class="nav-item">
-										<a href="<?php echo base_url('talento_humano/Asistencia') ?>" class="nav-link">Modificar asistencia</a>
 									</li>
 								</ul>
 							</li>

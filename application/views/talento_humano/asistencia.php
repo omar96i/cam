@@ -22,11 +22,6 @@
                                     <div class="col-12">
                                         <h2 class="d-inline">Asistencias</h2>
                                     </div>
-									<div class="col-12">
-										<div class="alert alert-danger" role="alert">
-											Esta opcion solo esta habilitada hasta el dia 05/11/2021 hasta las 23:59 <br> <strong>Importante!!</strong>  buscar tu nombre y modificar solo las asistencias que tienen tu nombre
-										</div>
-									</div>
                                 </div>
 
                                 <?php if(!empty($asistencia)): ?>
@@ -34,9 +29,10 @@
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
+													<th>Fecha</th>
                                                     <th>Documento</th>
-                                                    <th>Nombre</th>
-                                                    <th>Fecha</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
                                                     <th>Estado</th>
                                                     <th></th>
                                                 </tr>
@@ -69,7 +65,7 @@
         </div>
 
         <div class="modal fade" id="modalAsistencia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Modelos</h5>
@@ -82,9 +78,11 @@
                             <table id="empty" class="table table-sm table-striped table-bordered">
                                 <thead class="text-center">
                                     <tr>
-                                        <th>Nombre modelo</th>
-                                        <th>estado</th>
-                                        <th>motivo inasistencia</th>
+                                        <th>Documento</th>
+                                        <th>Nombres</th>
+                                        <th>Apellidos</th>
+                                        <th>Estado</th>
+                                        <th>Motivo inasistencia</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyitems" class="text-center">
@@ -183,14 +181,16 @@
             method   : 'POST',
             data     : {valor: valor, pagina : pagina, fecha_inicio: fecha_inicio, fecha_final: fecha_final},
             success  : function(r){
+				console.log(r)
                 if(r.status){
                     var tbody = '';
                     
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
+							<td class="align-middle text-capitalize">${r.data[k]['fecha']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['fecha']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
                             <td>
                                 <a href="" data-id_asistencia="${r.data[k]['id_asistencia']}" class="text-warning btn_asistencia"><img src="<?php echo base_url('assets/iconos_menu/ojo.png') ?>" alt=""></a>
@@ -214,7 +214,9 @@
                             body = "";
                             for (var i = 0; i < r[0].length; i++) {
                                 body += `<tr>
-                                    <td class="align-middle text-capitalize">${r[0][i]['nombres']}</td>`;
+                                    <td class="align-middle text-capitalize">${r[0][i]['documento']}</td>
+									<td class="align-middle text-capitalize">${r[0][i]['nombres']}</td>
+									<td class="align-middle text-capitalize">${r[0][i]['apellidos']}</td>`;
 
                                     if (r[0][i]['estado'] == "registrado") {
                                         body += "<td><input type='checkbox' data-id_empleado='"+r[0][i]['id_persona']+"' class='btn_chek' checked></td>";
