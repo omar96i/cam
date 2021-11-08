@@ -29,10 +29,10 @@
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-													<th>Fecha</th>
                                                     <th>Documento</th>
                                                     <th>Nombres</th>
                                                     <th>Apellidos</th>
+													<th>Fecha</th>
                                                     <th>Estado</th>
                                                     <th></th>
                                                 </tr>
@@ -187,10 +187,10 @@
                     
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
-							<td class="align-middle text-capitalize">${r.data[k]['fecha']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
+							<td class="align-middle text-capitalize">${r.data[k]['fecha']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
                             <td>
                                 <a href="" data-id_asistencia="${r.data[k]['id_asistencia']}" class="text-warning btn_asistencia"><img src="<?php echo base_url('assets/iconos_menu/ojo.png') ?>" alt=""></a>
@@ -247,7 +247,9 @@
                         
                     });
 
-					$("#empty").DataTable()
+					$("#empty").DataTable( {
+						"order": [[ 3, "desc" ]]
+					} )
                 }
             },
             dataType : 'json'

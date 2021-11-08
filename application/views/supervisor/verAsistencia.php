@@ -140,7 +140,6 @@
                             data: {id_asistencia: id_asistencia},
                         })
                         .done(function(r) {
-                            console.log(r);
 
                             body = "";
                             for (var i = 0; i < r[0].length; i++) {
@@ -179,7 +178,9 @@
                         
                     });
 
-					$('#empty').DataTable();
+					$('#empty').DataTable( {
+						"order": [[ 0, "desc" ]]
+					} );
                 }
             },
             dataType : 'json'
