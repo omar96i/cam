@@ -633,6 +633,7 @@ class Home extends CI_Controller {
 	 	$data['documento'] = $this->input->post('cedula');
 	 	$data['nombres'] = $this->input->post('nombres');
 	 	$data['apellidos'] = $this->input->post('apellidos');
+	 	$data['fecha_entrada'] = $this->input->post('fecha_entrada');
 	 	$data['ciudad'] = $this->input->post('ciudad');
 	 	$data['direccion'] = $this->input->post('direccion');
 	 	$data['correo_personal'] = $this->input->post('correo_personal');
@@ -788,6 +789,7 @@ class Home extends CI_Controller {
 		$data['id_persona'] = $this->input->post('id_persona_u');
 		$data['documento'] = $this->input->post('documento_u');
 		$data['nombres'] = $this->input->post('nombre_u');
+		$data['fecha_entrada'] = $this->input->post('fecha_entrada');
 		$data['apellidos'] = $this->input->post('apellidos_u');
 		$data['ciudad'] = $this->input->post('ciudad_u');
 		$data['direccion'] = $this->input->post('direccion_u');
@@ -888,6 +890,7 @@ class Home extends CI_Controller {
 	 	$data['apellidos'] = $this->input->post('apellidos');
 	 	$data['ciudad'] = $this->input->post('ciudad');
 	 	$data['direccion'] = $this->input->post('direccion');
+	 	$data['fecha_entrada'] = $this->input->post('fecha_entrada');
 	 	$data['correo_personal'] = $this->input->post('correo_personal');
 	 	$data['sexo'] = $this->input->post('sexo');
 	 	$data['fecha_nacimiento'] = $this->input->post('fecha_nacimiento');
@@ -969,6 +972,7 @@ class Home extends CI_Controller {
 		$data['nombres'] = $this->input->post('nombre_u');
 		$data['apellidos'] = $this->input->post('apellidos_u');
 		$data['ciudad'] = $this->input->post('ciudad_u');
+		$data['fecha_entrada'] = $this->input->post('fecha_entrada');
 		$data['direccion'] = $this->input->post('direccion_u');
 		$data['correo_personal'] = $this->input->post('correo_personal_u');
 		$data['sexo'] = $this->input->post('sexo_u');

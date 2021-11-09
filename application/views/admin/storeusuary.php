@@ -70,7 +70,11 @@
                                                 <input type="text" id="ciudad_u" class="form-control" name="ciudad_u" value="<?php echo $usuarios->ciudad ?>">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
-                                            
+                                            <div class="form-group">
+                                                <label for="fecha_entrada" class="col-form-label">Fecha de entrada:</label>
+                                                <input type="date" name="fecha_entrada" id="fecha_entrada" value="<?php echo $usuarios->fecha_entrada ?>" class="form-control" cols="10" rows="3"></input>
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
@@ -114,10 +118,10 @@
                                                 <label for="cuenta_tipo_u" class="col-form-label">Tipo cuenta:</label>
                                                 <select name="cuenta_tipo_u" id="cuenta_tipo_u" class="form-control">
                                                     <option value="administrador" <?php if($usuarios->tipo_cuenta == "administrador"){ echo "selected"; } ?> >Administrador</option>
-                                                    <option value="supervisor" <?php if($usuarios->tipo_cuenta == "supervisor"){ echo "selected"; } ?>>Supervisor</option>
+                                                    <option value="supervisor" <?php if($usuarios->tipo_cuenta == "supervisor"){ echo "selected"; } ?>>Monitor</option>
                                                     <option value="empleado" <?php if($usuarios->tipo_cuenta == "empleado"){ echo "selected"; } ?>>Empleado</option>
                                                     <option value="talento humano" <?php if($usuarios->tipo_cuenta == "talento humano"){ echo "selected"; } ?>>Talento humano</option>
-                                                    <option value="tecnico sistemas" <?php if($usuarios->tipo_cuenta == "tecnico sistemas"){ echo "selected"; } ?>>Tecnico sistemas</option>
+                                                    <option value="tecnico sistemas" <?php if($usuarios->tipo_cuenta == "tecnico sistemas"){ echo "selected"; } ?>>Supervisor</option>
                                                     <option value="fotografo" <?php if($usuarios->tipo_cuenta == "fotografo"){ echo "selected"; } ?>>Fotografo</option>
 													<option value="psicologa" <?php if($usuarios->tipo_cuenta == "psicologa"){ echo "selected"; } ?>>Psicologa</option>
 													<option value="servicios generales" <?php if($usuarios->tipo_cuenta == "servicios generales"){ echo "selected"; } ?>>Servicios generales</option>
@@ -153,6 +157,7 @@
                                                 <input type="text" name="clave_u" id="clave_u" value="<?php echo $usuarios->clave ?>" class="form-control" cols="10" rows="3"></input>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+											
                                             
                                         </div>
                                     </div>

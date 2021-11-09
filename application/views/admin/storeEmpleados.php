@@ -69,6 +69,11 @@
                                                 <input type="text" id="ciudad_u" class="form-control" name="ciudad_u" value="<?php echo $usuarios->ciudad ?>">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+											<div class="form-group">
+                                                <label for="fecha_entrada" class="col-form-label">Fecha de entrada:</label>
+                                                <input type="date" name="fecha_entrada" id="fecha_entrada" value="<?php echo $usuarios->fecha_entrada ?>" class="form-control" cols="10" rows="3"></input>
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
                                             
                                         </div>
                                         <div class="col-4">

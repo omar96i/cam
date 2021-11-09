@@ -107,6 +107,11 @@
                                                 <input type="text" name="observaciones" id="observaciones" class="form-control" cols="10" rows="3"></input>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+											<div class="form-group">
+                                                <label for="fecha_entrada" class="col-form-label">Fecha de entrada:</label>
+                                                <input type="date" name="fecha_entrada" id="fecha_entrada" class="form-control" cols="10" rows="3"></input>
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
 
                                             
                                         </div>
@@ -252,6 +257,11 @@
                 }else{
                     $("#ciudad").removeClass('is-invalid');
                 }
+				if ($("#fecha_entrada").val() == '') {
+                    $("#fecha_entrada").addClass('is-invalid'); 
+                }else{
+                    $("#fecha_entrada").removeClass('is-invalid');
+                }
 
 
             if( $("#cedula").val() != '' &&
@@ -267,6 +277,7 @@
                 $("#observaciones").val() != '' &&
                 $("#num_cuenta_banco").val() != '' &&
                 $("#tipo_cuenta_banco").val() != '' &&
+				$("#fecha_entrada").val() != '' &&
                 $("#name_banco").val() != '') {
 
                 $.ajax({

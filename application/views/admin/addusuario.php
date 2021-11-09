@@ -105,9 +105,9 @@
                                                 <select name="tipo_cuenta" id="tipo_cuenta" class="form-control">
                                                     <option value="0">Seleccione una opción...</option>
                                                     <option value="administrador">Administrador</option>
-                                                    <option value="supervisor">Supervisor</option>
+                                                    <option value="supervisor">Monitor</option>
                                                     <option value="talento humano">Talento Humano</option>
-                                                    <option value="tecnico sistemas">Tecnico Sistemas</option>
+                                                    <option value="tecnico sistemas">Supervisor</option>
                                                     <option value="fotografo">Fotografo</option>
                                                     <option value="psicologa">Psicologa</option>
                                                     <option value="servicios generales">Servicios generales</option>
@@ -156,6 +156,11 @@
                                             <div class="form-group">
                                                 <label for="clave" class="col-form-label">Contraseña:</label>
                                                 <input type="text" name="clave" id="clave" class="form-control" cols="10" rows="3"></input>
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
+											<div class="form-group">
+                                                <label for="fecha_entrada" class="col-form-label">Fecha de entrada:</label>
+                                                <input type="date" name="fecha_entrada" id="fecha_entrada" class="form-control" cols="10" rows="3"></input>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
 
@@ -270,6 +275,11 @@
             }else{
                 $("#ciudad").removeClass('is-invalid');
             }
+			if ($("#fecha_entrada").val() == '') {
+                $("#fecha_entrada").addClass('is-invalid'); 
+            }else{
+                $("#fecha_entrada").removeClass('is-invalid');
+            }
 
 
             if( $("#cedula").val() != '' &&
@@ -284,6 +294,7 @@
                 $("#direccion").val() != '' &&
                 $("#correo_personal").val() != '' &&
                 $("#telefono").val() != '' &&
+				$("#fecha_entrada").val() != '' &&
                 $("#observaciones").val() != '') {
 
                 $.ajax({
