@@ -14,11 +14,16 @@ class MfacturaMonitor extends CI_Model {
 
 		return false;
 	}
-	public function getFacturasTable() {
+	public function getFacturasTable($data) {
 		$this->db->select('persona.*, factura_tecnico.*');
 		$this->db->from('factura_tecnico');
 		$this->db->join('persona', 'persona.id_persona = factura_tecnico.id_empleado');
-
+		if($data['fecha_inicio'] != ""){
+			$this->db->where('fecha_inicial >=', $data['fecha_inicio']);
+		}
+		if($data['fecha_final'] != ""){
+			$this->db->where('fecha_inicial <=', $data['fecha_final']);
+		}
 		
 		$this->db->order_by('factura_tecnico.created_at' , 'DESC');
 
@@ -50,6 +55,7 @@ class MfacturaMonitor extends CI_Model {
 				}
 				$aux_adelanto = 0;
 				$aux_descuentos = 0;
+				$aux_aumento = 0;
 				$datos_insert = [];
 				$datos_insert['descuento'] = 0;
 
@@ -69,7 +75,16 @@ class MfacturaMonitor extends CI_Model {
 						$aux_descuentos = $aux_descuentos+$descuento->valor;
 					}
 				}
-				
+
+				// CONSULTAMOS AUMENTOS
+
+				$aumentos = $this->db->select('valor')->from('aumentos')->where('id_persona', $valor_s->id_persona)->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
+				if($aumentos->num_rows() > 0){
+					foreach ($aumentos->result() as $key => $aumento) {
+						$aux_aumento = $aux_aumento+$aumento->valor;
+					}
+				}
+
 				$aux_horas_total = 0;
 				// CONSULTAMOS LAS HORAS DE LAS MODELOS
 				$modelos = $this->db->select('id_persona')->from('usuarios')->where('estado', 'activo')->where('tipo_cuenta', 'supervisor')->get();
@@ -115,11 +130,12 @@ class MfacturaMonitor extends CI_Model {
 				//INSERTAMOS LOS DATOS
 				$datos_insert['descuento'] = $aux_descuentos+$aux_adelanto;
 				$datos_insert['cant_horas'] = $aux_horas_total;
+				$datos_insert['aumento'] = $aux_aumento;
 				$datos_insert['id_empleado'] = $valor_s->id_persona;
 				$datos_insert['id_administrador'] = $data['id_administrador'];
 				$datos_insert['id_sueldo'] = $sueldo_supervisor[0]->id_sueldos_empleados;
 				$datos_insert['id_meta'] = $meta[0]->id_meta;
-				$datos_insert['total_paga'] = (($sueldo_supervisor[0]->sueldo/2)+$datos_insert['comision'])-$datos_insert['descuento'];
+				$datos_insert['total_paga'] = ((($sueldo_supervisor[0]->sueldo/2)+$datos_insert['comision'])-$datos_insert['descuento'])+$aux_aumento;
 				$datos_insert['fecha_inicial'] = $data['fecha_inicial']; 
 				$datos_insert['fecha_final'] = $data['fecha_final'];
 				$datos_insert['estado'] = "sin registrar";
@@ -132,7 +148,10 @@ class MfacturaMonitor extends CI_Model {
 					$this->db->set('id_factura_tecnico', $id)->set('estado', 'registrado')->where('id_empleado', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->update('adelanto');
 				}
 				if(!$aux_descuentos == 0){
-					$this->db->set('id_factura_tecnico', $id)->set('estado', 'registrado')->where('id_persona', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->update('dias_descontados');
+					$this->db->set('id_factura_tecnico', $id)->set('estado', 'registrado')->where('id_persona', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('dias_descontados');
+				}
+				if(!$aux_aumento == 0){
+					$this->db->set('id_factura_tecnico', $id)->set('estado', 'registrado')->where('id_persona', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('aumentos');
 				}
 				// ASIGNAMOS LA NOMINA DEL SUPERVISOR A LA NOMINA DE LA MODELO
 

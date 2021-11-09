@@ -74,6 +74,7 @@ class MsalarioEmpleados extends CI_Model {
 				}
 				$aux_adelanto = 0;
 				$aux_descuentos = 0;
+				$aux_aumentos = 0;
 				$datos_insert = [];
 				$datos_insert['descuento'] = 0;
 
@@ -84,7 +85,15 @@ class MsalarioEmpleados extends CI_Model {
 						$aux_adelanto = $aux_adelanto+$adelanto->valor;
 					}
 				}
+				
+				// CONSULTAMOS AUMENTOS
 
+				$aumentos = $this->db->select('id, valor')->from('aumentos')->where('id_persona', $valor_s->id_persona)->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
+				if($aumentos->num_rows() > 0){
+					foreach ($aumentos->result() as $key => $aumento) {
+						$aux_aumentos = $aux_aumentos+$aumento->valor;
+					}
+				}
 				// CONSULTAMOS DESCUENTOS DE DIAS
 
 				$descuentos = $this->db->select('id, valor')->from('dias_descontados')->where('id_persona', $valor_s->id_persona)->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->where('estado', 'sin registrar')->get();
@@ -159,7 +168,8 @@ class MsalarioEmpleados extends CI_Model {
 				$datos_insert['id_administrador'] = $data['id_administrador'];
 				$datos_insert['id_sueldo'] = $sueldo_supervisor[0]->id_sueldos_empleados;
 				$datos_insert['id_meta'] = $meta[0]->id_meta;
-				$datos_insert['total_paga'] = (($sueldo_supervisor[0]->sueldo/2)+$datos_insert['total_comision'])-$datos_insert['descuento'];
+				$datos_insert['aumento'] = $aux_aumentos;
+				$datos_insert['total_paga'] = ((($sueldo_supervisor[0]->sueldo/2)+$datos_insert['total_comision'])-$datos_insert['descuento'])+$aux_aumentos;
 				$datos_insert['fecha_inicial'] = $data['fecha_inicial']; 
 				$datos_insert['fecha_final'] = $data['fecha_final'];
 				$datos_insert['estado_factura'] = "sin registrar";
@@ -173,6 +183,10 @@ class MsalarioEmpleados extends CI_Model {
 				}
 				if(!$aux_descuentos == 0){
 					$this->db->set('id_factura_supervisor', $id)->set('estado', 'registrado')->where('id_persona', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->update('dias_descontados');
+				}
+
+				if(!$aux_aumentos == 0){
+					$this->db->set('id_factura_supervisor', $id)->set('estado', 'registrado')->where('id_persona', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('aumentos');
 				}
 				// ASIGNAMOS LA NOMINA DEL SUPERVISOR A LA NOMINA DE LA MODELO
 
@@ -221,17 +235,25 @@ class MsalarioEmpleados extends CI_Model {
 				$id_adelanto = 0;
 				$aux_adelanto = 0;
 				$aux_descuentos = 0;
+				$aux_aumento = 0;
 
+				$consulta_aumentos = $this->db->select('valor')->from('aumentos')->where('id_persona', $value->id_persona)->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
 				$consulta_adelantos = $this->db->select_sum('valor')->from('adelanto')->where('id_empleado', $value->id_persona)->where('estado', 'sin registrar')->get();
 				$consulta_descuentos_dias = $this->db->select_sum('valor')->from('dias_descontados')->where('id_persona', $value->id_persona)->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
 
 				if($consulta_descuentos_dias->num_rows() > 0){
-					$consulta_descuentos_dias = $consulta_descuentos_dias->result();
-					$aux_descuentos = $consulta_descuentos_dias[0]->valor;
+					foreach ($consulta_descuentos_dias->result() as $key => $descuento) {
+						$aux_descuentos = $aux_descuentos+$descuento->valor;
+					}
 				}
 				if ($consulta_adelantos->num_rows() > 0) {
 					$consulta_adelantos = $consulta_adelantos->result();
 					$aux_adelanto = $consulta_adelantos[0]->valor;
+				}
+				if($consulta_aumentos->num_rows() > 0){
+					foreach ($consulta_aumentos->result() as $key => $aumento) {
+						$aux_aumento = $aux_aumento+$aumento->valor;
+					}
 				}
 
 				$adelanto = $aux_descuentos+$aux_adelanto;
@@ -276,7 +298,8 @@ class MsalarioEmpleados extends CI_Model {
 
 				$insert_data['id_empleado'] = $value->id_persona;
 				$insert_data['descuentos'] = $adelanto;
-				$insert_data['total_a_pagar'] = ($sueldo_general/2)-$adelanto;
+				$insert_data['aumento'] = $aux_aumento;
+				$insert_data['total_a_pagar'] = (($sueldo_general/2)-$adelanto)+$aux_aumento;
 				$insert_data['fecha_inicial'] = $data['fecha_inicial'];
 				$insert_data['fecha_final'] = $data['fecha_final'];
 				$insert_data['estado'] = "sin registrar";
@@ -285,8 +308,15 @@ class MsalarioEmpleados extends CI_Model {
 
 				$id = $this->db->insert_id();
 
+				if(!$aux_descuentos == 0){
+					$this->db->set('id_factura_general', $id)->set('estado', 'registrado')->where('id_persona', $insert_data['id_empleado'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('dias_descontados');
+				}
+
+				if(!$aux_aumento == 0){
+					$this->db->set('id_factura_general', $id)->set('estado', 'registrado')->where('id_persona', $insert_data['id_empleado'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('aumentos');
+				}
+
 				$this->db->set('id_factura_general', $id)->set('estado', 'registrado')->where('id_empleado', $insert_data['id_empleado'])->where('estado', 'sin registrar')->update('adelanto');
-				$this->db->set('id_factura_general', $id)->set('estado', 'registrado')->where('id_persona', $insert_data['id_empleado'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('dias_descontados');
 
 			}
 			return true;

@@ -9,7 +9,7 @@ class FacturaMonitor extends CI_Controller {
 		$this->load->model('MfacturaMonitor');
 	}
 
-	public function index(){
+	public function index($fecha_inicial = "", $fecha_final = ""){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$data['factura'] = $this->MfacturaMonitor->getFacturas();
 			if(!$data['factura']) {
@@ -18,6 +18,9 @@ class FacturaMonitor extends CI_Controller {
 			else {
 				$data['factura'] = count($this->MfacturaMonitor->getFacturas());
 			}
+
+			$data['fecha_inicial'] = $fecha_inicial;
+			$data['fecha_final'] = $fecha_final;
 
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/factura_monitor' , $data);
@@ -52,8 +55,9 @@ class FacturaMonitor extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-		
-		$usuarios         = $this->MfacturaMonitor->getFacturasTable();
+		$data['fecha_inicio'] = $this->input->post('fecha_inicio');
+		$data['fecha_final'] = $this->input->post('fecha_final');
+		$usuarios         = $this->MfacturaMonitor->getFacturasTable($data);
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
 			return;

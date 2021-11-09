@@ -24,25 +24,46 @@
                                     </div>
                                 </div>
 
+								<form class="container my-4">
+									<div class="row">
+										<div class="col">
+											<label for="fecha_inicio">Fecha inicial</label>
+											<input type="date" value="<?php echo $fecha_inicial ?>" class="form-control fecha_inicial" required>
+											<div class="invalid-feedback">El campo no debe quedar vacío</div>
+										</div>
+										<div class="col">
+											<label for="fecha_final">Fecha final</label>
+											<input type="date" value="<?php echo $fecha_final ?>" class="form-control fecha_final" required>
+											<div class="invalid-feedback">El campo no debe quedar vacío</div>
+										</div>
+									</div>
+									<div class="col-12 text-center my-3">
+										<button type="submit" class="btn btn-success btn_buscar_por_fechas">Buscar</button>
+										<button type="submit" class="btn btn-danger btn_resetear">Resetear</button>
+
+									</div>
+								</form>
+
                                 <?php if(!empty($factura)): ?>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Documento</th>
-                                                    <th>Nombres</th>
-                                                    <th>Apellidos</th>
-                                                    <th>Valor Dolar</th>
-                                                    <th>Dias asistidos</th>
-                                                    <th>Estado meta</th>
-                                                    <th>Tokens meta</th>
-                                                    <th>Porcentaje de paga</th>
-                                                    <th>Descuento</th>
-                                                    <th>Penalizaciones Tokens</th>
-                                                    <th>Total Tokens</th>
-													<th>Descripcion</th>
-                                                    <th>Total Pago</th>
-                                                    <th>Fecha de registro</th>
+                                                    <th class="important">Documento</th>
+                                                    <th class="important">Nombres</th>
+                                                    <th class="important">Apellidos</th>
+                                                    <th class="important">Valor Dolar</th>
+                                                    <th class="important">Dias asistidos</th>
+                                                    <th class="important">Estado meta</th>
+                                                    <th class="important">Tokens meta</th>
+                                                    <th class="important">Porcentaje de paga</th>
+                                                    <th class="important">Descuento</th>
+                                                    <th class="important">Penalizaciones Tokens</th>
+                                                    <th class="important">Total Tokens</th>
+													<th class="important">Descripcion</th>
+                                                    <th class="important">Total Pago</th>
+                                                    <th class="important">Fecha inicial</th>
+                                                    <th class="important">Fecha final</th>
                                                     <th>imprimir</th>
                                                     <th></th>
                                                 </tr>
@@ -72,25 +93,41 @@
 
 <script>
     $(document).ready(function() {
-        $("#fecha_inicial_buscar").change(function(event) {
-            usuario = $(".search_usuarios").val();
-            load_factura(usuario , 1);
-        });
-        $("#fecha_final_buscar").change(function(event) {
-            usuario = $(".search_usuarios").val();
-            load_factura(usuario , 1);
-        });
+		$(".btn_buscar_por_fechas").click(function(event){
+			event.preventDefault();
+			fecha_inicial = $(".fecha_inicial").val()
+			fecha_final = $(".fecha_final").val()
+			if ($(".fecha_inicial").val() == '') {
+                $(".fecha_inicial").addClass('is-invalid');
+            }else{
+                $(".fecha_inicial").removeClass('is-invalid');
+            }
+			if ($(".fecha_final").val() == '') {
+                $(".fecha_final").addClass('is-invalid');
+            }else{
+                $(".fecha_final").removeClass('is-invalid');
+            }
+			if(fecha_inicial == "" || fecha_final == ""){
+				return
+			}
+			ruta = "<?php echo base_url('admin/home/nomina/') ?>"+fecha_inicial+"/"+fecha_final
+			window.location.href = ruta;
+		});
+		$(".btn_resetear").click(function(event){
+			event.preventDefault();
+			ruta = "<?php echo base_url('admin/home/nomina') ?>"
+			window.location.href = ruta;
+		});
     });
     function load_factura(valor , pagina) {
-        fecha_inicio = $("#fecha_inicial_buscar").val();
-        fecha_final = $("#fecha_final_buscar").val();
+        fecha_inicio = "<?php echo $fecha_inicial; ?>";
+        fecha_final = "<?php echo $fecha_final; ?>";
         
         $.ajax({
             url      : '<?= base_url('admin/Home/getfacturas') ?>',
             method   : 'POST',
             data     : {valor : valor , pagina : pagina, fecha_inicio: fecha_inicio, fecha_final: fecha_final},
             success  : function(r){
-                console.log(r);
                 if(r.status){
                     var tbody = '';
                     for(var k=0; k<r.data.length; k++) {
@@ -115,7 +152,8 @@
 								tbody += `<td class="align-middle text-capitalize">${new Intl.NumberFormat('en-US').format(r.data[k]['total_a_pagar'])}</td>`
 							}
 						tbody += `
-                            <td class="align-middle text-capitalize">${r.data[k]['fecha_registrado']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['fecha_inicio']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['fecha_final']}</td>
                             <td class="align-middle text-capitalize">
                                 <a href="<?php echo base_url('Imprimir_factura/getFacturaInf/') ?>${r.data[k]['id_factura']}" target="_blank"><img src="<?php echo base_url('assets/iconos_menu/impresora.png') ?>" alt="" style="width: 20px; height: 20px;"> </a>
                             </td>
@@ -133,13 +171,21 @@
                         $("#modalVerRegistros").modal('show');
 
                     });
-					$("#empty").DataTable( {
-						dom: 'Bfrtip',
-						buttons: [
-							'copy', 'excel'
-						]
-					} )
                 }
+				$("#empty").DataTable( {
+					dom: 'Bfrtip',
+					buttons: [
+						'copy',
+						{
+							extend: 'excel',
+							title: 'Nomina modelos',
+							messageTop: 'Nomina',
+							exportOptions: {
+								columns: ['.important']
+							}
+						},
+					]
+				} )
             },
             dataType : 'json'
         });

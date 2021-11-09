@@ -262,13 +262,18 @@ class Mregistronomina extends CI_Model {
 		return false;
 	}
 
-	public function getFacturasAdmin() {
+	public function getFacturasAdmin($data) {
 		$this->db->select('b.*, factura.*,dolar.*, metas.num_horas');
 		$this->db->from('factura');
 		$this->db->join('dolar', 'dolar.id_dolar = factura.id_dolar');
 		$this->db->join('persona as b', 'b.id_persona = factura.id_usuario');
 		$this->db->join('metas', 'metas.id_meta = factura.id_meta');
-		
+		if($data['fecha_inicio'] != ""){
+			$this->db->where('fecha_inicio >=', $data['fecha_inicio']);
+		}
+		if($data['fecha_final'] != ""){
+			$this->db->where('fecha_inicio <=', $data['fecha_final']);
+		}
 		$this->db->order_by('factura.fecha_registrado' , 'DESC');
 		$usuarios = $this->db->get();
 
@@ -283,9 +288,9 @@ class Mregistronomina extends CI_Model {
 		$this->db->select('b.*, factura.*,dolar.*');
 		$this->db->from('factura');
 		$this->db->join('dolar', 'dolar.id_dolar = factura.id_dolar');
-
 		$this->db->join('persona as b', 'b.id_persona = factura.id_usuario');
-		
+
+
 		$this->db->order_by('factura.fecha_registrado' , 'DESC');
 		$usuarios = $this->db->get();
 

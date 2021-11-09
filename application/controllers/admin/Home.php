@@ -35,7 +35,7 @@ class Home extends CI_Controller {
 		$this->load->view('includes_admin/footer');
 	}
 
-	public function nomina(){
+	public function nomina($fecha_inicial = "", $fecha_final = ""){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$data['factura']     = $this->Mregistronomina->verRegistrosAdmin();
 
@@ -45,6 +45,8 @@ class Home extends CI_Controller {
 			else {
 				$data['factura'] = count($this->Mregistronomina->verRegistrosAdmin());
 			}
+			$data['fecha_inicial'] = $fecha_inicial;
+			$data['fecha_final'] = $fecha_final;
 
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/factura' , $data);
@@ -703,9 +705,10 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-
 		
-		$usuarios         = $this->Mregistronomina->getFacturasAdmin();
+		$data['fecha_inicio'] = $this->input->post('fecha_inicio');
+		$data['fecha_final'] = $this->input->post('fecha_final');
+		$usuarios  = $this->Mregistronomina->getFacturasAdmin($data);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -2028,7 +2031,7 @@ class Home extends CI_Controller {
 
 	/// INICIO FACTURA SUPERVISOR ///
 
-	public function factura_supervisor(){
+	public function factura_supervisor($fecha_inicial = "", $fecha_final = ""){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$data['factura'] = $this->MfacturasSupervisor->getFacturas();
 			if(!$data['factura']) {
@@ -2037,6 +2040,8 @@ class Home extends CI_Controller {
 			else {
 				$data['factura'] = count($this->MfacturasSupervisor->getFacturas());
 			}
+			$data['fecha_inicial'] = $fecha_inicial;
+			$data['fecha_final'] = $fecha_final;
 
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/factura_supervisor' , $data);
@@ -2053,8 +2058,9 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-
-		$usuarios         = $this->MfacturasSupervisor->getFacturasSupervisor();
+		$data['fecha_inicio'] = $this->input->post('fecha_inicio');
+		$data['fecha_final'] = $this->input->post('fecha_final');
+		$usuarios         = $this->MfacturasSupervisor->getFacturasSupervisor($data);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -2071,7 +2077,7 @@ class Home extends CI_Controller {
 
 	/// INICIO FACTURA GENERAL ///
 
-	public function factura_general(){
+	public function factura_general($fecha_inicial = "", $fecha_final = ""){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$data['factura'] = $this->MfacturaGeneral->getFacturas();
 			if(!$data['factura']) {
@@ -2080,6 +2086,8 @@ class Home extends CI_Controller {
 			else {
 				$data['factura'] = count($this->MfacturaGeneral->getFacturas());
 			}
+			$data['fecha_inicial'] = $fecha_inicial;
+			$data['fecha_final'] = $fecha_final;
 
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/factura_general' , $data);
@@ -2094,8 +2102,9 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-
-		$usuarios         = $this->MfacturaGeneral->getFacturasGeneral();
+		$data['fecha_inicio'] = $this->input->post('fecha_inicio');
+		$data['fecha_final'] = $this->input->post('fecha_final');
+		$usuarios         = $this->MfacturaGeneral->getFacturasGeneral($data);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);

@@ -20,26 +20,46 @@
                             <div class="col-sm-12">
                                 <div class="row">
                                     <div class="col-6">
-                                        <h2 class="d-inline">Nomina</h2>
+                                        <h2 class="d-inline">Nomina General</h2>
                                         <a href="#" class="btn btn-info mb-2 ml-1 btn_registrar_nomina_general">Generar Nomina General</a>
                                     </div>
                                 </div>
+
+								<form class="container my-4">
+									<div class="row">
+										<div class="col">
+											<label for="fecha_inicio">Fecha inicial</label>
+											<input type="date" value="<?php echo $fecha_inicial ?>" class="form-control fecha_inicial" required>
+											<div class="invalid-feedback">El campo no debe quedar vacío</div>
+										</div>
+										<div class="col">
+											<label for="fecha_final">Fecha final</label>
+											<input type="date" value="<?php echo $fecha_final ?>" class="form-control fecha_final" required>
+											<div class="invalid-feedback">El campo no debe quedar vacío</div>
+										</div>
+									</div>
+									<div class="col-12 text-center my-3">
+										<button type="submit" class="btn btn-success btn_buscar_por_fechas">Buscar</button>
+										<button type="submit" class="btn btn-danger btn_resetear">Resetear</button>
+
+									</div>
+								</form>
+
 
                                 <?php if(!empty($factura)): ?>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Documento Empleado</th>
-                                                    <th>Nombre Empleado</th>
-                                                    <th>Tipo usuario</th>
-
-                                                    <th>Descuento</th>
-                                                    <th>Total</th>
-                                                    <th>Fecha de registro</th>
-                                                    <th>Fecha inicio</th>
-                                                    <th>Fecha final</th>
-													<th>Descripcion</th>
+                                                    <th class="important">Documento Empleado</th>
+                                                    <th class="important">Nombre Empleado</th>
+                                                    <th class="important">Tipo usuario</th>
+                                                    <th class="important">Descuento</th>
+                                                    <th class="important">Total</th>
+                                                    <th class="important">Fecha de registro</th>
+                                                    <th class="important">Fecha inicio</th>
+                                                    <th class="important">Fecha final</th>
+													<th class="important">Descripcion</th>
 													<th></th>
                                                 </tr>
                                             </thead>
@@ -104,22 +124,40 @@
         $(".btn_registrar_nomina_general").click(function(event) {
             $("#ModalRegistroNominaGeneral").modal('show');
         });
-        $("#fecha_inicial_buscar").change(function(event) {
-            usuario = $(".search_usuarios").val();
-            load_factura(usuario , 1);
-        });
-        $("#fecha_final_buscar").change(function(event) {
-            usuario = $(".search_usuarios").val();
-            load_factura(usuario , 1);
-        });
+        $(".btn_buscar_por_fechas").click(function(event){
+			event.preventDefault();
+			fecha_inicial = $(".fecha_inicial").val()
+			fecha_final = $(".fecha_final").val()
+			if ($(".fecha_inicial").val() == '') {
+                $(".fecha_inicial").addClass('is-invalid');
+            }else{
+                $(".fecha_inicial").removeClass('is-invalid');
+            }
+			if ($(".fecha_final").val() == '') {
+                $(".fecha_final").addClass('is-invalid');
+            }else{
+                $(".fecha_final").removeClass('is-invalid');
+            }
+			if(fecha_inicial == "" || fecha_final == ""){
+				return
+			}
+			ruta = "<?php echo base_url('admin/home/factura_general/') ?>"+fecha_inicial+"/"+fecha_final
+			window.location.href = ruta;
+		});
+		$(".btn_resetear").click(function(event){
+			event.preventDefault();
+			ruta = "<?php echo base_url('admin/home/factura_general') ?>"
+			window.location.href = ruta;
+		});
     });
     function load_factura(valor , pagina) {
-        fecha_inicio = $("#fecha_inicial_buscar").val();
-        fecha_final = $("#fecha_final_buscar").val();
+        fecha_inicio = "<?php echo $fecha_inicial; ?>";
+        fecha_final = "<?php echo $fecha_final; ?>";
         
         $.ajax({
             url      : '<?= base_url('admin/Home/getfacturasGeneral') ?>',
             method   : 'POST',
+			data     : {fecha_inicio: fecha_inicio, fecha_final: fecha_final},
             success  : function(r){
                 if(r.status){
                     var tbody = '';
@@ -153,13 +191,22 @@
                         $("#modalVerRegistros").modal('show');
 
                     });
-                    $("#empty").DataTable( {
-						dom: 'Bfrtip',
-						buttons: [
-							'copy', 'excel'
-						]
-					} );
                 }
+				
+				$("#empty").DataTable( {
+					dom: 'Bfrtip',
+					buttons: [
+						'copy',
+						{
+							extend: 'excel',
+							title: 'Nomina General',
+							messageTop: 'Nomina',
+							exportOptions: {
+								columns: ['.important']
+							}
+						},
+					]
+				} );
             },
             dataType : 'json'
         });
