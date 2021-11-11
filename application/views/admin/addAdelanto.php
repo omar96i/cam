@@ -56,6 +56,11 @@
                                                 <input type="number" id="valor" class="form-control" name="valor">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+											<div class="form-group">
+                                                <label for="cuota" class="col-form-label">Cuotas:</label>
+                                                <input type="number" id="cuota" class="form-control" name="cuota">
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
                                        </div>
                                     </div>
                                     <div class="row">
@@ -99,9 +104,16 @@
             }else{
                 $("#valor").removeClass('is-invalid');
             }
+			if ($("#cuota").val() == '') {
+                $("#cuota").addClass('is-invalid');
+            }else{
+                $("#cuota").removeClass('is-invalid');
+            }
 
             if( $("#usuario").val() != 0 &&
                 $("#descripcion").val() != '' &&
+                $("#cuota").val() != '' &&
+
                 $("#valor").val() != '' 
             ) {
 
@@ -118,11 +130,9 @@
 
                     if(r.status){
                         $('#form_addproduct').trigger('reset');
-                        alertify.notify(
-                            'Registro agregado con éxito', 
-                            'success', 
-                            2
-                        );
+                        alertify.notify('Registro agregado con éxito', 'success', 2, function(){
+                           window.location.href = 'adelantos';
+                        });
                         return;
                     }
 

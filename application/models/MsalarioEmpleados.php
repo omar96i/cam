@@ -72,19 +72,51 @@ class MsalarioEmpleados extends CI_Model {
 				}else{
 					continue;
 				}
+				$bandera_adelanto = false;
+				$bandera_adelanto_proceso = false;
+				$id_adelanto = 0;
 				$aux_adelanto = 0;
 				$aux_descuentos = 0;
 				$aux_aumentos = 0;
 				$datos_insert = [];
 				$datos_insert['descuento'] = 0;
+				$adelanto_cantidad_cuotas = 0;
+				$adelanto_cantidad_cuotas_aux = 0;
+				$adelanto_cantidad_total = 0;
+				$adelanto_cantidad_total_aux = 0;
+				$estado_adelanto = "";
 
-				// CONSULTAMOS ADELANTOS
-				$adelantos = $this->db->select('id_adelanto, valor')->from('adelanto')->where('id_empleado', $valor_s->id_persona)->where('estado', 'sin registrar')->where('fecha_registrado >=', $data['fecha_inicial'])->where('fecha_registrado <=', $data['fecha_final'])->get();
-				if($adelantos->num_rows() > 0){
-					foreach ($adelantos->result() as $key => $adelanto) {
-						$aux_adelanto = $aux_adelanto+$adelanto->valor;
-					}
+				// Consultamos si tiene un adelanto
+				$consulta_adelantos = $this->db->select('*')->from('adelanto')->where('id_empleado', $valor_s->id_persona)->where('estado', 'sin registrar')->get();
+
+				if($consulta_adelantos->num_rows() > 0){
+					$bandera_adelanto = true;
+					$consulta_adelantos = $consulta_adelantos->result();
+					$adelanto_cantidad_cuotas = $consulta_adelantos[0]->cuota;
+					$adelanto_cantidad_total = $consulta_adelantos[0]->valor;
+					$id_adelanto = $consulta_adelantos[0]->id_adelanto;
+					$aux_adelanto = $adelanto_cantidad_total/$adelanto_cantidad_cuotas;
+					$adelanto_cantidad_total_aux = $adelanto_cantidad_total-$aux_adelanto;
+					$adelanto_cantidad_cuotas_aux = $adelanto_cantidad_cuotas-1;
+					$estado_adelanto = $consulta_adelantos[0]->estado;
 				}
+				// Consultamos si tiene un adelanto activo
+				$consulta_adelantos_proceso = $this->db->select('*')->from('adelanto')->where('id_empleado', $valor_s->id_persona)->where('estado', 'pagando')->get();
+				if($consulta_adelantos_proceso->num_rows() > 0){
+					$bandera_adelanto_proceso = true;
+					$consulta_adelantos_proceso = $consulta_adelantos_proceso->result();
+					$adelanto_cantidad_cuotas = $consulta_adelantos_proceso[0]->cuota;
+					$adelanto_cantidad_total = $consulta_adelantos_proceso[0]->valor;
+					$id_adelanto = $consulta_adelantos_proceso[0]->id_adelanto;
+
+					$aux_adelanto = $adelanto_cantidad_total/$adelanto_cantidad_cuotas;
+					$adelanto_cantidad_total_aux = $consulta_adelantos_proceso[0]->valor_aux-$aux_adelanto;
+					$adelanto_cantidad_cuotas_aux = $consulta_adelantos_proceso[0]->cuota_aux-1;
+					$estado_adelanto = $consulta_adelantos_proceso[0]->estado;
+				}
+
+
+				////////////////////////////////////
 				
 				// CONSULTAMOS AUMENTOS
 
@@ -178,9 +210,29 @@ class MsalarioEmpleados extends CI_Model {
 
 				$id = $this->db->insert_id();
 				// VERIFICAMOS SI TENIA ADELANTOS, SI LO TENIA FINALIZAMOS EL DESCUENTO DEL ADELANTO
-				if (!$aux_adelanto == 0) {
-					$this->db->set('id_factura_supervisor', $id)->set('estado', 'registrado')->where('id_empleado', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->update('adelanto');
+				if($bandera_adelanto){
+					$datos_insert_adelantos['id_adelanto'] = $id_adelanto;
+					$datos_insert_adelantos['id_factura_supervisor'] = $id;
+					$datos_insert_adelantos['valor'] = $aux_adelanto;
+					$this->db->insert('adelanto_factura', $datos_insert_adelantos);
+					if($adelanto_cantidad_cuotas_aux == 0){
+						$this->db->set('estado', 'registrado')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $datos_insert['id_empleado'])->where('estado', $estado_adelanto)->update('adelanto');
+					}else{
+						$this->db->set('estado', 'pagando')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $datos_insert['id_empleado'])->where('estado', $estado_adelanto)->update('adelanto');
+					}
 				}
+				if($bandera_adelanto_proceso){
+					$datos_insert_adelantos['id_adelanto'] = $id_adelanto;
+					$datos_insert_adelantos['id_factura_supervisor'] = $id;
+					$datos_insert_adelantos['valor'] = $aux_adelanto;
+					$this->db->insert('adelanto_factura', $datos_insert_adelantos);
+					if($adelanto_cantidad_cuotas_aux == 0){
+						$this->db->set('estado', 'registrado')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $datos_insert['id_empleado'])->where('estado', $estado_adelanto)->update('adelanto');
+					}else{
+						$this->db->set('estado', 'pagando')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $datos_insert['id_empleado'])->where('estado', $estado_adelanto)->update('adelanto');
+					}
+				}
+
 				if(!$aux_descuentos == 0){
 					$this->db->set('id_factura_supervisor', $id)->set('estado', 'registrado')->where('id_persona', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->update('dias_descontados');
 				}
@@ -231,24 +283,61 @@ class MsalarioEmpleados extends CI_Model {
 
 			foreach ($empleados->result() as $key => $value) {
 				$sueldo_general = 0;
+				
 				$adelanto = 0;
 				$id_adelanto = 0;
 				$aux_adelanto = 0;
 				$aux_descuentos = 0;
 				$aux_aumento = 0;
+				$adelanto_cantidad_cuotas = 0;
+				$adelanto_cantidad_cuotas_aux = 0;
+				$adelanto_cantidad_total = 0;
+				$adelanto_cantidad_total_aux = 0;
+				$estado_adelanto = "";
+				$bandera_adelanto = false;
+				$bandera_adelanto_proceso = false;
+
+
+				// adelantos
+				// Consultamos si tiene un adelanto
+				$consulta_adelantos = $this->db->select('*')->from('adelanto')->where('id_empleado', $value->id_persona)->where('estado', 'sin registrar')->get();
+
+				if($consulta_adelantos->num_rows() > 0){
+					$bandera_adelanto = true;
+					$consulta_adelantos = $consulta_adelantos->result();
+					$adelanto_cantidad_cuotas = $consulta_adelantos[0]->cuota;
+					$adelanto_cantidad_total = $consulta_adelantos[0]->valor;
+					$id_adelanto = $consulta_adelantos[0]->id_adelanto;
+					$aux_adelanto = $adelanto_cantidad_total/$adelanto_cantidad_cuotas;
+					$adelanto_cantidad_total_aux = $adelanto_cantidad_total-$aux_adelanto;
+					$adelanto_cantidad_cuotas_aux = $adelanto_cantidad_cuotas-1;
+					$estado_adelanto = $consulta_adelantos[0]->estado;
+				}
+				// Consultamos si tiene un adelanto activo
+				$consulta_adelantos_proceso = $this->db->select('*')->from('adelanto')->where('id_empleado', $value->id_persona)->where('estado', 'pagando')->get();
+				if($consulta_adelantos_proceso->num_rows() > 0){
+					$bandera_adelanto_proceso = true;
+					$consulta_adelantos_proceso = $consulta_adelantos_proceso->result();
+					$adelanto_cantidad_cuotas = $consulta_adelantos_proceso[0]->cuota;
+					$adelanto_cantidad_total = $consulta_adelantos_proceso[0]->valor;
+					$id_adelanto = $consulta_adelantos_proceso[0]->id_adelanto;
+
+					$aux_adelanto = $adelanto_cantidad_total/$adelanto_cantidad_cuotas;
+					$adelanto_cantidad_total_aux = $consulta_adelantos_proceso[0]->valor_aux-$aux_adelanto;
+					$adelanto_cantidad_cuotas_aux = $consulta_adelantos_proceso[0]->cuota_aux-1;
+					$estado_adelanto = $consulta_adelantos_proceso[0]->estado;
+				}
+
+
+				////////////////////////////////////
 
 				$consulta_aumentos = $this->db->select('valor')->from('aumentos')->where('id_persona', $value->id_persona)->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
-				$consulta_adelantos = $this->db->select_sum('valor')->from('adelanto')->where('id_empleado', $value->id_persona)->where('estado', 'sin registrar')->get();
 				$consulta_descuentos_dias = $this->db->select_sum('valor')->from('dias_descontados')->where('id_persona', $value->id_persona)->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
 
 				if($consulta_descuentos_dias->num_rows() > 0){
 					foreach ($consulta_descuentos_dias->result() as $key => $descuento) {
 						$aux_descuentos = $aux_descuentos+$descuento->valor;
 					}
-				}
-				if ($consulta_adelantos->num_rows() > 0) {
-					$consulta_adelantos = $consulta_adelantos->result();
-					$aux_adelanto = $consulta_adelantos[0]->valor;
 				}
 				if($consulta_aumentos->num_rows() > 0){
 					foreach ($consulta_aumentos->result() as $key => $aumento) {
@@ -315,8 +404,29 @@ class MsalarioEmpleados extends CI_Model {
 				if(!$aux_aumento == 0){
 					$this->db->set('id_factura_general', $id)->set('estado', 'registrado')->where('id_persona', $insert_data['id_empleado'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('aumentos');
 				}
-
-				$this->db->set('id_factura_general', $id)->set('estado', 'registrado')->where('id_empleado', $insert_data['id_empleado'])->where('estado', 'sin registrar')->update('adelanto');
+				if($bandera_adelanto){
+					$datos_insert_adelantos['id_adelanto'] = $id_adelanto;
+					$datos_insert_adelantos['id_factura_general'] = $id;
+					$datos_insert_adelantos['valor'] = $aux_adelanto;
+					$this->db->insert('adelanto_factura', $datos_insert_adelantos);
+					if($adelanto_cantidad_cuotas_aux == 0){
+						$this->db->set('estado', 'registrado')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $insert_data['id_empleado'])->where('estado', $estado_adelanto)->update('adelanto');
+					}else{
+						$this->db->set('estado', 'pagando')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $insert_data['id_empleado'])->where('estado', $estado_adelanto)->update('adelanto');
+					}
+				}
+				if($bandera_adelanto_proceso){
+					$datos_insert_adelantos['id_adelanto'] = $id_adelanto;
+					$datos_insert_adelantos['id_factura_general'] = $id;
+					$datos_insert_adelantos['valor'] = $aux_adelanto;
+					$this->db->insert('adelanto_factura', $datos_insert_adelantos);
+					if($adelanto_cantidad_cuotas_aux == 0){
+						$this->db->set('estado', 'registrado')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $insert_data['id_empleado'])->where('estado', $estado_adelanto)->update('adelanto');
+					}else{
+						$this->db->set('estado', 'pagando')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $insert_data['id_empleado'])->where('estado', $estado_adelanto)->update('adelanto');
+					}
+				}
+				
 
 			}
 			return true;

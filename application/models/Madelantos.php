@@ -51,8 +51,6 @@ class Madelantos extends CI_Model {
 		$this->db->select('adelanto.*, persona.*');
 		$this->db->from('adelanto');
 		$this->db->join('persona', 'persona.id_persona = adelanto.id_empleado');
-		$this->db->where('adelanto.estado !=', 'por verificar');
-		$this->db->order_by('adelanto.estado' , 'DESC');
 
 		$adelantos = $this->db->get();
 

@@ -1277,18 +1277,6 @@ class Home extends CI_Controller {
 	public function adelantos($tittle = "general"){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 
-			if($tittle == "sin_verificar"){
-				$data['adelantos'] = $this->Madelantos->getAdelantosSinVerificar();
-			}else{
-				$data['adelantos'] = $this->Madelantos->getAdelantos();
-			}
-			if(!$data['adelantos']) {
-				$data['adelantos'] = 0;
-			} 
-			else {
-				$data['adelantos'] = count($this->Madelantos->getAdelantos());
-			}
-
 			$data['tittle'] = $tittle;
 
 			$this->load->view('includes_admin/header');
@@ -1321,6 +1309,9 @@ class Home extends CI_Controller {
 		$data['id_administrador'] = $this->session->userdata('usuario')['id_usuario'];
 		$data['descripcion'] = $this->input->post('descripcion');
 		$data['valor'] = $this->input->post('valor');
+		$data['valor_aux'] = $this->input->post('valor');
+		$data['cuota'] = $this->input->post('cuota');
+		$data['cuota_aux'] = $this->input->post('cuota');
 		$data['estado'] = "sin registrar";
 
 		$insert_adelanto = $this->Madelantos->addAdelanto($data);
@@ -1398,6 +1389,9 @@ class Home extends CI_Controller {
 		$data['id_administrador'] = $this->session->userdata('usuario')['id_usuario'];
 		$data['descripcion'] = $this->input->post('descripcion');
 		$data['valor'] = $this->input->post('valor');
+		$data['valor_aux'] = $this->input->post('valor');
+		$data['cuota'] = $this->input->post('cuota');
+		$data['cuota_aux'] = $this->input->post('cuota');
 		$data['estado'] = "sin registrar";
 		$update_adelanto = $this->Madelantos->updateAdelanto($data);
 
@@ -1442,6 +1436,9 @@ class Home extends CI_Controller {
 		$data['id_empleado'] = $this->input->post('usuario');
 		$data['descripcion'] = $this->input->post('descripcion');
 		$data['valor'] = $this->input->post('valor');
+		$data['valor_aux'] = $this->input->post('valor');
+		$data['cuota'] = $this->input->post('cuota');
+		$data['cuota_aux'] = $this->input->post('cuota');
 
 		$update_adelanto = $this->Madelantos->updateAdelanto($data);
 
@@ -2019,7 +2016,6 @@ class Home extends CI_Controller {
 		$data['id_administrador'] = $this->session->userdata('usuario')['id_usuario'];
 
 		$respuesta = $this->MsalarioEmpleados->generarFacturaGeneral($data);
-
 		if ($respuesta) {
 			echo json_encode(['status' => true]);
 			return;

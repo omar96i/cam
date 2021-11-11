@@ -58,6 +58,9 @@ class SolicitarAdelanto extends CI_Controller {
 		$data['id_empleado'] = $this->session->userdata('usuario')['id_usuario'];
 		$data['descripcion'] = $this->input->post('descripcion');
 		$data['valor'] = $this->input->post('valor');
+		$data['cuota'] = $this->input->post('cuota');
+		$data['cuota_aux'] = $this->input->post('cuota');
+		$data['valor_aux'] = $this->input->post('valor');
 		$data['estado'] = "por verificar";
 
 		$verificar = $this->Madelantos->verificarAdelanto($data);

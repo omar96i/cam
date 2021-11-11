@@ -21,25 +21,33 @@
                                 <div class="row">
                                     <div class="col-8">
                                         <h2 class="d-inline">Adelantos</h2>
-                                        <a href="<?php echo base_url('admin/Home/addAdelanto') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
-										<a href="<?php echo base_url('admin/Home/adelantos/general') ?>" class="btn <?php echo ($tittle == "general")? "btn-success": "btn-info"; ?> mb-2 ml-1">General</a>
-										<a href="<?php echo base_url('admin/Home/adelantos/sin_verificar') ?>" class="btn <?php echo ($tittle == "sin_verificar")? "btn-success": "btn-info"; ?> mb-2 ml-1">Sin verificar</a>
+                                        <a href="<?php echo base_url('admin/Home/addAdelanto') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>	
                                     </div>
                                 </div>
+								<div class="row mb-3">
+									<div class="col-12 text-center">
+										<a href="<?php echo base_url('admin/Home/adelantos/general') ?>" class="btn <?php echo ($tittle == "general")? "btn-success": "btn-info"; ?> mb-2 ml-1">General</a>
+										<a href="<?php echo base_url('admin/Home/adelantos/sin_verificar') ?>" class="btn <?php echo ($tittle == "sin_verificar")? "btn-success": "btn-info"; ?> mb-2 ml-1">Sin verificar</a>
+										<a href="<?php echo base_url('admin/Home/adelantos/pagando') ?>" class="btn <?php echo ($tittle == "pagando")? "btn-success": "btn-info"; ?> mb-2 ml-1">En proceso</a>
+										<a href="<?php echo base_url('admin/Home/adelantos/registrado') ?>" class="btn <?php echo ($tittle == "registrado")? "btn-success": "btn-info"; ?> mb-2 ml-1">Registrados</a>
+										<a href="<?php echo base_url('admin/Home/adelantos/cancelado') ?>" class="btn <?php echo ($tittle == "cancelado")? "btn-success": "btn-info"; ?> mb-2 ml-1">Cancelados</a>
 
-                                <?php if(!empty($adelantos)): ?>
+									</div>
+								</div>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Id Adelanto</th>
                                                     <th>Documento</th>
                                                     <th>Nombres</th>
                                                     <th>Descripcion</th>
                                                     <th>Valor</th>
+                                                    <th>Cantidad de cuotas</th>
+                                                    <th>Valor por cuota</th>
+                                                    <th>Cuotas Faltantes</th>
+                                                    <th>Valor Faltante</th>
                                                     <th>Estado</th>
                                                     <th>Fecha</th>
-
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -48,18 +56,7 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
-                                    <?php else: ?>
-                                        <div class="text-center">
-                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay adelantos</span></p>
-                                        </div>
-                                    <?php endif; ?>
-
                                 </div>
                             </div>
                         </div>
@@ -72,30 +69,47 @@
 
 <script>
     function load_adelantos(valor , pagina) {
+		tittle = "<?php echo $tittle; ?>";
         $.ajax({
-            url      : '<?= ($tittle == "general") ? base_url('admin/home/veradelantos') :base_url('admin/home/veradelantosSinVerificar'); ?>',
+            url      : '<?= base_url('admin/home/veradelantos') ?>',
             method   : 'POST',
             success  : function(r){
                 if(r.status){
+					if(tittle == "general"){
+						data = _.filter(r.data, ['estado', 'sin registrar'])
+					}else if(tittle == "sin_verificar"){
+						data = _.filter(r.data, ['estado', 'por verificar'])
+					}else if(tittle == "pagando"){
+						data = _.filter(r.data, ['estado', 'pagando'])
+					}else if(tittle == "registrado"){
+						data = _.filter(r.data, ['estado', 'registrado'])
+					}
+					else if(tittle == "cancelado"){
+						data = _.filter(r.data, ['estado', 'cancelado'])
+					}
                     var tbody = '';
                     
-                    for(var k=0; k<r.data.length; k++) {
+                    for(var k=0; k<data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['id_adelanto']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
-                            <td class="align-middle text-capitalize">${"$ "+new Intl.NumberFormat().format(r.data[k]['valor'])}</td>
+                            <td class="align-middle text-capitalize">${data[k]['documento']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['nombres']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['descripcion']}</td>
+                            <td class="align-middle text-capitalize">${"$ "+new Intl.NumberFormat().format(data[k]['valor'])}</td>
+                            <td class="align-middle text-capitalize">${data[k]['cuota']}</td>
+                            <td class="align-middle text-capitalize">${"$ "+new Intl.NumberFormat().format(data[k]['valor']/data[k]['cuota'])}</td>
+							<td class="align-middle text-capitalize">${data[k]['cuota_aux']}</td>
 
-                            <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['fecha_registrado']}</td>
+                            <td class="align-middle text-capitalize">${"$ "+new Intl.NumberFormat().format(data[k]['valor_aux'])}</td>
+
+                            <td class="align-middle text-capitalize">${data[k]['estado']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['fecha_registrado']}</td>
 
                             <td class="align-middle">`
-                            if (r.data[k]['estado'] == "sin registrar") {
-                                tbody += `<a href="<?php echo site_url('admin/Home/editaradelantos/') ?>${r.data[k]['id_adelanto']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
+                            if (data[k]['estado'] == "sin registrar") {
+                                tbody += `<a href="<?php echo site_url('admin/Home/editaradelantos/') ?>${data[k]['id_adelanto']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
                             }
-							if (r.data[k]['estado'] == "por verificar") {
-                                tbody += `<a href="<?php echo site_url('admin/Home/editaradelantos/') ?>${r.data[k]['id_adelanto']}/por_verificar" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
+							if (data[k]['estado'] == "por verificar") {
+                                tbody += `<a href="<?php echo site_url('admin/Home/editaradelantos/') ?>${data[k]['id_adelanto']}/por_verificar" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
                             }
                         tbody += `</td>
                         </tr>`;
@@ -103,8 +117,10 @@
                             
                     }
                     $('#tbodyadelantos').html(tbody);
-					$("#empty").DataTable();
                 }
+				$("#empty").DataTable( {
+					"order": [[ 9, "desc" ]]
+				} );
             },
             dataType : 'json'
         });

@@ -77,6 +77,15 @@
                                                 <input type="number" id="valor" value="<?php echo $adelantos[0]->valor; ?>" class="form-control" name="valor">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+											<div class="form-group">
+                                                <label for="cuota" class="col-form-label">Cuotas:</label>
+                                                <input type="number" id="cuota" value="<?php echo $adelantos[0]->cuota; ?>" class="form-control" name="cuota">
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
+											<div class="form-group text-center">
+												<h6>Dinero por cuota</h6>
+												<h7 class="cuota_aux"></h7>
+											</div>
                                        </div>
                                     </div>
                                     <div class="row">
@@ -105,9 +114,25 @@
 
 <script>
     $(document).ready(function() {
+		if($("#valor").val() != "" && $("#cuota").val() != ""){
+			setData($("#valor").val(), $("#cuota").val())
+		}
+		$("#valor").keyup(function (e) { 
+			e.preventDefault();
+			if($("#valor").val() != "" && $("#cuota").val() != ""){
+				setData($("#valor").val(), $("#cuota").val())
+			}
+		});
+		$("#cuota").keyup(function (e) { 
+			e.preventDefault();
+			if($("#valor").val() != "" && $("#cuota").val() != ""){
+				setData($("#valor").val(), $("#cuota").val())
+			}
+		});
 
         $('.btn_agregar_asignacion').on('click' , function(e){
             e.preventDefault();
+			var tittle = "<?php echo $tittle; ?>";
             var ruta      = "<?php echo ($tittle == "por_verificar") ? base_url('admin/home/verificarAdelantos'):base_url('admin/home/storeAdelantos'); ?>";
             var form_data = new FormData($('#form_add_adelanto')[0]);
 
@@ -126,9 +151,15 @@
             }else{
                 $("#valor").removeClass('is-invalid');
             }
+			if ($("#cuota").val() == '') {
+                $("#cuota").addClass('is-invalid');
+            }else{
+                $("#cuota").removeClass('is-invalid');
+            }
 
             if( $("#usuario").val() != 0 &&
                 $("#descripcion").val() != '' &&
+                $("#cuota").val() != '' &&
                 $("#valor").val() != '' 
             ) {
 
@@ -146,7 +177,11 @@
                     if(r.status){
                         $('#form_addproduct').trigger('reset');
                         alertify.notify('Registro agregado con éxito', 'success', 2, function(){
-                           window.location.href = '../../adelantos';
+							if(tittle == "por_verificar"){
+								window.location.href = '../../adelantos';
+								return
+							}
+                           window.location.href = '../adelantos';
                         });
                         return;
                     }
@@ -229,5 +264,9 @@
 
         });
     });
+
+	function setData(valor1, valor2){
+		$(".cuota_aux").html(new Intl.NumberFormat('en-US').format(Math.round(valor1/valor2)))
+	}
     
 </script>

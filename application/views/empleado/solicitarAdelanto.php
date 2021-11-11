@@ -25,6 +25,11 @@
 										<input type="number" id="valor" class="form-control" name="valor">
 										<div class="invalid-feedback">El campo no debe quedar vacío</div>
 									</div>
+									<div class="form-group">
+										<label for="cuota" class="col-form-label">Cuotas:</label>
+										<input type="number" id="cuota" class="form-control" name="cuota">
+										<div class="invalid-feedback">El campo no debe quedar vacío</div>
+									</div>
 								</div>
 							</div>
 							<div class="row">
@@ -54,6 +59,8 @@
 				e.preventDefault();
 				descripcion = $("#descripcion").val();
 				valor = $("#valor").val();
+				cuota = $("#cuota").val();
+
 
 				if ($("#descripcion").val() == 0) {
              		$("#descripcion").addClass('is-invalid');
@@ -65,20 +72,28 @@
 				}else{
 					$("#valor").removeClass('is-invalid');
 				}
+				if ($("#cuota").val() == '') {
+					$("#cuota").addClass('is-invalid');
+				}else{
+					$("#cuota").removeClass('is-invalid');
+				}
 
 				if(
 					$("#descripcion").val() != '' &&
+					$("#cuota").val() != '' &&
                 	$("#valor").val() != ''
 				){
 					$.ajax({
 						url: '<?php echo base_url('empleado/SolicitarAdelanto/AddAdelanto') ?>',
 						type: 'POST',
 						dataType: 'json',
-						data: { descripcion : descripcion, valor : valor},
+						data: { descripcion : descripcion, valor : valor, cuota: cuota},
 					})
 					.done(function(r) {
 						$("#descripcion").val("");
 						$("#valor").val("");
+						$("#cuota").val("");
+
 						if(r.status){
 							
 							alertify.notify(
