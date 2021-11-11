@@ -26,8 +26,13 @@
                                     </div>
 									<?php }?>
                                 </div>
+								<div class="row mb-3">
+									<div class="col-12 text-center">
+										<a href="<?php echo base_url('admin/Home/metas/general') ?>" class="btn <?php echo ($tittle == "general")? "btn-success": "btn-info"; ?> mb-2 ml-1">General</a>
+										<a href="<?php echo base_url('admin/Home/metas/registrado') ?>" class="btn <?php echo ($tittle == "registrado")? "btn-success": "btn-info"; ?> mb-2 ml-1">Registradas</a>
+									</div>
+								</div>
 
-                                <?php if(!empty($metas)): ?>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
@@ -48,17 +53,7 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
-                                    <?php else: ?>
-                                        <div class="text-center">
-                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay metas</span></p>
-                                        </div>
-                                    <?php endif; ?>
 
                                 </div>
                             </div>
@@ -72,30 +67,35 @@
 
 <script>
 
-    function load_metas(valor , pagina) {
+    function load_metas() {
+		tittle = "<?php echo $tittle; ?>";
 
         $.ajax({
             url      : '<?= base_url('admin/home/verMetas') ?>',
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina},
             success  : function(r){
                 if(r.status){
+					if(tittle == "general"){
+						data = _.filter(r.data, ['estado', 'sin registrar']);
+					}else{
+						data = _.filter(r.data, ['estado', 'registrado']);
+					}
                     var tbody = '';
                     
-                    for(var k=0; k<r.data.length; k++) {
+                    for(var k=0; k<data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['tipo_cuenta']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['num_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['documento']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['nombres']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['apellidos']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['tipo_cuenta']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['num_horas']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['descripcion']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['estado']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['fecha_registro']}</td>
                             <td class="align-middle">`
 							
-							if (r.data[k]['estado'] == "sin registrar") {
-								tbody += `<a href="<?php echo site_url('admin/Home/editarmetas/') ?>${r.data[k]['id_meta']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
+							if (data[k]['estado'] == "sin registrar") {
+								tbody += `<a href="<?php echo site_url('admin/Home/editarmetas/') ?>${data[k]['id_meta']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>`
 							}
                             
                         tbody += `</td>
@@ -103,9 +103,10 @@
                                     
                     }
                     $('#tbodymetas').html(tbody);
-
-					$("#empty").DataTable();
                 }
+				$("#empty").DataTable( {
+					"order": [[ 7, "desc" ]]
+				} );
             },
             dataType : 'json'
         });

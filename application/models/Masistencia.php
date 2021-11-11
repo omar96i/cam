@@ -178,16 +178,11 @@ class Masistencia extends CI_Model {
 		return $nums->num_rows();
 	}
 
-	public function get_motivoAsistencias($valor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function get_motivoAsistencias() {
 		$this->db->select('*');
 		$this->db->from('motivo_asistencia');
-		$this->db->like('nombre' , $valor);
 		$this->db->where('estado', 'activo');
 		$this->db->order_by('nombre' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 
 		$asistencias = $this->db->get();
 		return $asistencias->result();

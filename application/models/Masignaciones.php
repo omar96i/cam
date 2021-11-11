@@ -123,19 +123,14 @@ class Masignaciones extends CI_Model {
 		return false;
 	}
 
-	public function getasignacionsupervisor($valor ,$id_supervisor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function getasignacionsupervisor($id_supervisor) {
 		$this->db->select('persona.*');
 		$this->db->from('empleado_supervisor');
 		$this->db->join('persona', 'persona.id_persona = empleado_supervisor.id_empleado');
-		$this->db->like('nombres' , $valor);
 		$this->db->where('id_supervisor', $id_supervisor);
 		$this->db->where('empleado_supervisor.estado', 'activo');
 
 		$this->db->order_by('id_persona' , 'DESC');
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {

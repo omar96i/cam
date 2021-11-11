@@ -46,33 +46,15 @@ class Mcitas extends CI_Model {
 		return false;
 	}
 
-	public function getDataCitasAdmin($fecha_inicio, $fecha_final, $valor, $inicio = FALSE, $registros_pagina = FALSE){
+	public function getDataCitasAdmin(){
 		$this->db->select('nombres,apellidos,documento,citas.*')->from('citas')->join('persona', 'citas.id_empleado = persona.id_persona')->where('estado !=', 'eliminado');
-		if ($fecha_inicio != "") {
-			$this->db->where('citas.fecha >=', $fecha_inicio);
-		}
-		if ($fecha_final != "") {
-			$this->db->where('citas.fecha <=', $fecha_final);
-		}
-		$this->db->like('documento', $valor);
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
+
+
 		$this->db->order_by('fecha', 'DESC');
 		$consulta = $this->db->get();
 
 		if ($consulta->num_rows() > 0) {
 			$this->db->select('nombres,apellidos,documento')->from('citas')->join('persona', 'citas.id_fotografo = persona.id_persona')->where('estado !=', 'eliminado');
-			if ($fecha_inicio != "") {
-				$this->db->where('citas.fecha >=', $fecha_inicio);
-			}
-			if ($fecha_final != "") {
-				$this->db->where('citas.fecha <=', $fecha_final);
-			}
-			$this->db->like('documento', $valor);
-			if($inicio !== FALSE && $registros_pagina !== FALSE) {
-				$this->db->limit($registros_pagina , $inicio);
-			}
 			$this->db->order_by('fecha', 'DESC');
 			$consulta2 = $this->db->get()->result();
 			$data['fotografo'] = $consulta2;

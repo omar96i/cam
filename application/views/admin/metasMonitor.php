@@ -21,11 +21,14 @@
                                 <div class="row">
                                     <div class="col-8">
                                         <h2 class="d-inline">Metas</h2>
-										
                                     </div>
                                 </div>
-
-                                <?php if(!empty($metas)): ?>
+								<div class="row mb-3">
+									<div class="col-12 text-center">
+										<a href="<?php echo base_url('admin/MetasSupervisor/index/general') ?>" class="btn <?php echo ($tittle == "general")? "btn-success": "btn-info"; ?> mb-2 ml-1">General</a>
+										<a href="<?php echo base_url('admin/MetasSupervisor/index/registrado') ?>" class="btn <?php echo ($tittle == "registrado")? "btn-success": "btn-info"; ?> mb-2 ml-1">Registradas</a>
+									</div>
+								</div>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
@@ -45,18 +48,7 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
-                                    <?php else: ?>
-                                        <div class="text-center">
-                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay metas</span></p>
-                                        </div>
-                                    <?php endif; ?>
-
                                 </div>
                             </div>
                         </div>
@@ -70,35 +62,37 @@
 <script>
 
     function load_metas(valor , pagina) {
-
+		tittle = "<?php echo $tittle; ?>";
         $.ajax({
             url      : '<?= base_url('admin/MetasSupervisor/verMetasSupervisor') ?>',
             method   : 'POST',
-            data     : {},
             success  : function(r){
                 if(r.status){
+					if(tittle == "general"){
+						data = _.filter(r.data, ['estado', 'sin registrar']);
+					}else{
+						data = _.filter(r.data, ['estado', 'registrado']);
+					}
                     var tbody = '';
                     
-                    for(var k=0; k<r.data.length; k++) {
+                    for(var k=0; k<data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['documento']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['nombres']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['apellidos']}</td>
                             <td class="align-middle text-capitalize">Supervisor</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['num_horas']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
-                            <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['num_horas']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['descripcion']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['estado']}</td>
+                            <td class="align-middle text-capitalize">${data[k]['fecha_registro']}</td>
                         </tr>`;
                                     
                     }
                     $('#tbodymetas').html(tbody);
-
-                   	$("#empty").DataTable();
-
-
-                    
                 }
+				$("#empty").DataTable( {
+					"order": [[ 7, "desc" ]]
+				} );
             },
             dataType : 'json'
         });

@@ -23,22 +23,11 @@
                                         <h2 class="d-inline">Penalizaciones</h2>
                                         <a href="<?php echo base_url('admin/Home/addpenalizaciones') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($penalizaciones)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search penalizaciones">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
-
-                                <?php if(!empty($penalizaciones)): ?>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Id Penalizacion</th>
                                                     <th>Nombre Penalizacion</th>
                                                     <th>Tokens</th>
                                                     <th>Estado</th>
@@ -51,16 +40,7 @@
                                             </tbody>
                                         </table>
 
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
                                     </div>
-                                    <?php else: ?>
-                                        <div class="text-center">
-                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay penalizaciones</span></p>
-                                        </div>
-                                    <?php endif; ?>
 
                                 </div>
                             </div>
@@ -77,14 +57,12 @@
         $.ajax({
             url      : '<?= base_url('admin/home/verpenalizaciones') ?>',
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina},
             success  : function(r){
                 if(r.status){
                     var tbody = '';
                     
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['id_penalizacion']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombre_penalizacion']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['puntos']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
@@ -96,28 +74,8 @@
                     }
                     $('#tbodypenalizaciones').html(tbody);
 
-
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
                 }
+				$("#empty").DataTable()
             },
             dataType : 'json'
         });

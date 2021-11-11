@@ -11,17 +11,9 @@ class IngresosSoftware extends CI_Controller {
 
 	public function index() {
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$data['ingresos'] = $this->MingresosSoftware->getDataIngresos();
-
-			if(!$data['ingresos']) {
-				$data['ingresos'] = 0;
-			} 
-			else {
-				$data['ingresos'] = count($this->MingresosSoftware->getDataIngresos());
-			}
 			
 			$this->load->view('includes_admin/header');
-			$this->load->view('admin/ingresosSoftware', $data);
+			$this->load->view('admin/ingresosSoftware');
 			$this->load->view('includes_admin/footer');
         }else{
 			redirect('Home');

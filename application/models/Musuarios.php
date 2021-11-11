@@ -259,7 +259,6 @@ class Musuarios extends CI_Model {
 	public function getDatosDescuentos(){
 		$datos = $this->db->select('persona.*')->from('usuarios')
 							->join('persona', 'persona.id_persona = usuarios.id_persona')
-							->where('tipo_cuenta !=', 'empleado')
 							->where('estado', 'activo')
 							->get();
 		return $datos->result();

@@ -173,12 +173,7 @@ class Home extends CI_Controller {
 			return; 
 		}
 		$id_supervisor    = $this->input->post('id_supervisor');
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Masignaciones->getasignacionsupervisor($valor ,$id_supervisor , $inicio , $cantidad);
-		$total_registros  = count($this->Masignaciones->getasignacionsupervisor($valor, $id_supervisor)); 
+		$usuarios         = $this->Masignaciones->getasignacionsupervisor($id_supervisor);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -188,9 +183,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 
 	}
@@ -1031,17 +1024,9 @@ class Home extends CI_Controller {
 
 	public function penalizaciones(){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$data['penalizaciones'] = $this->Mpenalizaciones->getPenalizaciones();
-
-			if(!$data['penalizaciones']) {
-				$data['penalizaciones'] = 0;
-			} 
-			else {
-				$data['penalizaciones'] = count($this->Mpenalizaciones->getPenalizaciones());
-			}
-
+			
 			$this->load->view('includes_admin/header');
-			$this->load->view('admin/penalizaciones' , $data);
+			$this->load->view('admin/penalizaciones');
 			$this->load->view('includes_admin/footer');
 		}else{
 			redirect('Home');
@@ -1066,13 +1051,7 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$penalizaciones         = $this->Mpenalizaciones->get_penalizaciones($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Mpenalizaciones->get_penalizaciones($valor)); 
+		$penalizaciones         = $this->Mpenalizaciones->get_penalizaciones();
 
 		if(!$penalizaciones) {
 			echo json_encode(['status' => false]);
@@ -1082,9 +1061,7 @@ class Home extends CI_Controller {
 		echo json_encode(
 		[
 			'status'          => true, 
-			'data'            => $penalizaciones,
-			'cantidad'        => $cantidad,
-			'total_registros' => $total_registros
+			'data'            => $penalizaciones
 		]);
 	}
 
@@ -1162,10 +1139,9 @@ class Home extends CI_Controller {
 
 	public function asistencias(){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$data['asistencias'] = $this->Masistencia->nums_motivoAsistencias();
 
 			$this->load->view('includes_admin/header');
-			$this->load->view('admin/asistencias' , $data);
+			$this->load->view('admin/asistencias' );
 			$this->load->view('includes_admin/footer');
 		}else{
 			redirect('Home');
@@ -1178,12 +1154,8 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$asistencias         = $this->Masistencia->get_motivoAsistencias($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Masistencia->get_motivoAsistencias($valor)); 
+		
+		$asistencias         = $this->Masistencia->get_motivoAsistencias();
 
 		if(empty($asistencias)) {
 			echo json_encode(['status' => false]);
@@ -1192,9 +1164,7 @@ class Home extends CI_Controller {
 
 		echo json_encode([
 			'status'          => true, 
-			'data'            => $asistencias,
-			'cantidad'        => $cantidad,
-			'total_registros' => $total_registros
+			'data'            => $asistencias
 		]);
 	}	
 
@@ -1713,16 +1683,10 @@ class Home extends CI_Controller {
 	/// PORCENTAJES FIN  ////
 
 	/// METAS INICIO ///
-	public function metasSupervisor(){
+	public function metasSupervisor($tittle = "general"){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
-			$data['metas'] = $this->Mmetas->getMetas();
-			if(!$data['metas']) {
-				$data['metas'] = 0;
-			} 
-			else {
-				$data['metas'] = count($this->Mmetas->getMetas());
-			}
-
+			
+			$data['tittle'] = $tittle;
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/metasSupervisor' , $data);
 			$this->load->view('includes_admin/footer');
@@ -1732,17 +1696,11 @@ class Home extends CI_Controller {
 
 		
 	}
-	public function metas(){
+	public function metas($tittle = "general"){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
-			$data['metas'] = $this->Mmetas->getMetas();
-			if(!$data['metas']) {
-				$data['metas'] = 0;
-			} 
-			else {
-				$data['metas'] = count($this->Mmetas->getMetas());
-			}
 
 			$data['tipo_cuenta'] = $this->session->userdata('usuario')['tipo'];
+			$data['tittle'] = $tittle;
 
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/metas' , $data);

@@ -182,6 +182,20 @@ class Mregistronomina extends CI_Model {
 
 		$adelanto = $aux_adelanto;
 		////////////////////////////
+
+		/// CONSULTAMOS DESCUENTOS ///
+		$aux_descuentos = 0;
+
+		$consulta_descuentos_dias = $this->db->select_sum('valor')->from('dias_descontados')->where('id_persona', $data['id_persona'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
+		if($consulta_descuentos_dias->num_rows() > 0){
+			foreach ($consulta_descuentos_dias->result() as $key => $descuento) {
+				$aux_descuentos = $aux_descuentos+$descuento->valor;
+			}
+		}
+
+
+		$adelanto = $adelanto+$aux_descuentos;
+		/////////////////////////////////
 		/// CONSULTAMOS VALOR DOLAR ///
 		$consulta_valor_dolar = $this->db->select('valor_dolar,id_dolar')->from('dolar')->where('estado', 'activo')->get()->result();
 		if (empty($consulta_valor_dolar)) {
@@ -266,6 +280,9 @@ class Mregistronomina extends CI_Model {
 			}else{
 				$this->db->set('estado', 'pagando')->set('cuota_aux', $adelanto_cantidad_cuotas_aux)->set('valor_aux', $adelanto_cantidad_total_aux)->where('id_empleado', $data['id_persona'])->where('estado', $estado_adelanto)->update('adelanto');
 			}
+		}
+		if(!$aux_descuentos == 0){
+			$this->db->set('id_factura', $id)->set('estado', 'registrado')->where('id_persona', $datos['id_usuario'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('dias_descontados');
 		}
 		$this->db->set('id_factura', $id)->set('estado', 'registrado')->where('id_empleado', $datos['id_usuario'])->where('fecha_registrado >=', $data['fecha_inicial'])->where('fecha_registrado <=', $data['fecha_final'])->update('empleado_penalizacion');
 

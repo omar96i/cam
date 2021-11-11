@@ -209,6 +209,32 @@
 									</span>
 								</a>
 							</li>
+							<?php if ($this->session->userdata('usuario')["tipo"]=='talento humano'){ ?>
+
+							<li class="nav-item nav-item-submenu">
+								<a href="#" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/engranaje_white.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> <span>Configuracion talento humano</span></a>
+								<ul class="nav nav-group-sub" data-submenu-title="Configuracion">
+									<li class="nav-item">
+										<a href="<?php echo base_url('talento_humano/Home/usuarios') ?>" class="nav-link">Modelos</a>
+									</li>
+
+									<!-- <li class="nav-item">
+										<a href="<?php //echo base_url('talento_humano/Home/facturas') ?>" class="nav-link">Facturas</a>
+									</li> -->
+									<li class="nav-item">
+										<a href="<?php echo base_url('talento_humano/Asistencia') ?>" class="nav-link">Asistencia</a>
+									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('talento_humano/Gastos') ?>" class="nav-link">Gastos</a>
+									</li>
+									
+									<li class="nav-item">
+										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
+									</li>
+								</ul>
+							</li>
+
+							<?php } ?>
 							<?php if ($this->session->userdata('usuario')["tipo"]=='administrador') { ?>
 							<li class="nav-item">
 								<a href="<?php echo base_url('admin/Home/usuarios') ?>" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/user-protection.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;">  <span>Crear Usuario</span></a>
@@ -282,9 +308,9 @@
 										<a href="<?php echo base_url('admin/Home/asistencias') ?>" class="nav-link">Asistencias</a>
 									</li>
 
-									<li class="nav-item">
-										<a href="<?php echo base_url('admin/Gastos') ?>" class="nav-link">Gastos / Ingresos</a>
-									</li>
+									<!-- <li class="nav-item">
+										<a href="<?php //echo base_url('admin/Gastos') ?>" class="nav-link">Gastos / Ingresos</a>
+									</li> -->
 									<li class="nav-item">
 										<a href="<?php echo base_url('admin/Reportes') ?>" class="nav-link">Reportes tecnicos</a>
 									</li>
@@ -367,32 +393,7 @@
 							
 						<?php } ?>
 
-						<?php if ($this->session->userdata('usuario')["tipo"]=='talento humano'){ ?>
-
-							<li class="nav-item nav-item-submenu">
-								<a href="#" class="nav-link"><img src="<?php echo base_url('assets/iconos_menu/engranaje_white.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> <span>Configuracion talento humano</span></a>
-								<ul class="nav nav-group-sub" data-submenu-title="Configuracion">
-									<li class="nav-item">
-										<a href="<?php echo base_url('talento_humano/Home/usuarios') ?>" class="nav-link">Modelos</a>
-									</li>
-
-									<li class="nav-item">
-										<a href="<?php echo base_url('talento_humano/Home/facturas') ?>" class="nav-link">Facturas</a>
-									</li>
-									<li class="nav-item">
-										<a href="<?php echo base_url('talento_humano/Asistencia') ?>" class="nav-link">Asistencia</a>
-									</li>
-									<li class="nav-item">
-										<a href="<?php echo base_url('talento_humano/Gastos') ?>" class="nav-link">Gastos</a>
-									</li>
-									
-									<li class="nav-item">
-										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>
-									</li>
-								</ul>
-							</li>
-
-						<?php } 
+						<?php
 						if ($this->session->userdata('usuario')["tipo"]=='tecnico sistemas'){ ?>
 							<li class="nav-item">
 								<a href="<?php echo base_url() ?>" class="nav-link">

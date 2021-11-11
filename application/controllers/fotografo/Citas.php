@@ -68,14 +68,7 @@ class Citas extends CI_Controller {
 			return; 
 		}
 
-		$fecha_inicial    = $this->input->post('fecha_inicio');    
-		$fecha_final 	  = $this->input->post('fecha_final');
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$citas            = $this->Mcitas->getDataCitasAdmin($fecha_inicial, $fecha_final, $valor, $inicio, $cantidad);
-		$total_registros  = count($this->Mcitas->getDataCitasAdmin($fecha_inicial, $fecha_final, $valor)); 
+		$citas            = $this->Mcitas->getDataCitasAdmin();
 
 		if(!$citas) {
 			echo json_encode(['status' => false]);
@@ -85,9 +78,7 @@ class Citas extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $citas,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $citas
 			]);
 	}
 

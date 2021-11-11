@@ -22,15 +22,10 @@ class ConsultarHoras extends CI_Controller {
 			return; 
 		}
 
-		$fecha_inicial 	  = $this->input->post('fecha_inicial_buscar');
-		$fecha_final  	  = $this->input->post('fecha_final_buscar');
+
 		$id_usuario 	  = $this->session->userdata('usuario')['id_usuario'];
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Mregistrohoras->getHoras($valor , $id_usuario, $fecha_inicial, $fecha_final, $inicio, $cantidad);
-		$total_registros  = count($this->Mregistrohoras->getHoras($valor, $id_usuario, $fecha_inicial, $fecha_final)); 
+
+		$usuarios         = $this->Mregistrohoras->getHoras($id_usuario);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -40,9 +35,7 @@ class ConsultarHoras extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 
 	}

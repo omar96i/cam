@@ -23,22 +23,12 @@
                                         <h2 class="d-inline">Asistencias</h2>
                                         <a href="<?php echo base_url('admin/Home/addasistencia') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                     </div>
-
-                                    <div class="col-4 caja_buscador">
-                                        <?php if(!empty($asistencias)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search asistencias">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
-                                <?php if(!empty($asistencias)): ?>
                                     <div  class="table-responsive mt-1 caja_tabla">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Id Asistencia</th>
                                                     <th>Nombre</th>
                                                     <th>Descuenta día</th>
                                                     <th>Estado</th>
@@ -55,12 +45,6 @@
 
                                         </div>
                                     </div>
-                                <?php else: ?>
-                                    <div class="text-center">
-                                        <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                        <p><span class="text-muted">No hay asistencias</span></p>
-                                    </div>
-                                <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +67,6 @@
                     
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize">${r.data[k]['id_motivo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombre']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['descuenta']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
@@ -95,34 +78,8 @@
                     }
                     $('#tbodyasistencias').html(tbody);
 
-
-                    // Total de Usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-
-                }else{
-                    $(".caja_buscador, .caja_tabla").remove();
-                    $(".caja_resultados").append(`<div class="text-center">
-                        <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                        <p><span class="text-muted">No hay asistencias</span></p>
-                    </div>`);
                 }
+				$("#empty").DataTable()
             },
             dataType : 'json'
         });

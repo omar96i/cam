@@ -70,16 +70,9 @@ class Home extends CI_Controller {
 
 		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
 
-		$data['horas']     = $this->Mregistrohoras->getHorasEmpleado($id_usuario);
         $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
         $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
 
-		if(!$data['horas']) {
-			$data['horas'] = 0;
-		} 
-		else {
-			$data['horas'] = count($this->Mregistrohoras->getHorasEmpleado($id_usuario));
-		}
 
         if (!$data['cant_notificaciones']) {
 			$data['cant_notificaciones'] = "vacio";

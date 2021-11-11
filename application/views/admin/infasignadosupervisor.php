@@ -30,13 +30,10 @@
                                     <div class="col-8">
                                         <h2 class="d-inline">Asignados</h2>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($usuarios)): ?>
-                                            <div class="input-group">
-                                                <input type="text"  class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search usuarios">
-                                            </div>
-                                        <?php endif; ?>
+                                </div>
+								<div class="row text-center">
+                                    <div class="col-12">
+                                        <h2><?php echo $supervisor[0]->nombres." ".$supervisor[0]->apellidos; ?></h2>
                                     </div>
                                 </div>
 
@@ -45,9 +42,6 @@
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
                                                 <tr>
-                                                    <th>Id supervisor</th>
-                                                    <th>Nombre supervisor</th>
-                                                    <th>Id Modelo</th>
                                                     <th>Documento modelo</th>
                                                     <th>Nombres modelo</th>
                                                     <th>Apellidos modelo</th>
@@ -124,17 +118,13 @@
         $.ajax({
             url      : '<?= base_url('admin/home/verusuariosasignados') ?>',
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina, id_supervisor: id_supervisor},
+            data     : {id_supervisor: id_supervisor},
             success  : function(r){
-                console.log(r.data);
                 if(r.status){
                     var tbody = '';
                     
                     for(var k=0; k<r.data.length; k++) {
                         tbody += `<tr>
-                            <td class="align-middle text-capitalize"><?php echo $supervisor[0]->id_persona; ?></td>
-                            <td class="align-middle text-capitalize"><?php echo $supervisor[0]->nombres; ?></td>
-                            <td class="align-middle text-capitalize">${r.data[k]['id_persona']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
@@ -172,32 +162,13 @@
                             console.log("error");
                             console.log(r);
                         });
-                        
                         $("#ModalPagesUsuario").modal('show');
 
                     });
 
 
                     // Total de usuarios y la cantidad por registro
-                    var cantidad        = r.cantidad,
-                        total_registros = r.total_registros,
-                        numero_links    = Math.ceil(total_registros / cantidad),
-                        link_seleccion  = pagina;
-
-                        pagination = '<nav aria-label="Paginador usuarios"><ul class="pagination justify-content-center">';                    
-                        for(var i = 1; i <= numero_links; i++) {
-                            if(i == link_seleccion) {
-                                pagination += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-                            }
-                            else {
-                                pagination += `<li class="page-item"><a class="page-link" href="${i}">${i}</a></li>`;
-
-                            }
-                        }
-                        pagination += '</ul></nav>';
-
-                        $('.pagination_usuarios').html(pagination);
-                    false;
+                    $("#empty").DataTable()
                 }
             },
             dataType : 'json'
@@ -228,7 +199,7 @@
             id_supervisor = <?php echo $supervisor[0]->id_persona; ?>;
             ruta        = "<?php echo base_url('admin/home/delete_empleado') ?>";
 
-            alertify.confirm("Nomina" , "¿Está seguro que quiere eliminar el registro?",
+            alertify.confirm("Gz studios" , "¿Está seguro que quiere eliminar la asignacion?",
             function(){
                 $.ajax({
                     url: ruta,

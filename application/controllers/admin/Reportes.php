@@ -11,17 +11,10 @@ class Reportes extends CI_Controller {
 
 	public function index(){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$data['reportes'] = $this->Mreportes->getReportesAdmin();
-
-			if(!$data['reportes']) {
-				$data['reportes'] = 0;
-			} 
-			else {
-				$data['reportes'] = count($this->Mreportes->getReportesAdmin());
-			}
+			
 			
 			$this->load->view('includes_admin/header');
-			$this->load->view('admin/reportes', $data);
+			$this->load->view('admin/reportes');
 			$this->load->view('includes_admin/footer');
 			
         }else{
@@ -37,14 +30,8 @@ class Reportes extends CI_Controller {
 			return; 
 		}
 
-		$fecha_inicial    = $this->input->post('fecha_inicio');    
-		$fecha_final 	  = $this->input->post('fecha_final');
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$informes         = $this->Mreportes->getDataReportesAdmin($fecha_inicial, $fecha_final, $inicio, $cantidad);
-		$total_registros  = count($this->Mreportes->getDataReportesAdmin($fecha_inicial, $fecha_final)); 
+
+		$informes         = $this->Mreportes->getDataReportesAdmin();
 
 		if(!$informes) {
 			echo json_encode(['status' => false]);
@@ -54,9 +41,7 @@ class Reportes extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $informes,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $informes
 			]);
 	}
 	

@@ -23,14 +23,6 @@
                                         <h2 class="d-inline">Monitores</h2>
                                         <a href="<?php echo base_url('admin/Home/asignarsupervisor') ?>" class="btn btn-info mb-2 ml-1">Asignar</a>
                                     </div>
-
-                                    <div class="col-4">
-                                        <?php if(!empty($supervisores)): ?>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control search_usuarios" placeholder="Buscar (por nombre)..." aria-label="Search supervisores">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
 
                                 <?php if(!empty($supervisores)): ?>

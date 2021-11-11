@@ -15,16 +15,12 @@ class Mpenalizaciones extends CI_Model {
 		return false;
 	}
 
-	public function get_penalizaciones($valor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function get_penalizaciones() {
 		$this->db->select('*');
 		$this->db->from('penalizaciones');
-		$this->db->like('nombre_penalizacion' , $valor);
 		$this->db->where('estado', 'activo');
 		$this->db->order_by('nombre_penalizacion' , 'DESC');
 
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$penalizaciones = $this->db->get();
 
 		if($penalizaciones->num_rows() > 0) {

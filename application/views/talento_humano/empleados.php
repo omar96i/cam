@@ -136,7 +136,6 @@
             .fail(function(r) {
                 console.log("error");
                 console.log(r);
-
             });
             
         });
@@ -162,8 +161,11 @@
                         </tr>`;
                     }
                     $('#tbodyempleados').html(tbody);
-                    $('#empty').DataTable();
+                    
                 }
+				$('#empty').DataTable( {
+					"order": [[ 3, "desc" ]]
+				} );
             },
             dataType : 'json'
         });

@@ -44,18 +44,8 @@ class Mreportes extends CI_Model {
 		return false;
 	}
 
-	public function getDataReportesAdmin($fecha_inicial, $fecha_final, $inicio = FALSE , $registros_pagina = FALSE) {
+	public function getDataReportesAdmin() {
 		$this->db->select('reportes.*, persona.nombres, persona.documento, persona.apellidos')->from('reportes')->join('persona', 'reportes.id_tecnico = persona.id_persona');
-		if ($fecha_inicial != null) {
-			$this->db->where('fecha >=', $fecha_inicial);
-		}
-		if ($fecha_final != null) {
-			$this->db->where('fecha <=', $fecha_final);
-		}
-
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-        }
         
 		$informes = $this->db->get();
 

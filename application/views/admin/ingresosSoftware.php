@@ -22,18 +22,7 @@
                                     <div class="col-6">
                                         <h2 class="d-inline">Ingresos a la pagina</h2>
                                     </div>
-
-                                    <div class="col-6">
-                                        <?php if(!empty($ingresos)): ?>
-                                            <div class="input-group">
-                                                <input type="date" id="fecha_inicial_buscar" class="form-control" name="s_fecha_buscar">
-                                                <input type="date" id="fecha_final_buscar" class="form-control" name="s_fecha_buscar">
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
                                 </div>
-
-                                <?php if(!empty($ingresos)): ?>
                                     <div  class="table-responsive mt-1">
                                         <table id="empty" class="table table-sm table-striped table-bordered">
                                             <thead class="text-center">
@@ -50,18 +39,7 @@
 
                                             </tbody>
                                         </table>
-
-                                        <div class="pagination_informes mt-2">
-
-                                        </div>
                                     </div>
-                                    <?php else: ?>
-                                        <div class="text-center">
-                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay ingresos</span></p>
-                                        </div>
-                                    <?php endif; ?>
-
                                 </div>
                             </div>
                         </div>
@@ -73,25 +51,13 @@
         </div>
 
 <script>
-    $(document).ready(function() {
-        $("#fecha_inicial_buscar").change(function(event) {
-            load_ingresos(1);
-        });
-        $("#fecha_final_buscar").change(function(event) {
-            load_ingresos(1);
-        });
-    });
     function load_ingresos(pagina) {
-        fecha_inicio = $("#fecha_inicial_buscar").val();
-        fecha_final = $("#fecha_final_buscar").val();
-
 
 
         $.ajax({
             url      : '<?= base_url('admin/IngresosSoftware/getIngresos') ?>',
             method   : 'POST',
             success  : function(r){
-                console.log(r);
                 if(r.status){
                     var tbody = '';
                     for(var k=0; k<r.data.length; k++) {
@@ -112,8 +78,11 @@
                     $('#tbodyingresos').html(tbody);
 
                     // Total de Usuarios y la cantidad por registro
-					$("#empty").DataTable()
+					
                 }
+				$("#empty").DataTable( {
+					"order": [[ 4, "desc" ]]
+				} )
             },
             dataType : 'json'
         });

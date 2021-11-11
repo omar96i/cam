@@ -10,16 +10,9 @@ class MetasSupervisor extends CI_Controller {
 		$this->load->model('Mmetas');
 	}
 
-	public function index(){
+	public function index($tittle = "general"){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
-			$data['metas'] = $this->Mmetas->getMetasMonitor();
-
-			if(!$data['metas']) {
-				$data['metas'] = 0;
-			} 
-			else {
-				$data['metas'] = count($this->Mmetas->getMetasMonitor());
-			}
+			$data['tittle'] = $tittle;
 			
 			$this->load->view('includes_admin/header');
 			$this->load->view('admin/metasMonitor', $data);
