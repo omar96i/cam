@@ -192,20 +192,13 @@ class Home extends CI_Controller {
 			]);
 	}
 
-	public function verhoras($id_usuario){
+	public function verhoras($id_usuario, $tittle = "sin_registrar"){
 		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='supervisor') {
 			redirect('Home');
 		}
 
-		$data['paginas'] = $this->Mregistrohoras->getHorasEmpleado($id_usuario);
 		$data['usuario'] = $id_usuario;
-
-		if(!$data['paginas']) {
-			$data['paginas'] = 0;
-		} 
-		else {
-			$data['paginas'] = count($this->Mregistrohoras->getHorasEmpleado($id_usuario));
-		}
+		$data['tittle'] = $tittle;
 
 		$this->load->view('includes_admin/header');
 		$this->load->view('supervisor/verhorasregistradas' , $data);

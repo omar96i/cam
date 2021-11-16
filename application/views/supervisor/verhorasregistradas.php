@@ -31,37 +31,35 @@
                                         <h2 class="d-inline">Registro de tokens</h2>
                                     </div>
                                 </div>
+								<div class="row mb-3">
+									<div class="col-12 text-center">
+										<a href="<?php echo site_url('supervisor/Home/verhoras/').$usuario.'/'.'sin_registrar' ?>" class="btn <?php echo ($tittle == "sin_registrar")? "btn-success": "btn-info"; ?> ">Sin verificar</a>
+										<a href="<?php echo site_url('supervisor/Home/verhoras/').$usuario.'/'.'verificado' ?>" class="btn <?php echo ($tittle == "verificado")? "btn-success": "btn-info"; ?> ">Verificados</a>
+									</div>
+								</div>
+								<div  class="table-responsive mt-1">
+									<table id="empty" class="table table-sm table-striped table-bordered">
+										<thead class="text-center">
+											<tr>
+												<th>Url pagina</th>
+												<th>Usuario</th>
+												<th>Contraseña</th>
+												<th>Tokens</th>
+												<th>Estado</th>
+												<th>Fecha</th>
+												<th></th>
+											</tr>
+										</thead>
 
-                                <?php if(!empty($paginas)): ?>
-                                    <div  class="table-responsive mt-1">
-                                        <table id="empty" class="table table-sm table-striped table-bordered">
-                                            <thead class="text-center">
-                                                <tr>
-                                                    <th>Url pagina</th>
-                                                    <th>Usuario</th>
-                                                    <th>Contraseña</th>
-                                                    <th>Tokens</th>
-                                                    <th>Estado</th>
-                                                    <th>Fecha</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
+										<tbody id="tbodypaginas" class="text-center">
 
-                                            <tbody id="tbodypaginas" class="text-center">
+										</tbody>
+									</table>
 
-                                            </tbody>
-                                        </table>
+									<div class="pagination_usuarios mt-2">
 
-                                        <div class="pagination_usuarios mt-2">
-
-                                        </div>
-                                    </div>
-                                    <?php else: ?>
-                                        <div class="text-center">
-                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay paginas</span></p>
-                                        </div>
-                                    <?php endif; ?>
+									</div>
+								</div>
 
                                 </div>
                             </div>
@@ -74,17 +72,8 @@
         </div>
 
 <script>
-    $(document).ready(function() {
-        $("#fecha_inicial_buscar").change(function(event) {
-            usuario = $(".search_usuarios").val();
-            load_paginas(usuario , 1);
-        });
-        $("#fecha_final_buscar").change(function(event) {
-            usuario = $(".search_usuarios").val();
-            load_paginas(usuario , 1);
-        });
-    });
     function load_paginas(valor , pagina) {
+		tittle = "<?php echo $tittle; ?>";
         id_usuario = <?php echo $usuario; ?>;
         $.ajax({
             url      : '<?= base_url('supervisor/home/gethoras') ?>',
@@ -92,7 +81,13 @@
             data     : {valor : valor , pagina : pagina, id_usuario: id_usuario},
             success  : function(r){
                 if(r.status){
-					data = _.filter(r.data, ['estado_registro', 'sin registrar']);
+					if(tittle == "sin_registrar"){
+						data = _.filter(r.data, ['estado_registro', 'sin registrar']);
+					}
+					if(tittle == "verificado"){
+						data = _.filter(r.data, ['estado_registro', 'verificado']);
+					}
+					
                     var tbody = '';
                     
                     for(var k=0; k<data.length; k++) {

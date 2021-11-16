@@ -261,8 +261,7 @@
 
 			    function Getgrafica(){
 			    	$("#grafica1").remove();
-		    		grafica = "<canvas id='grafica1' width='400' height='200'></canvas>";
-		    		$(".imprimir_grafica").append(grafica);
+		    		
 
 			    	fecha_inicial = $("#fecha_inicial").val();
 			    	fecha_final = $("#fecha_final").val();
@@ -282,7 +281,8 @@
 			    			cantidad_horas[i] = r[i][0]['cantidad_horas'];
 			    			colores[i] = ""+getRandomColor();
 			    		}
-
+						grafica = "<canvas id='grafica1' width='400' height='200'></canvas>";
+		    			$(".imprimir_grafica").append(grafica);
 			    		ctx = $("#grafica1");
 
 			    		var myChart = new Chart(ctx,{
