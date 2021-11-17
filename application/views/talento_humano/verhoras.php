@@ -270,7 +270,7 @@
                             <td class="align-middle text-capitalize">${data[k]['clave']}</td>
                             <td class="align-middle text-capitalize">${data[k]['cantidad_horas']}</td>
                             <td class="align-middle text-capitalize">${data[k]['fecha_registro']}</td>`;
-                        if (data[k]['estado_registro'] == 'sin registrar') {
+                        if (data[k]['estado_registro'] == 'sin registrar' || data[k]['estado_registro'] == 'verificado') {
                             tbody += `<td class="align-middle">
                                 <a href="<?php echo site_url('talento_humano/Home/edithoras/') ?>${data[k]['id_registro_horas']+'/'+<?= $this->uri->segment(4) ?>}" class="text-info"><i class="icon-pencil5"></i></a>
                             </td>`;

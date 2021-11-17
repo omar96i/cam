@@ -141,6 +141,13 @@ class Home extends CI_Controller {
 		$data['fecha_registro'] = $this->input->post('fecha');
 		$data['estado_registro'] = "sin registrar";
 
+		$verificar = $this->Mregistrohoras->verificarTokens($data);
+
+		if($verificar){
+			echo json_encode(['status' => false, 'msg' => 'La pagina ya dispone de un registro en la fecha seleccionada']);
+			return;
+		}
+
 		$respuesta = $this->Mregistrohoras->addHoras($data);
 
 		if(!$respuesta) {

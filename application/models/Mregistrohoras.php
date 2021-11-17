@@ -161,6 +161,21 @@ class Mregistrohoras extends CI_Model {
 		return false;
 	}
 
+	public function verificarTokens($data){
+		$registros = $this->db->select('*')->from('registro_horas')
+							->where('id_empleado', $data['id_empleado'])
+							->where('id_pagina', $data['id_pagina'])
+							->where('fecha_registro', $data['fecha_registro'])
+							->get();
+
+		if($registros->num_rows() > 0){
+			return true;
+		}
+
+		return false;
+
+	}
+
 	public function getDatosRegistros($id){
 		$this->db->select('*');
 		$this->db->from('registro_horas');
