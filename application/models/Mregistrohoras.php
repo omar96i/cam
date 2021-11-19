@@ -176,6 +176,38 @@ class Mregistrohoras extends CI_Model {
 
 	}
 
+	public function getDataTableFiltro($data){
+		$this->db->select('paginas.url_pagina, registro_horas.*, persona.*');
+		$this->db->from('registro_horas');
+		$this->db->join('persona', 'persona.id_persona = registro_horas.id_empleado');
+		$this->db->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina');
+		if($data['id_modelo'] != "false"){
+			$this->db->where('registro_horas.id_empleado', $data['id_modelo']);
+		}
+		if($data['id_monitor'] != "false"){
+			$this->db->where('registro_horas.id_supervisor', $data['id_monitor']);
+		}
+		if($data['estado_registro'] != "false"){
+			$data['estado_registro'] = ($data['estado_registro'] == "sin_registrar")? "sin registrar": $data['estado_registro'];
+			$this->db->where('registro_horas.estado_registro', $data['estado_registro']);
+		}
+
+		if($data['fecha_inicial'] != ""){
+			$this->db->where('registro_horas.fecha_registro >=', $data['fecha_inicial']);
+		}
+		if($data['fecha_final'] != ""){
+			$this->db->where('registro_horas.fecha_registro <=', $data['fecha_final']);
+		}
+
+		$registros = $this->db->get();
+
+		if($registros->num_rows() > 0) {
+			return $registros->result();
+		}
+
+		return false;
+	}
+
 	public function getDatosRegistros($id){
 		$this->db->select('*');
 		$this->db->from('registro_horas');

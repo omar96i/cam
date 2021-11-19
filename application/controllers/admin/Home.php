@@ -506,7 +506,7 @@ class Home extends CI_Controller {
 
 	/// USUARIOS INICIO /// 
 
-	public function usuarios() {
+	public function usuarios($tittle = "activo") {
 		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
 			redirect('Home');
 		}
@@ -519,6 +519,7 @@ class Home extends CI_Controller {
 		else {
 			$data['usuarios'] = count($this->Musuarios->getusuarios());
 		}
+		$data['tittle'] = $tittle;
 
 		$this->load->view('includes_admin/header');
 		$this->load->view('admin/usuarios', $data);
@@ -578,12 +579,8 @@ class Home extends CI_Controller {
 			return; 
 		}
 
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$usuarios         = $this->Musuarios->getusuary($valor , $inicio , $cantidad);
-		$total_registros  = count($this->Musuarios->getusuary($valor)); 
+		$tittle           = $this->input->post('tittle');
+		$usuarios         = $this->Musuarios->getusuary($tittle);
 
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
@@ -593,13 +590,11 @@ class Home extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $usuarios,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $usuarios
 			]);
 	}
 
-	public function editarusuarios($id_usuario) {
+	public function editarusuarios($id_usuario, $tittle = "activo") {
 		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
 			redirect('Home');
 		}
@@ -613,6 +608,7 @@ class Home extends CI_Controller {
 			die;
 		}
 		$data['usuarios']   = $info_usuario;
+		$data['tittle'] = $tittle;
 		//$data['categorias']  = $this->Mcategorias->getcategorias();
 		$this->load->view('includes_admin/header');
 		$this->load->view('admin/storeusuary' , $data);
@@ -801,6 +797,9 @@ class Home extends CI_Controller {
 		$data2['correo'] = $this->input->post('correo_u');
 		$data2['clave'] = $this->input->post('clave_u');
 		$data2['tipo_cuenta'] = $this->input->post('cuenta_tipo_u');
+		if(isset($_POST['estado'])){
+			$data2['estado'] = $this->input->post('estado');
+		}
 		/////  FOTO UPLOAD  /////
 		$config['upload_path']          = './assets/images/imagenes_usuario/';
         $config['allowed_types']        = 'jpg|png';
@@ -828,7 +827,7 @@ class Home extends CI_Controller {
 
 	/// EMPLEADOS INICIO ///
 
-	public function empleados() {
+	public function empleados($tittle = "activo") {
 		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
 			redirect('Home');
 		}
@@ -841,6 +840,8 @@ class Home extends CI_Controller {
 		else {
 			$data['usuarios'] = count($this->Musuarios->getempleados());
 		}
+
+		$data['tittle'] = $tittle;
 
 		$this->load->view('includes_admin/header');
 		$this->load->view('admin/empleados' , $data);
@@ -861,8 +862,8 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
 			return; 
 		}
-
-		$usuarios         = $this->Musuarios->get_empleados();
+		$tittle           = $this->input->post('tittle');
+		$usuarios         = $this->Musuarios->get_empleados_users($tittle);
 		if(!$usuarios) {
 			echo json_encode(['status' => false]);
 			return;
@@ -937,7 +938,7 @@ class Home extends CI_Controller {
 	 	echo json_encode(['status' => true]);
 	} 
 
-	public function editarempleados($id_usuario) {
+	public function editarempleados($id_usuario, $tittle) {
 		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='administrador') {
 			redirect('Home');
 		}
@@ -951,6 +952,7 @@ class Home extends CI_Controller {
 			die;
 		}
 		$data['usuarios']   = $info_usuario;
+		$data['tittle'] = $tittle;
 		//$data['categorias']  = $this->Mcategorias->getcategorias();
 		$this->load->view('includes_admin/header');
 		$this->load->view('admin/storeEmpleados' , $data);
@@ -982,6 +984,9 @@ class Home extends CI_Controller {
 		$data2['correo'] = $this->input->post('correo_u');
 		$data2['clave'] = $this->input->post('clave_u');
 		$data2['tipo_cuenta'] = $this->input->post('cuenta_tipo_u');
+		if(isset($_POST['estado'])){
+			$data2['estado'] = $this->input->post('estado');
+		}
 		/////  FOTO UPLOAD  /////
 		$config['upload_path']          = './assets/images/imagenes_empleado/';
         $config['allowed_types']        = 'jpg|png';

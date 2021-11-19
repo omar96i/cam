@@ -326,6 +326,9 @@
 									<li class="nav-item">
 										<a href="<?php echo base_url('admin/Aumentos/Aumentos') ?>" class="nav-link">Aumentos</a>
 									</li>
+									<li class="nav-item">
+										<a href="<?php echo base_url('admin/HistorialTokens/HistorialTokens') ?>" class="nav-link">Historial de tokens</a>
+									</li>
 								</ul>
 							</li>
 							

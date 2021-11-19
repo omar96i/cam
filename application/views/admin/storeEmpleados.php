@@ -110,6 +110,22 @@
                                                 <input type="text" name="observaciones_u" id="observaciones_u" value="<?php echo $usuarios->observaciones ?>" class="form-control" cols="10" rows="3"></input>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+
+											<?php
+												if($tittle == "inactivo"){?>
+												<div class="form-group">
+													<label for="estado" class="col-form-label">Estado:</label>
+													<select name="estado" id="estado" class="form-control">
+														<option value="activo" <?php if($usuarios->estado == "activo"){ echo "selected"; } ?> >Activo</option>
+														<option value="inactivo" <?php if($usuarios->estado == "inactivo"){ echo "selected"; } ?>>Inactivo</option>
+													</select>
+													<div class="invalid-feedback">El campo no debe quedar vacío</div>
+												</div>
+											<?php		
+												}
+
+											?>
+
                                             
 
                                         </div>
@@ -269,7 +285,7 @@
             .done(function(r) {
                 if(r.status){
                     alertify.notify('Registro actualizado', 'success', 2, function(){
-                        window.location.href = '../empleados';
+                        window.location.href = '../../empleados';
                     });
                     return;
                 }

@@ -24,6 +24,13 @@
                                         <a href="<?= base_url('admin/Home/addusuario') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                     </div>
                                 </div>
+								
+								<div class="row mb-3">
+									<div class="col-12 text-center">
+										<a href="<?php echo base_url('admin/Home/usuarios/activo') ?>" class="btn <?php echo ($tittle == "activo")? "btn-success": "btn-info"; ?> mb-2 ml-1">Activos</a>
+										<a href="<?php echo base_url('admin/Home/usuarios/inactivo') ?>" class="btn <?php echo ($tittle == "inactivo")? "btn-success": "btn-info"; ?> mb-2 ml-1">Inactivo</a>
+									</div>
+								</div>
 								<hr>
                                 <?php if(!empty($usuarios)): ?>
                                     <div  class="table-responsive mt-1">
@@ -139,13 +146,13 @@
 	}
 
     function load_usuarios(valor , pagina) {
+		tittle = "<?php echo $tittle; ?>";
         $.ajax({
             url      : '<?= base_url('admin/home/viewusuarios') ?>',
             method   : 'POST',
-            data     : {valor : valor , pagina : pagina},
+            data     : {'tittle': tittle},
             success  : function(r){
                 if(r.status){
-                    console.log(r);
                     var tbody = '';
                     for(var k=0; k<r.data.length; k++) {
 						if(r.data[k]['tipo_cuenta'] == "tecnico sistemas"){
@@ -166,7 +173,7 @@
                             <td class="align-middle text-capitalize">${r.data[k]['correo']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['tipo_cuenta']}</td>
                             <td class="align-middle ">
-                                <a href="<?php echo site_url('admin/Home/editarusuarios/') ?>${r.data[k]['id_persona']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
+                                <a href="<?php echo site_url('admin/Home/editarusuarios/') ?>${r.data[k]['id_persona']+"/"+tittle}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-danger btn_deletepersonal" data-id_persona="${r.data[k]['id_persona']}" data-toggle="tooltip" title="Eliminar"><img src="<?php echo base_url('assets/iconos_menu/eliminar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
 								<a href="" class="text-info modalPdf" data-tipo_cuenta="${r.data[k]['tipo_cuenta']}" data-id_persona="${r.data[k]['id_persona']}" data-fecha_entrada="${r.data[k]['fecha_entrada']}" data-sueldo_aux="${r.data[k]['sueldo_aux']}"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                             </td>

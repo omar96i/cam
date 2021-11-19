@@ -83,13 +83,11 @@ class Musuarios extends CI_Model {
 		return false;
 	}
 
-	public function getusuary($valor , $inicio = FALSE , $registros_pagina = FALSE) {
+	public function getusuary($tipo) {
 		$this->db->select('persona.*, correo, tipo_cuenta');
 		$this->db->from('persona');
 		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
-		$this->db->like('tipo_cuenta' , $valor);
-
-		$this->db->where('usuarios.estado', 'activo');
+		$this->db->where('usuarios.estado', $tipo);
 		$this->db->where('tipo_cuenta !=', 'empleado');
 		$this->db->order_by('tipo_cuenta' , 'DESC');
 		$usuarios = $this->db->get();
@@ -118,8 +116,42 @@ class Musuarios extends CI_Model {
 		return false;
 	}
 
+	public function get_empleados_users($tipo) {
+		$this->db->select('persona.*, correo, tipo_cuenta');
+		$this->db->from('persona');
+		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
+		$this->db->where('usuarios.estado', $tipo);
+		$this->db->where('tipo_cuenta', 'empleado');
+		$this->db->order_by('documento' , 'DESC');
+
+		$usuarios = $this->db->get();
+
+		if($usuarios->num_rows() > 0) {
+			return $usuarios->result();
+		}
+
+		return false;
+	}
+
+	public function getMonitor(){
+		$this->db->select('persona.*, correo, tipo_cuenta');
+		$this->db->from('persona');
+		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
+		$this->db->where('usuarios.estado', 'activo');
+		$this->db->where('tipo_cuenta', 'supervisor');
+		$this->db->order_by('documento' , 'DESC');
+
+		$usuarios = $this->db->get();
+
+		if($usuarios->num_rows() > 0) {
+			return $usuarios->result();
+		}
+
+		return false;
+	}
+
 	public function datausuarios($id_usuario) {
-		$this->db->select('persona.*, correo, tipo_cuenta, clave');
+		$this->db->select('persona.*, correo, tipo_cuenta, clave, estado');
 		$this->db->from('persona');
 		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
 		$this->db->where('persona.id_persona' , $id_usuario);
