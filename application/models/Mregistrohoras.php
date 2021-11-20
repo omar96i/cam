@@ -84,7 +84,8 @@ class Mregistrohoras extends CI_Model {
 	public function addHoras($data){
 		$this->db->insert('registro_horas', $data);
 		if ($this->db->affected_rows()>0) {
-			return true;
+			$id = $this->db->insert_id();
+			return $id;
 		}
 		return false;
 	} 

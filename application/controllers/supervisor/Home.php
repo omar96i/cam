@@ -12,6 +12,7 @@ class Home extends CI_Controller {
 		$this->load->model('Mregistrohoras');
 		$this->load->model('Masistencia');
 		$this->load->model('Mpenalizaciones');
+		$this->load->model('MnotificacionesTokens');
 		$this->load->model('Mmetas');
 
 
@@ -149,6 +150,9 @@ class Home extends CI_Controller {
 		}
 
 		$respuesta = $this->Mregistrohoras->addHoras($data);
+		$data2['id_registro_horas'] = $respuesta;
+		$response = $this->MnotificacionesTokens->store($data2);
+
 
 		if(!$respuesta) {
 			echo json_encode(['status' => false, 'msg' => 'No se pudo agregar el registro']);
