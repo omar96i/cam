@@ -55,6 +55,15 @@
 	                                            <input type="number" id="cantidad_horas" class="form-control" disabled name="cantidad_horas">
 	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
 	                                        </div>
+											<div class="form-group">
+	                                            <label for="estado_meta" class="col-form-label">Meta estado:</label>
+	                                            <select name="estado_meta" id="estado_meta" class="form-control">
+	                                                <option value="0">Sin seleccionar</option>
+													<option value="con_meta">Contar meta</option>
+													<option value="sin_meta">No contar meta</option>
+	                                            </select>
+	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+	                                        </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -117,11 +126,17 @@
                 empleado = $("#empleado").val();
                 descripcion = $("#descripcion").val();
                 cantidad_horas = $("#cantidad_horas").val();
+				estado_meta = $("#estado_meta").val()
 
                 if ($("#empleado").val() == 0) {
                     $("#empleado").addClass('is-invalid');
                 }else{
                     $("#empleado").removeClass('is-invalid');
+                }
+				if ($("#estado_meta").val() == 0) {
+                    $("#estado_meta").addClass('is-invalid');
+                }else{
+                    $("#estado_meta").removeClass('is-invalid');
                 }
                 if ($("#descripcion").val() == 0) {
                     $("#descripcion").addClass('is-invalid');
@@ -135,6 +150,7 @@
                 }
 
                 if( $("#empleado").val() != 0 &&
+					$("#estado_meta").val() != 0 &&
                 	$("#descripcion").val() != '' &&
                 	$("#cantidad_horas").val() != ''
                 ) {
@@ -143,7 +159,7 @@
                         url: ruta,
                         type: 'POST',
                         dataType: 'json',
-                        data: {empleado: empleado, descripcion: descripcion, cantidad_horas: cantidad_horas},
+                        data: {empleado: empleado, descripcion: descripcion, cantidad_horas: cantidad_horas, estado_meta: estado_meta},
                     })
                     .done(function(r) {
 

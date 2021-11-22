@@ -20,7 +20,7 @@
                             <div class="col-sm-12">
                                 <div class="row">
                                     <div class="col-8">
-                                        <h2 class="d-inline">Descuentos de dias</h2>
+                                        <h2 class="d-inline">Descuentos</h2>
                                         <a href="<?php echo base_url('admin/DescuentosDias/addDescuento') ?>" class="btn btn-info mb-2 ml-1">Agregar</a>
                                     </div>
                                 </div>

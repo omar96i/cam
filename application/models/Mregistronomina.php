@@ -96,7 +96,7 @@ class Mregistronomina extends CI_Model {
 		$tokens_subtotal = $cantidad_horas+$tokens_bonga;
 		/////////////////////////////////////////
 		/// CONSULTAMOS LA META DEL EMPLEADO Y VERIFICAMOS SI CUMPLIO LA META ///
-		$consulta_meta = $this->db->select('num_horas, id_meta')->from('metas')->where('id_empleado', $data['id_persona'])->where('estado', 'sin registrar')->get()->result();
+		$consulta_meta = $this->db->select('*')->from('metas')->where('id_empleado', $data['id_persona'])->where('estado', 'sin registrar')->get()->result();
 		$estado_meta = "incompleta";
 		if ($tokens_subtotal>=$consulta_meta[0]->num_horas) {
 			$estado_meta = "completa";
@@ -139,6 +139,22 @@ class Mregistronomina extends CI_Model {
 				$porcentaje_dias_bonga = $value->valor_multiplicar;
 				break;
 			}
+		}
+
+		if($consulta_meta[0]->estado_meta == "sin_meta"){
+			$consulta_porcentaje_dias = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
+												->where('estado', 'activo')
+												->where('tipo', 'general')
+												->where('valor', 60)
+												->get()->result();
+			$consulta_porcentaje_dias_bonga = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
+												->where('estado', 'activo')
+												->where('tipo', 'bongacams')
+												->where('valor', 60)
+												->get()->result();
+			$porcentaje_dias = $consulta_porcentaje_dias[0]->valor_multiplicar;
+			$id_porcentaje_dias = $consulta_porcentaje_dias[0]->id_porcentajes_dias;
+			$porcentaje_dias_bonga = $consulta_porcentaje_dias_bonga[0]->valor_multiplicar;
 		}
 		///////////////////////////////////////////////////
 		/// CONSULTAMOS ADELANTOS ///

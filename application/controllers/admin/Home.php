@@ -209,7 +209,7 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => true]);
 			return;
 		}
-		echo json_encode(['status' => false, 'msg' => 'No se pudo actualizar las metas']);
+		echo json_encode(['status' => false, 'msg' => 'No se pudo actualizar las metas del supervisor']);
 		
 	}
 
@@ -1743,16 +1743,10 @@ class Home extends CI_Controller {
 
 	public function ActualizarMetas(){
 		$respuesta = $this->Mmetas->actualizarMetasGeneral($this->session->userdata('usuario')['id_usuario']);
-		if($respuesta){
-			$respuesta = $this->Mmetas->actualizarMetaTecnicoSistemas($this->session->userdata('usuario')['id_usuario']);
-			if($respuesta){
-				return true;
-			}else{
-				return false;
-			}
-		}else{
-			return false;
-		}
+		$respuesta2 = $this->Mmetas->actualizarMetaTecnicoSistemas($this->session->userdata('usuario')['id_usuario']);
+
+		return true;
+		
 	}
 
 	public function agregarMetas(){
@@ -1764,6 +1758,7 @@ class Home extends CI_Controller {
 		$data['id_administrador'] = $this->session->userdata('usuario')['id_usuario'];
 		$data['descripcion'] = $this->input->post('descripcion');
 		$data['num_horas'] = $this->input->post('cantidad_horas');
+		$data['estado_meta'] = $this->input->post('estado_meta');
 		$data['estado'] = "sin registrar";
 
 		$insert_metas = $this->Mmetas->insertMetas($data);
@@ -1772,15 +1767,17 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Algo pasó, Registrar']);
 			return;
 		}else{
-			$update_supervisor = $this->Mmetas->actualizarMetaSupervisor($data['id_empleado'], $data['id_administrador']);
-			if (!$update_supervisor) {
-				echo json_encode(['status' => false, 'msg' => 'Algo pasó, Supervisor']);
-				return;
-			}
-			$update_tecnico_sistemas = $this->Mmetas->actualizarMetaTecnicoSistemas($data['id_administrador']);
-			if (!$update_tecnico_sistemas) {
-				echo json_encode(['status' => false, 'msg' => 'Algo pasó, Tecnico sistema']);
-				return;
+			if($data['estado_meta'] == "con_meta"){
+				$update_supervisor = $this->Mmetas->actualizarMetaSupervisor($data['id_empleado'], $data['id_administrador']);
+				if (!$update_supervisor) {
+					echo json_encode(['status' => false, 'msg' => 'Algo pasó, Supervisor']);
+					return;
+				}
+				$update_tecnico_sistemas = $this->Mmetas->actualizarMetaTecnicoSistemas($data['id_administrador']);
+				if (!$update_tecnico_sistemas) {
+					echo json_encode(['status' => false, 'msg' => 'Algo pasó, Tecnico sistema']);
+					return;
+				}
 			}
 		}
 
@@ -1850,6 +1847,7 @@ class Home extends CI_Controller {
 		$data['id_meta'] = $this->input->post('id_meta');
 		$data['descripcion'] = $this->input->post('descripcion');
 		$data['num_horas'] = $this->input->post('num_horas');
+		$data['estado_meta'] = $this->input->post('estado_meta');
 
 		$updateMeta = $this->Mmetas->editarMeta($data);
 

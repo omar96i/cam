@@ -44,6 +44,7 @@
                                                     <th>Numero de Tokens</th>
                                                     <th>Descripcion</th>
                                                     <th>Estado</th>
+													<th>Estado Meta</th>
                                                     <th>Fecha registro</th>
                                                     <th></th>
                                                 </tr>
@@ -91,6 +92,7 @@
                             <td class="align-middle text-capitalize">${data[k]['num_horas']}</td>
                             <td class="align-middle text-capitalize">${data[k]['descripcion']}</td>
                             <td class="align-middle text-capitalize">${data[k]['estado']}</td>
+							<td class="align-middle text-capitalize">${(data[k]['estado_meta'] == 'sin_meta')? 'Sin meta' : 'Con meta'}</td>
                             <td class="align-middle text-capitalize">${data[k]['fecha_registro']}</td>
                             <td class="align-middle">`
 							

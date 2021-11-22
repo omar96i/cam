@@ -321,7 +321,7 @@
 										<a href="<?php echo base_url('admin/Citas') ?>" class="nav-link">Citas</a>
 									</li>
 									<li class="nav-item">
-										<a href="<?php echo base_url('admin/DescuentosDias') ?>" class="nav-link">Descuentos de dias</a>
+										<a href="<?php echo base_url('admin/DescuentosDias') ?>" class="nav-link">Descuentos</a>
 									</li>
 									<li class="nav-item">
 										<a href="<?php echo base_url('admin/Aumentos/Aumentos') ?>" class="nav-link">Aumentos</a>

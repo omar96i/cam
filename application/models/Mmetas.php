@@ -204,6 +204,7 @@ class Mmetas extends CI_Model {
 
 							$this->db->select('num_horas');
 							$this->db->where('estado', 'sin registrar');
+							$this->db->where('estado_meta', 'con_meta');
 							$this->db->where('id_empleado', $id_empleado->id_empleado);
 							$this->db->from('metas');
 		
@@ -238,6 +239,7 @@ class Mmetas extends CI_Model {
 						foreach ($consulta_id_empleados as $key => $id_empleado) {
 							$this->db->select('num_horas');
 							$this->db->where('estado', 'sin registrar');
+							$this->db->where('estado_meta', 'con_meta');
 							$this->db->where('id_empleado', $id_empleado->id_empleado);
 							$this->db->from('metas');
 							/////////////////////////////////////////////////////////////////////////
@@ -314,6 +316,7 @@ class Mmetas extends CI_Model {
 				foreach ($datos_consulta_id_empleados as $key => $value) {
 					$this->db->select('num_horas');
 					$this->db->where('estado', 'sin registrar');
+					$this->db->where('estado_meta', 'con_meta');
 					$this->db->where('id_empleado', $value->id_empleado);
 					$this->db->from('metas');
 					/////////////////////////////////////////////////////////////////////////
@@ -337,6 +340,7 @@ class Mmetas extends CI_Model {
 				foreach ($datos_consulta_id_empleados as $key => $value) {
 					$this->db->select('num_horas');
 					$this->db->where('estado', 'sin registrar');
+					$this->db->where('estado_meta', 'con_meta');
 					$this->db->where('id_empleado', $value->id_empleado);
 					$this->db->from('metas');
 					/////////////////////////////////////////////////////////////////////////

@@ -50,6 +50,15 @@
                                                 <input type="number" id="num_horas" value="<?php echo $meta[0]->num_horas; ?>" class="form-control" name="num_horas">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+											<div class="form-group">
+	                                            <label for="estado_meta" class="col-form-label">Meta estado:</label>
+	                                            <select name="estado_meta" id="estado_meta" class="form-control">
+	                                                <option value="0">Sin seleccionar</option>
+													<option value="con_meta" <?php echo ($meta[0]->estado_meta == "con_meta")? "selected": ""; ?>>Contar meta</option>
+													<option value="sin_meta" <?php echo ($meta[0]->estado_meta == "sin_meta")? "selected": ""; ?>>No contar meta</option>
+	                                            </select>
+	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+	                                        </div>
                                        </div>
                                     </div>
                                     <div class="row">
@@ -78,10 +87,15 @@
             var ruta      = "<?php echo base_url('admin/Home/storeMetas') ?>";
             var form_data = new FormData($('#form_add_adelanto')[0]);
 
-            if ($("#descripcion").val() == 0) {
+            if ($("#descripcion").val() == '') {
                 $("#descripcion").addClass('is-invalid');
             }else{
                 $("#descripcion").removeClass('is-invalid');
+            }
+			if ($("#estado_meta").val() == 0) {
+                $("#estado_meta").addClass('is-invalid');
+            }else{
+                $("#estado_meta").removeClass('is-invalid');
             }
             if ($("#num_horas").val() == '') {
                 $("#num_horas").addClass('is-invalid');
@@ -90,6 +104,7 @@
             }
 
             if( $("#descripcion").val() != '' &&
+				$("#estado_meta").val() != 0 &&
                 $("#num_horas").val() != ''
             ) {
 
