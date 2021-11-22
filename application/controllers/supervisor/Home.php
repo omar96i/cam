@@ -142,6 +142,13 @@ class Home extends CI_Controller {
 		$data['fecha_registro'] = $this->input->post('fecha');
 		$data['estado_registro'] = "sin registrar";
 
+		$verificar_fechas = $this->Mregistrohoras->verificarFecha($data);
+
+		if(!$verificar_fechas){
+			echo json_encode(['status' => false, 'msg' => 'La modelo no asistio el dia seleccionado.']);
+			return;
+		}
+
 		$verificar = $this->Mregistrohoras->verificarTokens($data);
 
 		if($verificar){

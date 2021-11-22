@@ -177,6 +177,16 @@ class Mregistrohoras extends CI_Model {
 
 	}
 
+	public function verificarFecha($data){
+		$registro = $this->db->select('*')->from('asistencia_empleado')->join('asistencia', 'asistencia.id_asistencia = asistencia_empleado.id_asistencia')->where('asistencia_empleado.id_empleado', $data['id_empleado'])->where('asistencia.fecha', $data['fecha_registro'])->where('asistencia_empleado.estado', 'registrado')->get();
+		
+		if($registro->num_rows() > 0){
+			return true;
+		}
+		return false;
+
+	}
+
 	public function getDataTableFiltro($data){
 		$this->db->select('paginas.url_pagina, registro_horas.*, persona.*');
 		$this->db->from('registro_horas');
