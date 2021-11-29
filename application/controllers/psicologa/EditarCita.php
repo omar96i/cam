@@ -12,7 +12,7 @@ class EditarCita extends CI_Controller {
 	}
 
 	public function editCita($id){
-		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='fotografo') {
+		if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='psicologa') {
 			redirect('Home');
 		}
 		

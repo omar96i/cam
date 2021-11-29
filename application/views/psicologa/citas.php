@@ -115,7 +115,7 @@
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>`
                         if (r.data[k]['estado'] != "antigua") {
                             tbody += `<td class="align-middle">
-                                <a href="<?php echo site_url('fotografo/EditarCita/editCita/') ?>${r.data[k]['id_citas']}" class="text-dark"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
+                                <a href="<?php echo site_url('psicologa/EditarCita/editCita/') ?>${r.data[k]['id_citas']}" class="text-dark"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-danger btn_delete_cita" data-id_cita="${r.data[k]['id_citas']}" data-toggle="tooltip" title="Eliminar"><img src="<?php echo base_url('assets/iconos_menu/eliminar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                             </td>
                             </tr>`;
