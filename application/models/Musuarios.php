@@ -23,6 +23,10 @@ class Musuarios extends CI_Model {
 		return $this->db->select('tipo_cuenta')->from('usuarios')->where('id_usuario', $id)->get()->result();
 	}
 
+	public function getModelsMonitor($id){
+		return $this->db->select('persona.id_persona, persona.nombres, persona.apellidos')->from('empleado_supervisor')->join('persona', 'persona.id_persona = empleado_supervisor.id_empleado')->where('id_supervisor', $id)->where('empleado_supervisor.estado', 'activo')->get()->result();
+	}
+
 	public function getMonitorUsers(){
 		$this->db->select('persona.nombres, persona.apellidos, persona.id_persona, metas.*');
 		$this->db->from('persona');

@@ -17,6 +17,36 @@ class VerAsistencia extends CI_Controller {
 
 	}
 
+	public function getModels(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+		$data['modelos'] = $this->Musuarios->getModelsMonitor($id_usuario);
+
+		echo json_encode($data);
+	}
+
+	public function AddModelo(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$data['id_empleado'] = $this->input->post('id_modelo');
+		$data['id_asistencia'] = $this->input->post('id_asistencia');
+		$data['estado'] = "sin registrar";
+		$verificar = $this->Masistencia->VerificarModelo($data);
+		if($verificar){
+			echo json_encode(['status'=>false,'msg' => 'La modelo ya se encuentra registrada en la fecha seleccionada']);
+			return;
+		}
+		$respuesta = $this->Masistencia->AddAsistenciaEmpleado($data);
+		echo json_encode(['status' => true]);
+	}
+
 	public function index(){
 		if($this->session->userdata('usuario')['tipo']=='supervisor' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
 			$id_usuario = $this->session->userdata('usuario')['id_usuario'];

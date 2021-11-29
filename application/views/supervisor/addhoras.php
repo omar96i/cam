@@ -71,6 +71,14 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-4">
+										<div class="form-group">
+                                               	<label for="motivo" class="col-form-label">Tipo de tokens:</label>
+	                                            <select name="motivo" id="motivo" class="form-control">
+	                                                <option value="tn">Tokens normales</option>
+	                                                <option value="ti">Tokens inactivos</option>
+	                                            </select>
+	                                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
                                             <div class="form-group mt-2">
                                                 <button class="btn btn-success btn-block btn_agregar_asignacion">Aceptar</button>
                                             </div>
@@ -96,6 +104,7 @@
                 paginas = $("#paginas").val();
                 cantidad_horas = $("#cantidad_horas").val();
                 fecha = $("#fecha").val();
+				motivo = $("#motivo").val();
 
                 if ($("#paginas").val() == 0) {
                     $("#paginas").addClass('is-invalid');
@@ -128,7 +137,7 @@
                         url: ruta,
                         type: 'POST',
                         dataType: 'json',
-                        data: {paginas: paginas, usuarios: usuarios, cantidad_horas: cantidad_horas, fecha: fecha},
+                        data: {paginas: paginas, usuarios: usuarios, cantidad_horas: cantidad_horas, fecha: fecha, motivo:motivo},
                     })
                     .done(function(r) {
 						$(".btn_agregar_asignacion").removeAttr("disabled");

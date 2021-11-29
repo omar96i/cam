@@ -215,4 +215,17 @@ class Masistencia extends CI_Model {
 		return $this->db->affected_rows() > 0 ? true : false;
 	}
 
+	public function VerificarModelo($data){
+		$asistencia = $this->db->select('fecha')->from('asistencia')->where('id_asistencia', $data['id_asistencia'])->get()->result();
+		$modelo = $this->db->select('*')->from('asistencia')->join('asistencia_empleado', 'asistencia.id_asistencia = asistencia_empleado.id_asistencia')->where('fecha', $asistencia[0]->fecha)->where('id_empleado', $data['id_empleado'])->get();
+		if ($modelo->num_rows() > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public function AddAsistenciaEmpleado($data){
+		return $this->db->insert('asistencia_empleado', $data);
+	}
+
 }

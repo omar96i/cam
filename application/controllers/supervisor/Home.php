@@ -141,14 +141,14 @@ class Home extends CI_Controller {
 		$data['cantidad_horas'] = $this->input->post('cantidad_horas');
 		$data['fecha_registro'] = $this->input->post('fecha');
 		$data['estado_registro'] = "sin registrar";
-
-		$verificar_fechas = $this->Mregistrohoras->verificarFecha($data);
-
-		if(!$verificar_fechas){
-			echo json_encode(['status' => false, 'msg' => 'La modelo no asistio el dia seleccionado.']);
-			return;
+		$motivo = $this->input->post('motivo');
+		if($motivo == "tn"){
+			$verificar_fechas = $this->Mregistrohoras->verificarFecha($data);
+			if(!$verificar_fechas){
+				echo json_encode(['status' => false, 'msg' => 'La modelo no asistio el dia seleccionado.']);
+				return;
+			}
 		}
-
 		$verificar = $this->Mregistrohoras->verificarTokens($data);
 
 		if($verificar){
@@ -157,9 +157,6 @@ class Home extends CI_Controller {
 		}
 
 		$respuesta = $this->Mregistrohoras->addHoras($data);
-		$data2['id_registro_horas'] = $respuesta;
-		$response = $this->MnotificacionesTokens->store($data2);
-
 
 		if(!$respuesta) {
 			echo json_encode(['status' => false, 'msg' => 'No se pudo agregar el registro']);

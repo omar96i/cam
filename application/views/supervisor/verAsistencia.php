@@ -92,6 +92,30 @@
             </div>
         </div>
 
+		<div class="modal fade" id="modalModelo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Agregar Modelo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+						<label for="modelos" class="col-form-label">Modelos:</label>
+						<select name="modelos" id="modelos" class="form-control">
+						</select>
+						<div class="invalid-feedback">El campo no debe quedar vacío</div>
+						<input type="text" class="input_id_asistencia" style="display: none;">
+                    </div>
+                    <div class="modal-footer">
+						<button type="button" class="btn btn-success" id="add_modelo">Registrar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 <script>
     $(document).ready(function() {
         $("#fecha_inicial_buscar").change(function(event) {
@@ -105,9 +129,43 @@
             event.preventDefault();
             ModificarAsistencia();
         });
+		$("#add_modelo").click(function(event) {
+            event.preventDefault();
+			AddModelo();
+        });
         load_asistencias(1);
         
     });
+
+	function AddModelo(){
+		id_modelo = $("#modelos").val()
+		id_asistencia = $(".input_id_asistencia").val()
+		if ($("#modelos").val() == 0) {
+			$("#modelos").addClass('is-invalid');
+		}else{
+			$("#modelos").removeClass('is-invalid');
+		}
+		if(id_modelo != 0){
+			$.ajax({
+				url: '<?= base_url('supervisor/VerAsistencia/AddModelo') ?>',
+				type: 'POST',
+				dataType: 'json',
+				data: {id_asistencia: id_asistencia, id_modelo: id_modelo},
+			})
+			.done(function(r) {
+				if(r.status){
+					$("#modalModelo").modal('hide')
+					alertify.notify('Modelo Agregada', 'success', 2);
+					return;
+				}
+				alertify.alert('Ups :(' , r.msg);
+			})
+			.fail(function(r) {
+				console.log("error");
+				console.log(r);
+			});
+		}
+	}
 
     function load_asistencias(pagina) {
 
@@ -115,7 +173,6 @@
             url      : '<?= base_url('supervisor/VerAsistencia/getAsistencias') ?>',
             method   : 'POST',
             success  : function(r){
-				console.log(r)
                 if(r.status){
                     var tbody = '';
                     
@@ -125,6 +182,7 @@
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
                             <td>
                                 <a href="" data-id_asistencia="${r.data[k]['id_asistencia']}" class="text-warning btn_asistencia"><img src="<?php echo base_url('assets/iconos_menu/ojo.png') ?>" alt=""></a>
+								<a href="" data-id_asistencia="${r.data[k]['id_asistencia']}" class="btn btn-success btn_agregar_modelo">Add</a>
                             </td>`;
                         tbody += `</tr>`;
                     }
@@ -170,6 +228,31 @@
                             $("#tbodyitems").html(body);
                             $(".id_asistencia").hide();
                             $("#modalAsistencia").modal('show');
+                        })
+                        .fail(function(r) {
+                            console.log("error");
+                            console.log(r);
+                        });
+                        
+                    });
+
+					$(".btn_agregar_modelo").on("click", function(event) {
+                        event.preventDefault();
+						id_asistencia = $(this).data('id_asistencia')
+                        $.ajax({
+                            url: '<?= base_url('supervisor/VerAsistencia/getModels') ?>',
+                            type: 'POST',
+                            dataType: 'json',
+                        })
+                        .done(function(r) {
+							var tbody = '';
+							tbody += `<option value="0">Sin seleccionar</option>`
+							for(var k=0; k<r.modelos.length; k++) {
+								tbody += `<option value="${r.modelos[k]['id_persona']}">${r.modelos[k]['nombres']+" "+r.modelos[k]['nombres']}</option>`;
+							}
+							$(".input_id_asistencia").val(id_asistencia)
+							$("#modelos").html(tbody)
+							$("#modalModelo").modal('show')
                         })
                         .fail(function(r) {
                             console.log("error");
