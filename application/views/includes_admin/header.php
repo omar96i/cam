@@ -91,37 +91,35 @@
 			
 
 			<ul class="navbar-nav">
-				<?php if ($this->session->userdata('usuario')["tipo"]=='empleado') {?>
-					<li class="nav-item dropdown">
-						<a class="nav-link" data-toggle="dropdown" href="#">
-							<img width="20" src="<?php echo base_url('assets/iconos_menu/bombilla.png') ?>" alt="">
-							<span class="badge badge-warning navbar-badge" style="padding: 1px 2px 1px 2px; vertical-align: super;">
-								<?php echo ($cant_notificaciones=="vacio") ? "0" : count($cant_notificaciones); ?>
-							</span>
-						</a>
-						<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-							<div class="caja_notificaciones" style="height:150px; overflow-y: scroll;">
-								<?php if ($notificaciones != "vacio") {
-									foreach ($notificaciones as $i => $valor){?>
-										<div class="container">
-											<a  href="<?php echo base_url('empleado/Notificaciones/verNotificacion/').$valor->id_citas; ?>" class="text-dark">
-												<h4 class="m-0"><?php echo ($valor->estado == "pendiente")?"Cita Programada":"Cita Finalizada"; ?></h4>
-												<strong><?php echo $valor->fecha; ?> / </strong><strong><?php echo $valor->hora; ?></strong>
-											</a>
-										</div>
-									
-										<div class="dropdown-divider">
-										</div>
-									<?php } 
-								}else{ ?>
+				<li class="nav-item dropdown">
+					<a class="nav-link" data-toggle="dropdown" href="#">
+						<img width="20" src="<?php echo base_url('assets/iconos_menu/bombilla.png') ?>" alt="">
+						<span class="badge badge-warning navbar-badge" style="padding: 1px 2px 1px 2px; vertical-align: super;">
+							<?php echo ($cant_notificaciones=="vacio") ? "0" : count($cant_notificaciones); ?>
+						</span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+						<div class="caja_notificaciones" style="height:150px; overflow-y: scroll;">
+							<?php if ($notificaciones != "vacio") {
+								foreach ($notificaciones as $i => $valor){?>
 									<div class="container">
-										<p>Sin notificaciones</p>
+										<a  href="<?php echo base_url('empleado/Notificaciones/verNotificacion/').$valor->id_citas; ?>" class="text-dark">
+											<h4 class="m-0"><?php echo ($valor->estado == "pendiente")?"Cita Programada":"Cita Finalizada"; ?></h4>
+											<strong><?php echo $valor->fecha; ?> / </strong><strong><?php echo $valor->hora; ?></strong>
+										</a>
 									</div>
-								<?php } ?>
-							</div>
+								
+									<div class="dropdown-divider">
+									</div>
+								<?php } 
+							}else{ ?>
+								<div class="container">
+									<p>Sin notificaciones</p>
+								</div>
+							<?php } ?>
 						</div>
-					</li>
-				<?php } ?>
+					</div>
+				</li>
 				
 				<li class="nav-item dropdown dropdown-user">
 					<a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
@@ -224,9 +222,9 @@
 									<li class="nav-item">
 										<a href="<?php echo base_url('talento_humano/Asistencia') ?>" class="nav-link">Asistencia</a>
 									</li>
-									<li class="nav-item">
+									<!--<li class="nav-item">
 										<a href="<?php echo base_url('talento_humano/Gastos') ?>" class="nav-link">Gastos</a>
-									</li>
+									</li> -->
 									
 									<li class="nav-item">
 										<a href="<?php echo base_url('SolicitarAdelanto') ?>" class="nav-link">Solicitar adelanto</a>

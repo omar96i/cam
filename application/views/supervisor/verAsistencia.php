@@ -182,7 +182,7 @@
                             <td class="align-middle text-capitalize">${r.data[k]['estado']}</td>
                             <td>
                                 <a href="" data-id_asistencia="${r.data[k]['id_asistencia']}" class="text-warning btn_asistencia"><img src="<?php echo base_url('assets/iconos_menu/ojo.png') ?>" alt=""></a>
-								<a href="" data-id_asistencia="${r.data[k]['id_asistencia']}" class="btn btn-success btn_agregar_modelo">Add</a>
+								<a href="" data-id_asistencia="${r.data[k]['id_asistencia']}" class="btn_agregar_modelo"><img src="<?php echo base_url('assets/iconos_menu/plus.png') ?>" alt="" style="width: 25px;"></a>
                             </td>`;
                         tbody += `</tr>`;
                     }

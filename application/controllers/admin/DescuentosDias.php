@@ -8,6 +8,7 @@ class DescuentosDias extends CI_Controller {
 		parent::__construct();
 		$this->load->model('MdescuentosDias');
 		$this->load->model('Musuarios');
+		$this->load->model('Mcitas');
 
 	}
 
@@ -21,8 +22,21 @@ class DescuentosDias extends CI_Controller {
 			else {
 				$data['descuentos'] = count($this->MdescuentosDias->getDatos());
 			}
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
 			
-			$this->load->view('includes_admin/header');
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/descuentosDias', $data);
 			$this->load->view('includes_admin/footer');
         }else{
@@ -51,8 +65,21 @@ class DescuentosDias extends CI_Controller {
 
 	public function addDescuento(){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
 			$data['usuarios'] = $this->Musuarios->getDatosDescuentos();
-			$this->load->view('includes_admin/header');
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/addDescuento', $data);
 			$this->load->view('includes_admin/footer');
         }else{
@@ -85,9 +112,22 @@ class DescuentosDias extends CI_Controller {
 
 	public function editDescuento($id){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
 			$data['descuento'] = $this->MdescuentosDias->getDataOnly($id);
 			$data['usuarios'] = $this->Musuarios->getDatosDescuentos();
-			$this->load->view('includes_admin/header');
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/editDescuento', $data);
 			$this->load->view('includes_admin/footer');
         }else{

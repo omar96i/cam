@@ -17,8 +17,21 @@ class AddCita extends CI_Controller {
         }
         
         $data['empleados'] = $this->Musuarios->getUsuariosFotografo();
+		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
 
-        $this->load->view('includes_admin/header');
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
+
+        $this->load->view('includes_admin/header', $data);
 		$this->load->view('fotografo/addCita', $data);
 		$this->load->view('includes_admin/footer');
 	}

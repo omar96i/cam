@@ -14,6 +14,7 @@ class Asistencia extends CI_Controller {
 		$this->load->model('Mregistronomina');
 		$this->load->model('Mpenalizaciones');
 		$this->load->model('Masistencia');
+		$this->load->model('Mcitas');
 
 	}
 
@@ -30,8 +31,20 @@ class Asistencia extends CI_Controller {
 				$data['asistencia'] = count($this->Masistencia->t_h_getDatosAsistencia());
 			}
 
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
+
 			
-			$this->load->view('includes_admin/header');
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('talento_humano/asistencia', $data);
 			$this->load->view('includes_admin/footer');
 		}else{

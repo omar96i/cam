@@ -25,18 +25,8 @@ class Mcitas extends CI_Model {
         return $this->db->insert('citas', $data);
 	}
 	
-	public function getDataCitas($id_fotografo, $fecha_inicio, $fecha_final, $valor, $inicio = FALSE, $registros_pagina = FALSE){
+	public function getDataCitas($id_fotografo){
 		$this->db->select('nombres,apellidos,documento,citas.*')->from('citas')->join('persona', 'citas.id_empleado = persona.id_persona')->where('id_fotografo', $id_fotografo)->where('estado !=', 'eliminado');
-		if ($fecha_inicio != "") {
-			$this->db->where('citas.fecha >=', $fecha_inicio);
-		}
-		if ($fecha_final != "") {
-			$this->db->where('citas.fecha <=', $fecha_final);
-		}
-		$this->db->like('documento', $valor);
-		if($inicio !== FALSE && $registros_pagina !== FALSE) {
-			$this->db->limit($registros_pagina , $inicio);
-		}
 		$this->db->order_by('fecha', 'DESC');
 		$consulta = $this->db->get();
 

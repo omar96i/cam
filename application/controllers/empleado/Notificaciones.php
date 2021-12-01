@@ -10,9 +10,6 @@ class Notificaciones extends CI_Controller {
     }
     
     public function verNotificacion($id){
-        if(!isset($_SESSION['usuario']) || $this->session->userdata('usuario')['tipo']!='empleado') {
-			redirect('Home');
-        }
         $fecha = date("Y-m-d");
 
         $this->Mcitas->actualizarCita($fecha);

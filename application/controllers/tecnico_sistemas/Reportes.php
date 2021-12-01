@@ -7,6 +7,7 @@ class Reportes extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Mreportes');
+		$this->load->model('Mcitas');
 	}
 
 	public function index(){
@@ -24,8 +25,20 @@ class Reportes extends CI_Controller {
 		else {
 			$data['reportes'] = count($this->Mreportes->getReportes($id_tecnico));
 		}
+
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_tecnico);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_tecnico);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
         
-        $this->load->view('includes_admin/header');
+        $this->load->view('includes_admin/header', $data);
 		$this->load->view('tecnico_sistemas/reportes', $data);
 		$this->load->view('includes_admin/footer');
 	}

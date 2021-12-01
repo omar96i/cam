@@ -18,6 +18,18 @@ class Citas extends CI_Controller {
 
         $data['citas'] = $this->Mcitas->getCitas($id_fotografo);
 
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_fotografo);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_fotografo);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
+
 		if(!$data['citas']) {
 			$data['citas'] = 0;
 		} 
@@ -25,7 +37,7 @@ class Citas extends CI_Controller {
 			$data['citas'] = count($this->Mcitas->getCitas($id_fotografo));
 		}
         
-        $this->load->view('includes_admin/header');
+        $this->load->view('includes_admin/header', $data);
 		$this->load->view('fotografo/citas', $data);
 		$this->load->view('includes_admin/footer');
 	}
@@ -38,15 +50,8 @@ class Citas extends CI_Controller {
 			return; 
 		}
 
-		$fecha_inicial    = $this->input->post('fecha_inicio');    
-		$fecha_final 	  = $this->input->post('fecha_final');
 		$id_usuario       = $this->session->userdata('usuario')['id_usuario'];
-		$valor            = $this->input->post('valor');
-		$pagina           = $this->input->post('pagina');
-		$cantidad         = 4;
-		$inicio           = ($pagina - 1) * $cantidad;
-		$citas         = $this->Mcitas->getDataCitas($id_usuario , $fecha_inicial, $fecha_final, $valor, $inicio, $cantidad);
-		$total_registros  = count($this->Mcitas->getDataCitas($id_usuario, $fecha_inicial, $fecha_final, $valor)); 
+		$citas         = $this->Mcitas->getDataCitas($id_usuario);
 
 		if(!$citas) {
 			echo json_encode(['status' => false]);
@@ -56,9 +61,7 @@ class Citas extends CI_Controller {
 		echo json_encode(
 			[
 				'status'          => true, 
-				'data'            => $citas,
-				'cantidad'        => $cantidad,
-				'total_registros' => $total_registros
+				'data'            => $citas
 			]);
 	}
 

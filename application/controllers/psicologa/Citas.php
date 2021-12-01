@@ -24,8 +24,21 @@ class Citas extends CI_Controller {
 		else {
 			$data['citas'] = count($this->Mcitas->getCitas($id_psicologa));
 		}
+
+
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_psicologa);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_psicologa);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
         
-        $this->load->view('includes_admin/header');
+        $this->load->view('includes_admin/header', $data);
 		$this->load->view('psicologa/citas', $data);
 		$this->load->view('includes_admin/footer');
 	}

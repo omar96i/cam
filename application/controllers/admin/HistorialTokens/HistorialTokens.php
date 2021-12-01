@@ -8,7 +8,7 @@ class HistorialTokens extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Musuarios');
 		$this->load->model('Mregistrohoras');
-
+		$this->load->model('Mcitas');
 	}
 
 	public function index($fecha_inicial = "", $fecha_final = "", $id_supervisor = false, $id_empleado = false, $estado_registro=""){
@@ -21,7 +21,20 @@ class HistorialTokens extends CI_Controller {
 			$data['estado_registro'] = $estado_registro;
 			$data['modelos'] = $this->Musuarios->get_empleados();
 			$data['monitores'] = $this->Musuarios->getMonitor();
-			$this->load->view('includes_admin/header');
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/historialTokens/historialTokens', $data);
 			$this->load->view('includes_admin/footer');
         }else{

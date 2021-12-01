@@ -21,11 +21,25 @@ class Gastos extends CI_Controller {
 		$this->load->model('MsalarioEmpleados');
 		$this->load->model('MfacturasSupervisor');
 		$this->load->model('MfacturaGeneral');
+		$this->load->model('Mcitas');
 	}
 
 	public function index() {
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$this->load->view('includes_admin/header');
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/gastos');
 			$this->load->view('includes_admin/footer');
 		}else{

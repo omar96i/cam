@@ -7,6 +7,7 @@ class FacturaMonitor extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('MfacturaMonitor');
+		$this->load->model('Mcitas');
 	}
 
 	public function index($fecha_inicial = "", $fecha_final = ""){
@@ -18,11 +19,20 @@ class FacturaMonitor extends CI_Controller {
 			else {
 				$data['factura'] = count($this->MfacturaMonitor->getFacturas());
 			}
-
 			$data['fecha_inicial'] = $fecha_inicial;
 			$data['fecha_final'] = $fecha_final;
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
 
-			$this->load->view('includes_admin/header');
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
+
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/factura_monitor' , $data);
 			$this->load->view('includes_admin/footer');
 		}else{

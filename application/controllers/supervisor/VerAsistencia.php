@@ -13,7 +13,7 @@ class VerAsistencia extends CI_Controller {
 		$this->load->model('Masistencia');
 		$this->load->model('Mpenalizaciones');
 		$this->load->model('Mmetas');
-
+		$this->load->model('Mcitas');
 
 	}
 
@@ -60,8 +60,20 @@ class VerAsistencia extends CI_Controller {
 				$data['asistencia'] = count($this->Masistencia->getDatosAsistencia($id_usuario));
 			}
 
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
+
 			
-			$this->load->view('includes_admin/header');
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('supervisor/verAsistencia', $data);
 			$this->load->view('includes_admin/footer');
 		}else{

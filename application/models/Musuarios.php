@@ -277,6 +277,16 @@ class Musuarios extends CI_Model {
 
 		return $datos->result();
 	}
+
+	public function getUsuariosPsicologa(){
+		$this->db->select('persona.id_persona, persona.documento, persona.nombres, persona.apellidos');
+		$this->db->from('persona');
+		$this->db->join('usuarios', 'usuarios.id_persona = persona.id_persona');
+		$this->db->where('estado', 'activo');
+		$datos=$this->db->get();
+
+		return $datos->result();
+	}
 	
 	public function delete_usuario($id_usuario){
 		$this->db->where('id_persona', $id_usuario);

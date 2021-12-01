@@ -8,6 +8,8 @@ class DefaultMetas extends CI_Controller {
 		parent::__construct();
 		$this->load->model('MmetasSupervisor');
 		$this->load->model('Mmetas');
+		$this->load->model('Mcitas');
+
 	}
 
 	public function index(){
@@ -20,8 +22,20 @@ class DefaultMetas extends CI_Controller {
 			else {
 				$data['metas'] = count($this->MmetasSupervisor->getDatos());
 			}
-			
-			$this->load->view('includes_admin/header');
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/defaultMetas', $data);
 			$this->load->view('includes_admin/footer');
         }else{
@@ -31,7 +45,20 @@ class DefaultMetas extends CI_Controller {
 
 	public function addMetaDefault(){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$this->load->view('includes_admin/header');
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/addMetaDefault');
 			$this->load->view('includes_admin/footer');
         }else{
@@ -80,8 +107,21 @@ class DefaultMetas extends CI_Controller {
 
 	public function editMeta($id){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
 			$data['meta'] = $this->MmetasSupervisor->getDataOnly($id);
-			$this->load->view('includes_admin/header');
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/editMetaDefault', $data);
 			$this->load->view('includes_admin/footer');
         }else{

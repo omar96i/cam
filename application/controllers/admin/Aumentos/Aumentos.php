@@ -8,12 +8,26 @@ class Aumentos extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Musuarios');
 		$this->load->model('Maumentos');
+		$this->load->model('Mcitas');
 	}
 
 	public function index($tipo = "sin_registrar"){
 
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
-			$this->load->view('includes_admin/header');
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/aumentos/index', ['tipo' => $tipo]);
 			$this->load->view('includes_admin/footer');
         }else{
@@ -43,8 +57,21 @@ class Aumentos extends CI_Controller {
 
 	public function addAumento(){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
 			$data['usuarios'] = $this->Musuarios->getDatosDescuentos();
-			$this->load->view('includes_admin/header');
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/aumentos/store', $data);
 			$this->load->view('includes_admin/footer');
         }else{
@@ -76,9 +103,22 @@ class Aumentos extends CI_Controller {
 
 	public function edit($id){
 		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
+			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+			$data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+			if (!$data['cant_notificaciones']) {
+				$data['cant_notificaciones'] = "vacio";
+			}
+
+			if (!$data['notificaciones']) {
+				$data['notificaciones'] = "vacio";
+			}
 			$data['aumento'] = $this->Maumentos->getAumento($id);
 			$data['usuarios'] = $this->Musuarios->getDatosDescuentos();
-			$this->load->view('includes_admin/header');
+			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/aumentos/edit', $data);
 			$this->load->view('includes_admin/footer');
         }else{

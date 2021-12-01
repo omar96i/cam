@@ -13,6 +13,7 @@ class Home extends CI_Controller {
 		$this->load->model('Mdolar');
 		$this->load->model('Mregistronomina');
 		$this->load->model('Mpenalizaciones');
+		$this->load->model('Mcitas');
 
 	}
 
@@ -23,9 +24,23 @@ class Home extends CI_Controller {
 			redirect('Home');
 		}
 
+		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
+
 		$data['user'] = $this->Musuarios->getUser($this->session->userdata('usuario')['id_usuario']);
 
-		$this->load->view('includes_admin/header');
+		$this->load->view('includes_admin/header', $data);
 		$this->load->view('talento_humano/home', $data);
 		$this->load->view('includes_admin/footer');
 	}
@@ -46,7 +61,21 @@ class Home extends CI_Controller {
 			$data['registro_horas'] = count($this->Mregistrohoras->t_h_registro_horas_factura($id_factura));
 		}
 
-		$this->load->view('includes_admin/header');
+		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
+
+		$this->load->view('includes_admin/header', $data);
 		$this->load->view('talento_humano/registroshoras' , $data);
 		$this->load->view('includes_admin/footer');
 	}
@@ -61,6 +90,18 @@ class Home extends CI_Controller {
 
 		$data['factura']     = $this->Mregistronomina->verRegistrosNomina($id_talento_humano);
 
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_talento_humano);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_talento_humano);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
+
 		if(!$data['factura']) {
 			$data['factura'] = 0;
 		} 
@@ -68,7 +109,7 @@ class Home extends CI_Controller {
 			$data['factura'] = count($this->Mregistronomina->verRegistrosNomina($id_talento_humano));
 		}
 
-		$this->load->view('includes_admin/header');
+		$this->load->view('includes_admin/header', $data);
 		$this->load->view('talento_humano/facturas' , $data);
 		$this->load->view('includes_admin/footer');
 	}
@@ -82,6 +123,17 @@ class Home extends CI_Controller {
 
 		$data['empleados']     = $this->Musuarios->t_h_get_empleados();
 
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
 		if(!$data['empleados']) {
 			$data['empleados'] = 0;
 		} 
@@ -89,7 +141,7 @@ class Home extends CI_Controller {
 			$data['empleados'] = count($this->Musuarios->t_h_get_empleados());
 		}
 
-		$this->load->view('includes_admin/header');
+		$this->load->view('includes_admin/header', $data);
 		$this->load->view('talento_humano/empleados' , $data);
 		$this->load->view('includes_admin/footer');
 	}
@@ -111,8 +163,21 @@ class Home extends CI_Controller {
 		else {
 			$data['registro_horas'] = count($this->Mregistrohoras->t_h_get_horas_usuario($id_usuario, $tipo));
 		}
+		$id_talento_humano = $this->session->userdata('usuario')['id_usuario'];
 
-		$this->load->view('includes_admin/header');
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_talento_humano);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_talento_humano);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
+
+		$this->load->view('includes_admin/header', $data);
 		$this->load->view('talento_humano/verhoras' , $data);
 		$this->load->view('includes_admin/footer');
 	}
@@ -125,8 +190,22 @@ class Home extends CI_Controller {
 
 		$data['registro_horas']   = $inf_registro;
 		$data['id_modelo']   = $id_modelo;
+
+		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
 		//$data['categorias']  = $this->Mcategorias->getcategorias();
-		$this->load->view('includes_admin/header');
+		$this->load->view('includes_admin/header', $data);
 		$this->load->view('talento_humano/edithoras' , $data);
 		$this->load->view('includes_admin/footer');
 	}
@@ -263,7 +342,21 @@ class Home extends CI_Controller {
 		}
 		$data['id_usuario'] = $id_usuario;
 
-		$this->load->view('includes_admin/header');
+		$id_talento_humano = $this->session->userdata('usuario')['id_usuario'];
+
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_talento_humano);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_talento_humano);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        }
+
+		$this->load->view('includes_admin/header', $data);
 		$this->load->view('talento_humano/verPenalizaciones' , $data);
 		$this->load->view('includes_admin/footer');
 	}
@@ -302,9 +395,22 @@ class Home extends CI_Controller {
 		}
 		$data['id_modelo']   = $id_modelo;
 		$data['penalizaciones'] = $this->Mpenalizaciones->getPenalizaciones();
-		$data['penalizacion'] = $this->Mpenalizaciones->getDataPenalizacion($id_penalizacion); 
+		$data['penalizacion'] = $this->Mpenalizaciones->getDataPenalizacion($id_penalizacion);
+		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
 
-		$this->load->view('includes_admin/header');
+        $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
+        $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+
+
+        if (!$data['cant_notificaciones']) {
+			$data['cant_notificaciones'] = "vacio";
+		}
+
+        if (!$data['notificaciones']) {
+            $data['notificaciones'] = "vacio";
+        } 
+
+		$this->load->view('includes_admin/header', $data);
 		$this->load->view('talento_humano/editPenalizacion' , $data);
 		$this->load->view('includes_admin/footer');
 	}
