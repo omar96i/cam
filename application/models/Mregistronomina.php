@@ -17,6 +17,14 @@ class Mregistronomina extends CI_Model {
 	public function getFacturaGeneral($id){
 		return $this->db->select('*')->from('factura_general')->where('id_factura_general', $id)->get()->result();
 	}
+
+	public function VerificarMeta($data){
+		$consulta_meta = $this->db->select('*')->from('metas')->where('id_empleado', $data['id_persona'])->where('estado', 'sin registrar')->get();
+		if($consulta_meta->num_rows() > 0){
+			return true;
+		}
+		return false;
+	}
 	
 	public function registrarNomina($data){
 

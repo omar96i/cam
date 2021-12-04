@@ -37,7 +37,7 @@ class VerAsistencia extends CI_Controller {
 
 		$data['id_empleado'] = $this->input->post('id_modelo');
 		$data['id_asistencia'] = $this->input->post('id_asistencia');
-		$data['estado'] = "sin registrar";
+		$data['estado'] = "registrado";
 		$verificar = $this->Masistencia->VerificarModelo($data);
 		if($verificar){
 			echo json_encode(['status'=>false,'msg' => 'La modelo ya se encuentra registrada en la fecha seleccionada']);

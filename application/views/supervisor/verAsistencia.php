@@ -248,7 +248,7 @@
 							var tbody = '';
 							tbody += `<option value="0">Sin seleccionar</option>`
 							for(var k=0; k<r.modelos.length; k++) {
-								tbody += `<option value="${r.modelos[k]['id_persona']}">${r.modelos[k]['nombres']+" "+r.modelos[k]['nombres']}</option>`;
+								tbody += `<option value="${r.modelos[k]['id_persona']}">${r.modelos[k]['nombres']+" "+r.modelos[k]['apellidos']}</option>`;
 							}
 							$(".input_id_asistencia").val(id_asistencia)
 							$("#modelos").html(tbody)

@@ -54,11 +54,11 @@
 
       <form id="form-login" action="">
           <div class="form-group">
-			 <input name="email" class="form-control" placeholder="E-mail" type="text">
+			 <input name="email" id="email" class="form-control" placeholder="E-mail" type="text">
 			 <div class="invalid-feedback">El campo no debe quedar vacío</div>
           </div> 
           <div class="form-group">
-			<input name="clave" class="form-control" placeholder="Password" type="password">
+			<input name="clave" id="password" class="form-control" placeholder="Password" type="password">
 			 <div class="invalid-feedback">El campo no debe quedar vacío</div>
           </div> 
           

@@ -70,7 +70,7 @@ class Aumentos extends CI_Controller {
 			if (!$data['notificaciones']) {
 				$data['notificaciones'] = "vacio";
 			}
-			$data['usuarios'] = $this->Musuarios->getDatosDescuentos();
+			$data['usuarios'] = $this->Musuarios->getDatosAumentos();
 			$this->load->view('includes_admin/header', $data);
 			$this->load->view('admin/aumentos/store', $data);
 			$this->load->view('includes_admin/footer');

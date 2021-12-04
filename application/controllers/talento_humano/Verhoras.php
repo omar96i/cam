@@ -52,7 +52,12 @@ class Verhoras extends CI_Controller {
 					return;	
 
 				}else{
-					$respuesta = $this->Mregistronomina->registrarNomina($data);
+					if($this->Mregistronomina->VerificarMeta($data)){
+						$respuesta = $this->Mregistronomina->registrarNomina($data);
+					}else{
+						echo json_encode(['status' => false, 'msg' =>'El usuario actualmente no tiene meta']);
+						return;	
+					}	
 				}
 
 			}else{

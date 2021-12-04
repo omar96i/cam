@@ -309,4 +309,13 @@ class Musuarios extends CI_Model {
 							->get();
 		return $datos->result();
 	}
+
+	public function getDatosAumentos(){
+		$datos = $this->db->select('persona.*')->from('usuarios')
+							->join('persona', 'persona.id_persona = usuarios.id_persona')
+							->where('estado', 'activo')
+							->where('usuarios.tipo_cuenta !=', 'empleado')
+							->get();
+		return $datos->result();
+	}
 }
