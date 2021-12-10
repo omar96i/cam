@@ -289,6 +289,27 @@ class Home extends CI_Controller {
 		}
 
 		$id_usuario 	  = $this->input->post('id_usuario');
+		$id_monitor = $this->session->userdata('usuario')['id_usuario'];
+		$usuarios         = $this->Mregistrohoras->gerHorasUsuarioMonitor($id_usuario, $id_monitor);
+
+		if(!$usuarios) {
+			echo json_encode(['status' => false]);
+			return;
+		}
+
+		echo json_encode(
+			[
+				'status'          => true, 
+				'data'            => $usuarios
+			]);
+	}
+	public function gethorasth(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$id_usuario 	  = $this->input->post('id_usuario');
 		$usuarios         = $this->Mregistrohoras->getHorasUsuario($id_usuario);
 
 		if(!$usuarios) {

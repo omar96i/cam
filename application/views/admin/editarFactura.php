@@ -36,8 +36,12 @@
                                     <div class="row mt-3">
                                         <div class="col-sm-12 col-md-4">
                                             <div class="form-group">
-                                                <label for="id_factura" class="col-form-label">Id:</label>
-                                                <input type="number" id="id_factura" value="<?php echo $factura[0]->id_factura; ?>" class="form-control" readonly name="id_factura">
+                                                <input type="number" id="id_factura" value="<?php echo $factura[0]->id_factura; ?>" class="form-control" readonly name="id_factura" style="display: none;">
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
+											<div class="form-group">
+                                                <label for="porcentaje_paga" class="col-form-label">Porcentaje:</label>
+                                                <input type="text" id="porcentaje_paga" value="<?php echo $factura[0]->porcentaje_paga; ?>" class="form-control" name="porcentaje_paga">
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
                                             <div class="form-group">
@@ -82,12 +86,6 @@
             e.preventDefault();
             var ruta      = "<?php echo base_url('admin/home/editFactura') ?>";
             var form_data = new FormData($('#form_add_adelanto')[0]);
-
-            if ($("#id_factura").val() == '') {
-                $("#id_factura").addClass('is-invalid');
-            }else{
-                $("#id_factura").removeClass('is-invalid');
-            }
             if ($("#descripcion").val() == '') {
                 $("#descripcion").addClass('is-invalid');
             }else{
@@ -98,15 +96,9 @@
             }else{
                 $("#total_a_pagar").removeClass('is-invalid');
             }
-			if ($("#nuevo_valor").val() == '') {
-                $("#nuevo_valor").addClass('is-invalid');
-            }else{
-                $("#nuevo_valor").removeClass('is-invalid');
-            }
 
             if( $("#id_factura").val() != '' &&
                 $("#descripcion").val() != '' &&
-				$("#nuevo_valor").val() != '' &&
                 $("#total_a_pagar").val() != '' 
             ) {
 				
@@ -121,7 +113,7 @@
                     contentType : false,
                 })
                 .done(function(r) {
-
+					console.log(r)
                     if(r.status){
                         $('#form_addproduct').trigger('reset');
                         alertify.notify('Registro agregado con éxito', 'success', 2, function(){

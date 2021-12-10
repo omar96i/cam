@@ -81,6 +81,26 @@ class Mregistrohoras extends CI_Model {
 		return false;
 	}
 
+	public function gerHorasUsuarioMonitor($id_usuario, $id_monitor){
+		$this->db->select('paginas.url_pagina, registro_horas.*, persona_pagina.*');
+		$this->db->from('registro_horas');
+		$this->db->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina');
+		$this->db->join('persona_pagina', 'persona_pagina.id_pagina = paginas.id_pagina');
+		$this->db->where('persona_pagina.estado', 'activo');
+		$this->db->where('persona_pagina.id_persona', $id_usuario);
+		$this->db->where('registro_horas.id_supervisor', $id_monitor);
+		$this->db->where('registro_horas.id_empleado', $id_usuario);
+		
+		$this->db->order_by('estado_registro' , 'DESC');
+		$usuarios = $this->db->get();
+
+		if($usuarios->num_rows() > 0) {
+			return $usuarios->result();
+		}
+
+		return false;
+	}
+
 	public function addHoras($data){
 		$this->db->insert('registro_horas', $data);
 		if ($this->db->affected_rows()>0) {
@@ -178,13 +198,12 @@ class Mregistrohoras extends CI_Model {
 	}
 
 	public function verificarFecha($data){
-		$registro = $this->db->select('*')->from('asistencia_empleado')->join('asistencia', 'asistencia.id_asistencia = asistencia_empleado.id_asistencia')->where('asistencia_empleado.id_empleado', $data['id_empleado'])->where('asistencia.fecha', $data['fecha_registro'])->where('asistencia_empleado.estado', 'registrado')->get();
+		$registro = $this->db->select('*')->from('asistencia_empleado')->join('asistencia', 'asistencia.id_asistencia = asistencia_empleado.id_asistencia')->where('asistencia_empleado.id_empleado', $data['id_empleado'])->where('asistencia.id_supervisor', $data['id_supervisor'])->where('asistencia.fecha', $data['fecha_registro'])->where('asistencia_empleado.estado', 'registrado')->get();
 		
 		if($registro->num_rows() > 0){
 			return true;
 		}
 		return false;
-
 	}
 
 	public function getDataTableFiltro($data){

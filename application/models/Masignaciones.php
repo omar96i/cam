@@ -59,23 +59,7 @@ class Masignaciones extends CI_Model {
 		$usuarios = $this->db->get();
 
 		if($usuarios->num_rows() > 0) {
-			$lista_usuarios = $usuarios->result();
-			$acum = 0;
-			$datos = [];
-			foreach ($lista_usuarios as $key => $value) {
-				$this->db->select('*');
-				$this->db->from('empleado_supervisor');
-				$this->db->where('id_empleado', $value->id_persona);
-				$this->db->where('estado', 'activo');
-				$usuario = $this->db->get();
-				
-				if (!$usuario->num_rows()>0) {
-					$datos[$acum] = $lista_usuarios[$key];
-					$acum = $acum+1;
-				}
-			}
-
-			return $datos;
+			return $usuarios->result();
 		}
 
 		return false;
@@ -123,6 +107,16 @@ class Masignaciones extends CI_Model {
 		return false;
 	}
 
+	public function VerificarAsignacion($data){
+		$consulta = $this->db->select('*')->from('empleado_supervisor')
+							->where('id_empleado', $data['id_empleado'])
+							->where('id_supervisor', $data['id_supervisor'])
+							->where('estado', $data['estado'])->get();
+		if($consulta->num_rows() > 0){
+			return true;
+		}
+		return false;
+	}
 	public function getasignacionsupervisor($id_supervisor) {
 		$this->db->select('persona.*');
 		$this->db->from('empleado_supervisor');

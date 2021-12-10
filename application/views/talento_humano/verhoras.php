@@ -233,7 +233,7 @@
         fecha_inicio = $("#fecha_inicial_buscar").val();
         fecha_final = $("#fecha_final_buscar").val();
         $.ajax({
-            url      : '<?= base_url('supervisor/home/gethoras') ?>',
+            url      : '<?= base_url('supervisor/home/gethorasth') ?>',
             method   : 'POST',
             data     : {id_usuario: id_usuario, tipo: tipo},
             success  : function(r){
@@ -330,7 +330,6 @@
                 dataType: 'json',
                 data: {id_persona : id_persona, fecha_final: fecha_final},
                 success: function(r) {
-					console.log(r);
                     if(r.status){
 						alertify.notify('Registro de nomina realizado', 'success', 2, function(){
 							window.location.reload()

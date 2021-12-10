@@ -213,20 +213,24 @@ class Home extends CI_Controller {
 		$data['id_empleado'] = $this->input->post('empleado');
 		$data['estado'] = "activo";
 
+		if(!$this->Masignaciones->VerificarAsignacion($data)){
+			$respuesta = $this->Masignaciones->addasignacion($data);
 
-		$respuesta = $this->Masignaciones->addasignacion($data);
+			if(!$respuesta) {
+				echo json_encode(['status' => false, 'msg' => 'No se pudo agregar el registro']);
+				return;
+			}
 
-		if(!$respuesta) {
-			echo json_encode(['status' => false, 'msg' => 'No se pudo agregar el registro']);
-			return;
+			if($this->ActualizarMetas()){
+				echo json_encode(['status' => true]);
+				return;
+			}
+
+			echo json_encode(['status' => false, 'msg' => 'No se pudo Actualizar metas']);
+		}else{
+			echo json_encode(['status' => false, 'msg' => 'La modelo ya esta asignada a este monitor']);
 		}
-
-		if($this->ActualizarMetas()){
-			echo json_encode(['status' => true]);
-			return;
-		}
-
-		echo json_encode(['status' => false, 'msg' => 'No se pudo Actualizar metas']);
+		
 		
 	}
 
@@ -2250,16 +2254,7 @@ class Home extends CI_Controller {
 			return;
 		}else{
 			if($data['estado_meta'] == "con_meta"){
-				$update_supervisor = $this->Mmetas->actualizarMetaSupervisor($data['id_empleado'], $data['id_administrador']);
-				if (!$update_supervisor) {
-					echo json_encode(['status' => false, 'msg' => 'Algo pasó, Supervisor']);
-					return;
-				}
-				$update_tecnico_sistemas = $this->Mmetas->actualizarMetaTecnicoSistemas($data['id_administrador']);
-				if (!$update_tecnico_sistemas) {
-					echo json_encode(['status' => false, 'msg' => 'Algo pasó, Tecnico sistema']);
-					return;
-				}
+				$this->ActualizarMetas();
 			}
 		}
 
@@ -2352,8 +2347,7 @@ class Home extends CI_Controller {
 			echo json_encode(['status' => false, 'msg' => 'Algo pasó, Update']);
 			return;
 		}
-		$this->Mmetas->actualizarMetaSupervisor($datos_usuario[0]->id_empleado, $datos_usuario[0]->id_administrador);
-		$this->Mmetas->actualizarMetaTecnicoSistemas($datos_usuario[0]->id_administrador);
+		$this->ActualizarMetas();
 
 		echo json_encode(['status' => true]);
 
@@ -2795,7 +2789,10 @@ class Home extends CI_Controller {
 		$data['descripcion'] = $this->input->post('descripcion');
 		$data['total_a_pagar'] = $this->input->post('total_a_pagar');
 		$data['nuevo_valor'] = $this->input->post('nuevo_valor');
-
+		$data['porcentaje_paga'] = $this->input->post('porcentaje_paga');
+		if(empty($data['nuevo_valor'])){
+			$data['nuevo_valor'] = null;
+		}
 		$respuesta = $this->Mregistronomina->editFactura($data);
 
 		if(!$respuesta) {

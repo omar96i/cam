@@ -135,15 +135,30 @@ class Masistencia extends CI_Model {
 
 			$data2['id_asistencia'] = $this->db->insert_id();
 			foreach ($datos_consulta_items_empleados as $key => $value) {
+				
 				$data2['id_empleado'] = ($tipo_usuario == "tecnico sistemas") ? $value->id_usuario : $value->id_empleado;
 				$data2['estado'] = "sin registrar";
-				$this->db->insert('asistencia_empleado', $data2);
+				if(!$this->ValidarFecha($data['fecha'], $data2['id_empleado'])){
+					$this->db->insert('asistencia_empleado', $data2);
+				}
 			}
 
 			return true;
 
 		}
 
+		return false;
+	}
+
+	public function ValidarFecha($fecha, $id_empleado){
+		$consulta = $this->db->select('*')->from('asistencia_empleado')
+										->join('asistencia', 'asistencia.id_asistencia = asistencia_empleado.id_asistencia')
+										->where('asistencia.fecha', $fecha)
+										->where('asistencia_empleado.id_empleado', $id_empleado)
+										->get();
+		if($consulta->num_rows() > 0){
+			return true;
+		}
 		return false;
 	}
 
@@ -222,6 +237,11 @@ class Masistencia extends CI_Model {
 			return true;
 		}
 		return false;
+	}
+
+	public function DeleteModeloAsistencia($data){
+		$this->db->where('id_asistencia', $data['id_asistencia'])->where('id_empleado', $data['id_empleado']);
+		return $this->db->delete('asistencia_empleado');
 	}
 
 	public function AddAsistenciaEmpleado($data){

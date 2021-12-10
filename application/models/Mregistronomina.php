@@ -163,6 +163,7 @@ class Mregistronomina extends CI_Model {
 			$porcentaje_dias = $consulta_porcentaje_dias[0]->valor_multiplicar;
 			$id_porcentaje_dias = $consulta_porcentaje_dias[0]->id_porcentajes_dias;
 			$porcentaje_dias_bonga = $consulta_porcentaje_dias_bonga[0]->valor_multiplicar;
+			$porcentaje_dias_porcentaje = 60;
 		}
 		///////////////////////////////////////////////////
 		/// CONSULTAMOS ADELANTOS ///

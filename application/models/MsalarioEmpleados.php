@@ -142,22 +142,22 @@ class MsalarioEmpleados extends CI_Model {
 				$modelos = $this->db->select('id_empleado')->from('empleado_supervisor')->where('id_supervisor', $valor_s->id_persona)->where('estado', 'activo')->get();
 				if($modelos->num_rows() > 0){
 					foreach ($modelos->result() as $key => $modelo) {
-						$nomina_modelo_bonga = $this->db->select_sum('cantidad_horas')->from('factura')
-													->join('registro_horas', 'registro_horas.id_factura = factura.id_factura')
+						$nomina_modelo_bonga = $this->db->select_sum('cantidad_horas')->from('registro_horas')
 													->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina')
 													->where('paginas.url_pagina', 'bongacams')
-													->where('id_usuario', $modelo->id_empleado)
-													->where('fecha_inicio >=', $data['fecha_inicial'])
-													->where('fecha_inicio <=', $data['fecha_final'])
-													->where('id_factura_supervisor', null)->get();
-						$nomina_modelo_general = $this->db->select_sum('cantidad_horas')->from('factura')
-													->join('registro_horas', 'registro_horas.id_factura = factura.id_factura')
-													->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina')
-													->where('paginas.url_pagina !=', 'bongacams')
-													->where('id_usuario', $modelo->id_empleado)
-													->where('fecha_inicio >=', $data['fecha_inicial'])
-													->where('fecha_inicio <=', $data['fecha_final'])
-													->where('id_factura_supervisor', null)->get();
+													->where('registro_horas.id_empleado', $modelo->id_empleado)
+													->where('registro_horas.id_supervisor', $valor_s->id_persona)
+													->where('fecha_registro >=', $data['fecha_inicial'])
+													->where('fecha_registro <=', $data['fecha_final'])
+													->where('estado_registro', 'registrado')->get();
+						$nomina_modelo_general = $this->db->select_sum('cantidad_horas')->from('registro_horas')
+															->join('paginas', 'paginas.id_pagina = registro_horas.id_pagina')
+															->where('paginas.url_pagina !=', 'bongacams')
+															->where('registro_horas.id_empleado', $modelo->id_empleado)
+															->where('registro_horas.id_supervisor', $valor_s->id_persona)
+															->where('fecha_registro >=', $data['fecha_inicial'])
+															->where('fecha_registro <=', $data['fecha_final'])
+															->where('estado_registro', 'registrado')->get();
 						if($nomina_modelo_general->num_rows()>0){
 							$nomina_modelo_general = $nomina_modelo_general->result();
 							$aux_horas_general = $aux_horas_general+$nomina_modelo_general[0]->cantidad_horas;
@@ -239,17 +239,6 @@ class MsalarioEmpleados extends CI_Model {
 
 				if(!$aux_aumentos == 0){
 					$this->db->set('id_factura_supervisor', $id)->set('estado', 'registrado')->where('id_persona', $datos_insert['id_empleado'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('aumentos');
-				}
-				// ASIGNAMOS LA NOMINA DEL SUPERVISOR A LA NOMINA DE LA MODELO
-
-				$modelos = $this->db->select('id_empleado')->from('empleado_supervisor')->where('id_supervisor', $valor_s->id_persona)->where('estado', 'activo')->get();
-				if($modelos->num_rows() > 0){
-					foreach ($modelos->result() as $key => $modelo) {
-						$nomina_modelo = $this->db->select('total_horas')->from('factura')->where('id_usuario', $modelo->id_empleado)->where('fecha_inicio >=', $data['fecha_inicial'])->where('fecha_inicio <=', $data['fecha_final'])->where('id_factura_supervisor', null)->get();
-						if($nomina_modelo->num_rows()>0){
-							$this->db->set('id_factura_supervisor', $id)->where('id_usuario', $modelo->id_empleado)->where('fecha_inicio >=', $data['fecha_inicial'])->where('fecha_inicio <=', $data['fecha_final'])->where('id_factura_supervisor', null)->update('factura');
-						}
-					}
 				}
 				// FINALIZAMOS LA META DEL SUPERVISOR
 				$this->db->set('estado', 'registrado')->where('id_empleado', $valor_s->id_persona)->update('metas');

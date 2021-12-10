@@ -201,7 +201,8 @@ class Mmetas extends CI_Model {
 						$consulta_id_empleados = $consulta_id_empleados->result();
 						$acum = 0;
 						foreach ($consulta_id_empleados as $key => $id_empleado) {
-
+							$verificar = $this->db->select('*')->from('empleado_supervisor')->where('id_empleado', $id_empleado->id_empleado)->where('estado', 'activo')->get();
+							$dividir = $verificar->num_rows();
 							$this->db->select('num_horas');
 							$this->db->where('estado', 'sin registrar');
 							$this->db->where('estado_meta', 'con_meta');
@@ -211,7 +212,7 @@ class Mmetas extends CI_Model {
 							$consulta_cantidad_horas = $this->db->get();
 							if ($consulta_cantidad_horas->num_rows() > 0) {
 								$consulta_cantidad_horas = $consulta_cantidad_horas->result();
-								$acum = $acum + $consulta_cantidad_horas[0]->num_horas;
+								$acum = $acum + ($consulta_cantidad_horas[0]->num_horas/$dividir);
 							}
 						}
 
@@ -237,6 +238,8 @@ class Mmetas extends CI_Model {
 						$consulta_id_empleados = $consulta_id_empleados->result();
 						$acum = 0;
 						foreach ($consulta_id_empleados as $key => $id_empleado) {
+							$verificar = $this->db->select('*')->from('empleado_supervisor')->where('id_empleado', $id_empleado->id_empleado)->where('estado', 'activo')->get();
+							$dividir = $verificar->num_rows();
 							$this->db->select('num_horas');
 							$this->db->where('estado', 'sin registrar');
 							$this->db->where('estado_meta', 'con_meta');
@@ -247,7 +250,7 @@ class Mmetas extends CI_Model {
 							$consulta_cantidad_horas = $this->db->get();
 							if ($consulta_cantidad_horas->num_rows() > 0) {
 								$datos_consulta_cantidad_horas = $consulta_cantidad_horas->result();
-								$acum = $acum + $datos_consulta_cantidad_horas[0]->num_horas;
+								$acum = $acum + ($datos_consulta_cantidad_horas[0]->num_horas/$dividir);
 							}
 						}
 						/////////////////////////////////////////////////////////////////////////
@@ -275,6 +278,7 @@ class Mmetas extends CI_Model {
 		
 
 	}
+
 
 	public function actualizarMetaSupervisor($id_empleado, $id_administrador){
 
