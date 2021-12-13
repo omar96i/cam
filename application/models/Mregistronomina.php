@@ -262,6 +262,15 @@ class Mregistronomina extends CI_Model {
 		$valor_dolar = $consulta_valor_dolar[0]->valor_dolar;
 		//////////////////////////////
 
+		/// AUMENTOS ////
+		$aux_aumentos = 0;
+		$aumentos = $this->db->select('id, valor')->from('aumentos')->where('id_persona', $data['id_persona'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
+		if($aumentos->num_rows() > 0){
+			foreach ($aumentos->result() as $key => $aumento) {
+				$aux_aumentos = $aux_aumentos+$aumento->valor;
+			}
+		}
+
 		/// CALCULOS EMPLEADOS ///
 
 
@@ -274,7 +283,7 @@ class Mregistronomina extends CI_Model {
 
 		$sub_total = $sub_total_generales+$sub_total_bongacams;
 
-		$total = $sub_total-$adelanto;
+		$total = ($sub_total+$aux_aumentos)-$adelanto;
 
 		///////////////
 
@@ -296,6 +305,7 @@ class Mregistronomina extends CI_Model {
 		$datos['id_dolar'] = $consulta_valor_dolar[0]->id_dolar;
 		$datos['id_porcentaje_dias'] = $id_porcentaje_dias;
 		$datos['descuento'] = $adelanto;
+		$datos['aumentos'] = $aux_aumentos;
 		$datos['total_horas'] = $total_horas;
 		$datos['total_a_pagar'] = $total;
 		$datos['estado_factura'] = "sin registrar";
@@ -317,6 +327,10 @@ class Mregistronomina extends CI_Model {
 		////////////////////////////
 
 		//$this->db->insert('ingresos', $data_ingreso);
+
+		if(!$aux_aumentos == 0){
+			$this->db->set('id_factura', $id)->set('estado', 'registrado')->where('id_persona', $data['id_persona'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->update('aumentos');
+		}
 
 		if($bandera_adelanto){
 			$datos_insert_adelantos['id_adelanto'] = $id_adelanto;

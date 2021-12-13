@@ -58,6 +58,7 @@
                                                     <th class="important">Tokens meta</th>
                                                     <th class="important">Porcentaje de paga</th>
                                                     <th class="important">Descuento</th>
+                                                    <th class="important">Aumentos</th>
                                                     <th class="important">Penalizaciones Tokens</th>
                                                     <th class="important">Total Tokens</th>
 													<th class="important">Descripcion</th>
@@ -135,13 +136,13 @@
                             <td class="align-middle text-capitalize">${r.data[k]['documento']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['nombres']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['apellidos']}</td>
-
                             <td class="align-middle text-capitalize">${r.data[k]['valor_dolar']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['cant_dias']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado_meta']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['num_horas']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['porcentaje_paga']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['descuento']}</td>
+                            <td class="align-middle text-capitalize">${r.data[k]['aumentos']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['penalizacion_horas']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['total_horas']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['descripcion']}</td>`
