@@ -112,15 +112,18 @@ class Mregistronomina extends CI_Model {
 		/////////////////////////////////////////////////////////////////////////
 
 		/// CONSULTAMOS EL PORCENTAJE DE LOS DIAS GENERAL///
-		$consulta_porcentaje_dias = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
+
+		// Consultamos la fecha de entrada de la modelo 
+		$fecha_entrada = $this->db->select('fecha_entrada')->from('persona')->where('id_persona', $data['id_persona'])->get()->result();
+		$consulta_porcentaje_dias = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar,fecha_accion')->from('porcentajes_dias')
 											->where('estado', 'activo')
 											->where('tipo', 'general')
-											->order_by('cantidad_dias', 'desc')
+											->order_by('fecha_accion', 'desc')
 											->get()->result();
-		$consulta_porcentaje_dias_bonga = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
+		$consulta_porcentaje_dias_bonga = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar,fecha_accion')->from('porcentajes_dias')
 											->where('estado', 'activo')
 											->where('tipo', 'bongacams')
-											->order_by('cantidad_dias', 'desc')
+											->order_by('fecha_accion', 'desc')
 											->get()->result();
 		$porcentaje_dias = 0;
 		$porcentaje_dias_bonga = 0;
@@ -128,24 +131,52 @@ class Mregistronomina extends CI_Model {
 		$id_porcentaje_dias = null;
 		////////////////////////////////////////////
 
-		/// VERIFICAMOS SI CUMPLE CON EL MINIMO DE DIAS GENERAL ///
 		foreach ($consulta_porcentaje_dias as $key => $value) {
-			if ($numero_dias >= $value->cantidad_dias && $value->estado_meta == $estado_meta) {
-				/// ASIGNAMOS EL VALOR DEL % SI CuMPLE CON LOS DIAS Y META ///
-				$porcentaje_dias_porcentaje = $value->valor;
-				$porcentaje_dias = $value->valor_multiplicar;
-				$id_porcentaje_dias = $consulta_porcentaje_dias[$key]->id_porcentajes_dias;
-				break;
+			if($fecha_entrada[0]->fecha_entrada >= $value->fecha_accion){
+				$subconsulta = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar,fecha_accion')->from('porcentajes_dias')
+										->where('estado', 'activo')
+										->where('tipo', 'general')
+										->where('fecha_accion', $value->fecha_accion)
+										->order_by('cantidad_dias', 'desc')
+										->get()->result();
+				$bandera = false;
+				foreach ($subconsulta as $key => $val) {
+					if ($numero_dias >= $val->cantidad_dias && $val->estado_meta == $estado_meta) {
+						/// ASIGNAMOS EL VALOR DEL % SI CuMPLE CON LOS DIAS Y META ///
+						$porcentaje_dias_porcentaje = $val->valor;
+						$porcentaje_dias = $val->valor_multiplicar;
+						$id_porcentaje_dias = $subconsulta[$key]->id_porcentajes_dias;
+						$bandera = true;
+						break;
+					}
+				}
+				if($bandera){
+					break;
+				}
 			}
 		}
 		///////////////////////////////////////////////////
 
-		/// VERIFICAMOS SI CUMPLE CON EL MINIMO DE DIAS BONGACAMS ///
 		foreach ($consulta_porcentaje_dias_bonga as $key => $value) {
-			if ($numero_dias >= $value->cantidad_dias && $value->estado_meta == $estado_meta) {
-				/// ASIGNAMOS EL VALOR DEL % SI CuMPLE CON LOS DIAS Y META ///
-				$porcentaje_dias_bonga = $value->valor_multiplicar;
-				break;
+			if($fecha_entrada[0]->fecha_entrada >= $value->fecha_accion){
+				$subconsulta = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar,fecha_accion')->from('porcentajes_dias')
+										->where('estado', 'activo')
+										->where('tipo', 'bongacams')
+										->where('fecha_accion', $value->fecha_accion)
+										->order_by('cantidad_dias', 'desc')
+										->get()->result();
+				$bandera = false;
+				foreach ($subconsulta as $key => $val) {
+					if ($numero_dias >= $val->cantidad_dias && $val->estado_meta == $estado_meta) {
+						/// ASIGNAMOS EL VALOR DEL % SI CuMPLE CON LOS DIAS Y META ///
+						$porcentaje_dias_bonga = $val->valor_multiplicar;
+						$bandera = true;
+						break;
+					}
+				}
+				if($bandera){
+					break;
+				}
 			}
 		}
 
@@ -154,11 +185,13 @@ class Mregistronomina extends CI_Model {
 												->where('estado', 'activo')
 												->where('tipo', 'general')
 												->where('valor', 60)
+												->order_by('fecha_accion', 'desc')
 												->get()->result();
 			$consulta_porcentaje_dias_bonga = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
 												->where('estado', 'activo')
 												->where('tipo', 'bongacams')
 												->where('valor', 60)
+												->order_by('fecha_accion', 'desc')
 												->get()->result();
 			$porcentaje_dias = $consulta_porcentaje_dias[0]->valor_multiplicar;
 			$id_porcentaje_dias = $consulta_porcentaje_dias[0]->id_porcentajes_dias;
@@ -236,6 +269,7 @@ class Mregistronomina extends CI_Model {
 		$sub_total_generales = ($cantidad_horas*$porcentaje_dias)*$valor_dolar;
 		// CALCULOS PAGINAS BONGACAMS
 		$sub_total_bongacams = ($tokens_bonga*$porcentaje_dias_bonga)*$valor_dolar;
+
 		
 
 		$sub_total = $sub_total_generales+$sub_total_bongacams;

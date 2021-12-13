@@ -66,6 +66,11 @@
                                                 </select>
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
+											<div class="form-group">
+                                                <label for="fecha_accion" class="col-form-label">Fecha de accion</label>
+                                                <input type="date" id="fecha_accion" value="<?php echo $porcentaje[0]->fecha_accion ?>" class="form-control" name="fecha_accion">
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="estado" class="col-form-label">Estado :</label>
                                                 <select name="estado" id="estado" class="form-control">
@@ -105,6 +110,7 @@
         estado_meta = $("#estado_meta").val();
         valor_multiplicar = $("#valor_multiplicar").val();
         tipo = $("#tipo").val();
+		fecha_accion = $("#fecha_accion").val()
 
 
     	id_porcentajes = <?php echo $porcentaje[0]->id_porcentajes_dias; ?>;
@@ -145,6 +151,11 @@
 		}else{
 			$("#tipo").removeClass('is-invalid');
 		}
+		if ($("#fecha_accion").val() == '') {
+			$("#fecha_accion").addClass('is-invalid');
+		}else{
+			$("#fecha_accion").removeClass('is-invalid');
+		}
 
 
                    
@@ -153,14 +164,15 @@
 			$("#estado").val() != '' &&
             $("#estado_meta").val() != '' && 
 			$("#valor_multiplicar").val() != '' &&
-			$("#tipo").val() != ''
+			$("#tipo").val() != '' && 
+			$("#fecha_accion").val() != ''
         ){
             
             $.ajax({
                 url: ruta,
                 type: 'POST',
                 dataType: 'json',
-                data: {dias : dias , valor : valor, estado : estado, id_porcentajes: id_porcentajes, estado_meta:estado_meta, valor_multiplicar: valor_multiplicar, tipo: tipo},
+                data: {dias : dias , valor : valor, estado : estado, id_porcentajes: id_porcentajes, estado_meta:estado_meta, valor_multiplicar: valor_multiplicar, tipo: tipo, fecha_accion: fecha_accion},
             })
             .done(function(r) {
                 if(r.status){

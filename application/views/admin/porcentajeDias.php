@@ -40,6 +40,7 @@
                                                     <th>%</th>
                                                     <th>Valor a mulplicar</th>
                                                     <th>Estado Meta</th>
+                                                    <th>Fecha de accion</th>
                                                     <th>Fecha de registro</th>
                                                     <th></th>
                                                 </tr>
@@ -85,7 +86,7 @@
                             <td class="align-middle text-capitalize">${r.data[k]['valor']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['valor_multiplicar']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['estado_meta']}</td>
-
+                            <td class="align-middle text-capitalize">${r.data[k]['fecha_accion']}</td>
                             <td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>
                             <td class="align-middle">
                                 <a href="<?php echo site_url('admin/Home/editarPorcentajesDias/') ?>${r.data[k]['id_porcentajes_dias']}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>

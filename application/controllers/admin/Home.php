@@ -1918,6 +1918,7 @@ class Home extends CI_Controller {
 		$data['valor'] = $this->input->post('valor');
 		$data['estado_meta'] = $this->input->post('estado_meta');
 		$data['valor_multiplicar'] = $this->input->post('valor_multiplicar');
+		$data['fecha_accion'] = $this->input->post('fecha_accion');
 		$data['tipo'] = $this->input->post('tipo');
 		$data['estado'] = "activo";
 
@@ -1968,6 +1969,7 @@ class Home extends CI_Controller {
 		$data['estado_meta'] = $this->input->post('estado_meta');
 		$data['valor_multiplicar'] = $this->input->post('valor_multiplicar');
 		$data['tipo'] = $this->input->post('tipo');
+		$data['fecha_accion'] = $this->input->post('fecha_accion');
 
 		$data['id_porcentajes_dias'] = $this->input->post('id_porcentajes');
 

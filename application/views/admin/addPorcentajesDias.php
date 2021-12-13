@@ -59,6 +59,11 @@
                                                 <div class="invalid-feedback">El campo no debe quedar vacío</div>
                                             </div>
 											<div class="form-group">
+                                                <label for="fecha_accion" class="col-form-label">Fecha de accion</label>
+                                                <input type="date" id="fecha_accion" class="form-control" name="fecha_accion">
+                                                <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                                            </div>
+											<div class="form-group">
                                                 <label for="tipo" class="col-form-label">Paginas</label>
                                                 <select name="tipo" id="tipo" class="form-control">
                                                     <option value="general">General</option>
@@ -96,6 +101,7 @@
                 estado_meta = $("#estado_meta").val();
                 valor_multiplicar = $("#valor_multiplicar").val();
                 tipo = $("#tipo").val();
+				fecha_accion = $("#fecha_accion").val()
 
 
                 if ($("#dias").val() == '') {
@@ -123,14 +129,19 @@
                 }else{
                     $("#tipo").removeClass('is-invalid');
                 }
+				if ($("#fecha_accion").val() == '') {
+                    $("#fecha_accion").addClass('is-invalid');
+                }else{
+                    $("#fecha_accion").removeClass('is-invalid');
+                }
 
-                if( $("#dias").val() != '' && $("#valor").val() != '' && $("#estado_meta").val() != '' && $("#valor_multiplicar").val() != '' && $("#tipo").val() != '') {
+                if( $("#dias").val() != '' && $("#fecha_accion").val() != '' && $("#valor").val() != '' && $("#estado_meta").val() != '' && $("#valor_multiplicar").val() != '' && $("#tipo").val() != '') {
 
                     $.ajax({
                         url: ruta,
                         type: 'POST',
                         dataType: 'json',
-                        data: {dias: dias, valor: valor, estado_meta:estado_meta, valor_multiplicar: valor_multiplicar, tipo: tipo},
+                        data: {dias: dias, valor: valor, estado_meta:estado_meta, valor_multiplicar: valor_multiplicar, tipo: tipo, fecha_accion: fecha_accion},
                     })
                     .done(function(r) {
 
