@@ -65,6 +65,22 @@ class VerAsistencia extends CI_Controller {
 		echo json_encode(['status' => true]);
 	}
 
+	public function eliminarModeloAsistencia(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+		$data['id_empleado'] = $this->input->post('id_empleado');
+		$data['id_asistencia'] = $this->input->post('id_asistencia');
+		$verificar = $this->Masistencia->VerificarAsignaciones($data['id_empleado']);
+		if($verificar){
+			echo json_encode(['status' => false, 'msg' => 'La modelo seleccionada solo tiene una asignacion']);
+			return;
+		}
+		$this->Masistencia->DeleteModeloAsistencia($data);
+		echo json_encode(['status' => true]);
+	}
+
 	public function index(){
 		if($this->session->userdata('usuario')['tipo']=='supervisor' || $this->session->userdata('usuario')['tipo']=='tecnico sistemas') {
 			$id_usuario = $this->session->userdata('usuario')['id_usuario'];

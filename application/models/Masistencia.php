@@ -239,6 +239,16 @@ class Masistencia extends CI_Model {
 		return false;
 	}
 
+	public function VerificarAsignaciones($id_modelo){
+		$consulta = $this->db->select('*')->from('empleado_supervisor')->where('id_empleado', $id_modelo)->where('estado', 'activo')->get();
+		
+		if($consulta->num_rows() == 1){
+			return true;
+		}
+	
+		return false;
+	}
+
 	public function DeleteModeloAsistencia($data){
 		$this->db->where('id_asistencia', $data['id_asistencia'])->where('id_empleado', $data['id_empleado']);
 		return $this->db->delete('asistencia_empleado');

@@ -42,6 +42,7 @@
                                                         <th>Apellidos</th>
                                                         <th>Estado asistencia</th>
                                                         <th>Motivo inasistencia</th>
+                                                        <th></th>
                                                     </tr>
                                                 </thead>
 
@@ -70,6 +71,9 @@
                                                                     <?php endforeach ?>
                                                                 </select>
                                                             </td>
+															<td>
+															<a href="" data-id_empleado="<?php echo $value->id_persona ?>" data-id_asistencia="<?php echo (isset($items_asistencia))?$items_asistencia[0]->id_asistencia:''; ?>" class="btn_eliminar_modelo"><img src="<?php echo base_url('assets/iconos_menu/eliminar.png') ?>" alt="" style="width: 25px;"></a>
+															</td>
                                                         </tr>
                                                     <?php } ?>
                                                     <tr>
@@ -97,6 +101,43 @@
         </div>
 
 <script>
+	$(document).ready(function () {
+		$(".btn_eliminar_modelo").click(function (e) { 
+			e.preventDefault();
+			id = $(this).data('id_empleado')
+			id_asistencia = $(this).data('id_asistencia')
+			alertify.confirm("Nomina" , "Estas seguro de eliminar la modelo?",
+			function(){
+				EliminarModelo(id, id_asistencia)
+			},
+			function(){
+				alertify.confirm().close();
+			});
+		});
+	});
+	function EliminarModelo(id, id_asistencia){
+		
+		$.ajax({
+			url: '<?= base_url('supervisor/VerAsistencia/eliminarModeloAsistencia') ?>',
+			type: 'POST',
+			dataType: 'json',
+			data: {id_empleado: id, id_asistencia: id_asistencia},
+		})
+		.done(function(r) {
+			if(r.status){
+				alertify.notify('Modelo eliminada', 'success', 1, function(){
+					window.location.href = '../Home/asistencia';
+				});
+				return;
+			}
+			alertify.alert(r.msg);
+		})
+		.fail(function(r) {
+			console.log("error");
+			console.log(r);
+		});
+	}
+
 
     $("#btn_registrar_asistencia").on('click', function(e) {
         alertify.confirm("Nomina" , "Estas seguro de finalizar la asistencia?",
@@ -210,25 +251,6 @@
     $(".btn_chek").on('change', function(e) {
         $(this).parents('tr').find('select').toggle();
     })
-
-    function ConsultarEmpleados(){
-        $.ajax({
-            url: '<?= base_url('supervisor/Home/obtenerEmpleadosSuperviso') ?>',
-            type: 'default GET (Other values: POST)',
-            dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
-            data: {param1: 'value1'},
-        })
-        .done(function() {
-            console.log("success");
-        })
-        .fail(function() {
-            console.log("error");
-        })
-        .always(function() {
-            console.log("complete");
-        });
-        
-    }
 
 
 </script>
