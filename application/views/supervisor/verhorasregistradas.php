@@ -98,7 +98,7 @@
                             <td class="align-middle text-capitalize">${data[k]['cantidad_horas']}</td>
                             <td class="align-middle text-capitalize">${data[k]['estado_registro']}</td>
                             <td class="align-middle text-capitalize">${data[k]['fecha_registro']}</td>`;
-                        if (r.data[k]['estado_registro'] == 'sin registrar') {
+                        if (data[k]['estado_registro'] == 'sin registrar') {
                             tbody += `<td class="align-middle">
                                 <a href="<?php echo site_url('supervisor/Home/editarhoras/') ?>${data[k]['id_registro_horas']+'/'+<?= $this->uri->segment(4) ?>}" class="text-info"><i class="icon-pencil5"></i></a>
                             </td>`;
@@ -106,13 +106,9 @@
 							tbody += `<td class="align-middle">
                             </td>`;
 						}
-
-
-
                         tbody += `</tr>`;
                     }
                     $('#tbodypaginas').html(tbody);
-
 					$('#empty').DataTable( {
 						"order": [[ 5, "desc" ]]
 					} );

@@ -86,12 +86,6 @@
                             <input type="date" id="fecha_ingreso" class="form-control">
                             <div class="invalid-feedback">El campo no debe quedar vacío</div>
                         </div>
-                        
-                        <div class="form-group ocultar">
-                            <label for="salario_aux" class="col-form-label">Salario</label>
-                            <input type="number" id="salario_aux" class="form-control">
-                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
-                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -180,26 +174,20 @@
                         </tr>`;
                     }
                     $('#tbodyusuarios').html(tbody);
-					$('#empty').DataTable();
+					
 					$(".modalPdf").click(function (e) { 
 						e.preventDefault();
-						
 						$("#fecha_ingreso").val($(this).data('fecha_entrada'))
-						$("#salario_aux").val($(this).data('sueldo_aux'))
 						$(".btn_registrar_valores").data('id_persona', $(this).data('id_persona'))
 						$(".btn_registrar_valores").data('tipo_cuenta', $(this).data('tipo_cuenta'))
 						$(".btn_generar_pdf").data('id_persona', $(this).data('id_persona'))
 						tipo_cuenta = $(".btn_registrar_valores").data('tipo_cuenta')
 						id_user = $(this).data('id_persona')
-						if(tipo_cuenta == "supervisor" || tipo_cuenta == "tecnico sistemas"){
-							$(".ocultar").show()
-						}else{
-							$(".ocultar").hide()
-						}
 						hred = "<?php echo base_url('Pdf/getInfPdf/') ?>"+id_user+""
 						$(".btn_generar_pdf").attr('href', hred);
 						$("#ModalGenerarPDF").modal('show')
 					});
+					$('#empty').DataTable();
                 }
             },
             dataType : 'json'

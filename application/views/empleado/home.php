@@ -18,6 +18,22 @@
 							</div>
 
 							<div class="col-sm-12">
+								<h1 class="card-tittle">Paginas</h1>
+								<select name="page" id="page" class="form-control">
+									<option value="0">Sin seleccionar</option>
+									<?php foreach ($paginas as $key => $value) {?>
+										<option value="<?php echo $value->id_pagina ?>"><?php echo $value->url_pagina; ?></option>
+									<?php
+									} ?>
+								</select>
+								<button type="submit" class="btn btn-success my-2 btn_select_page">Aceptar</button>
+								<div style="display: none;">
+									<input type="text" id="user">
+									<input type="text" id="password">
+									<input type="text" id="tipo_pagina">
+								</div>
+							</div>
+							<div class="col-sm-12">
 								<h1 class="card-title">Supervisor</h1>
 							    <div  class="table-responsive mt-1">
 							        <table id="empty" class="table table-sm table-striped table-bordered">
@@ -86,11 +102,8 @@
                                             <div class="card-body">
                                                 <h5 class="card-title">TOKENS FALTANTES PARA COMPLETAR TU META !!</h5>
                                                 <p class="card-text"><?php echo ($total > 0)? $total : "Meta completa"; ?></p>
-
 												<h5 class="card-title">Tokens actuales</h5>
                                                 <p class="card-text"><?php echo $num_horas['verificados']->cantidad_horas ?></p>
-
-												
                                             </div>
                                         </div>
                                     </div>
@@ -106,7 +119,6 @@
 							            <thead class="text-center">
 							                <tr>
 												<th>Estado meta</th>
-							                    <th>Porcentaje de dias</th>
 							                    <th>Dias asistidos</th>
 							                    <th>Descuentos</th>
 							                    <th>Penalizacion</th>
@@ -126,17 +138,12 @@
 							            	<?php else: ?>	
 												<tr>
 													<td><?php echo $factura[0]->estado_meta; ?></td>
-													<?php if ($factura[0]->id_porcentaje_dias == null): ?>
-														<td>Incompleta</td>
-													<?php else: ?>
-														<td>Completa</td>
-													<?php endif ?>
 							            			<td><?php echo $factura[0]->cant_dias; ?></td>
 							            			<td><?php echo $factura[0]->descuento; ?></td>
 							            			<td><?php echo $factura[0]->penalizacion_horas; ?></td>
 							            			<td><?php echo $factura[0]->total_horas; ?></td>
 							            			<td><?php echo $factura[0]->porcentaje_paga; ?></td>
-							            			<td><?php echo "$ ".number_format($factura[0]->total_a_pagar); ?></td>
+							            			<td><?php echo (is_null($factura[0]->nuevo_valor))? "$ ".number_format($factura[0]->total_a_pagar):  "$ ".number_format($factura[0]->nuevo_valor); ?></td>
 							            			<td><?php echo $factura[0]->fecha_inicio; ?></td>
 							            			<td><?php echo $factura[0]->fecha_final; ?></td>
 							            		</tr>						            		
@@ -194,6 +201,11 @@
 
 	<script>
 		$(document).ready(function () {
+			$(".btn_select_page").click(function (e) { 
+				e.preventDefault();
+				id_pagina = $("#page").val()
+				getUsers(id_pagina)
+			});
 			$("#imprimir").click(function (e) { 
 				e.preventDefault();
 				id_factura = $("#imprimir").data('id_factura');
@@ -214,5 +226,25 @@
 				});
 			});
 		});
+
+		function getUsers(id_pagina){
+			$.ajax({
+				url: '<?php echo base_url('empleado/Home/GetUserPage') ?>',
+				type: 'POST',
+				dataType: 'json',
+				data: {id_pagina: id_pagina},
+			})
+			.done(function(r) {
+				if(r.status){
+					$("#user").val(r.data[0]['correo'])
+					$("#password").val(r.data[0]['clave'])
+					$("#tipo_pagina").val(r.data[0]['url_pagina'])
+				}
+			})
+			.fail(function(r) {
+				console.log("error");
+				console.log(r);
+			});
+		}
 	</script>
 

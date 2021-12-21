@@ -63,7 +63,7 @@
           </div> 
           
           <div class="form-group">
-              <button type="submit" class="btn btn-primary btn-block btn_login" style="background-color: rgba(50,65,72,0.9) !important;"> Ingresar  </button>
+              <button type="submit" id="btn_login" class="btn btn-primary btn-block btn_login" style="background-color: rgba(50,65,72,0.9) !important;"> Ingresar  </button>
           </div> 
 		  <div class="form-group">
               <button type="submit" class="btn btn-primary btn-block btn_login" style="background-color: rgba(50,65,72,0.9) !important;"> Olvido su Contraseña?  </button>

@@ -34,6 +34,7 @@ class Home extends CI_Controller {
 		$data['factura'] = $this->Mregistronomina->getLastFactura($id_usuario);
         $data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
         $data['cant_notificaciones'] = $this->Mcitas->getCantCitasEmpleado($id_usuario);
+		$data['paginas'] = $this->Mpaginas->getPagesUsuario($id_usuario);
 		$data['estado'] = true;
 		$datos['user'] = $this->Musuarios->getUser($this->session->userdata('usuario')['id_usuario']);
 		$datos['adelanto'] = $this->Madelantos->getLastAdelanto($this->session->userdata('usuario')['id_usuario']);
@@ -61,6 +62,25 @@ class Home extends CI_Controller {
 		$this->load->view('includes_admin/header', $data);
 		$this->load->view('empleado/home', $datos);
 		$this->load->view('includes_admin/footer');
+	}
+
+	public function GetUserPage(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$id_usuario = $this->session->userdata('usuario')['id_usuario'];
+		$id_pagina = $this->input->post('id_pagina');
+
+		$respuesta = $this->Mpaginas->obtenerUsuarioPaginas($id_usuario, $id_pagina);
+
+		if (!$respuesta) {
+			echo json_encode(['status' => false , 'msg' => 'No se encuentra usuarios']);
+			return;
+		}
+
+		echo json_encode(['status' => true, 'data' => $respuesta]);
 	}
 
 	public function consultarhoras(){

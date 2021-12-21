@@ -302,6 +302,14 @@ class Musuarios extends CI_Model {
 		return $datos->result();
 	}
 
+	public function getSueldoUsuario($tipo_usuario){
+		$consulta = $this->db->select('sueldo')->from('sueldos_empleados')->where('tipo_usuario', $tipo_usuario)->where('estado', 'activo')->get();
+		if($consulta->num_rows() > 0){
+			return $consulta->result();
+		}
+		return false;
+	}
+
 	public function getDatosDescuentos(){
 		$datos = $this->db->select('persona.*')->from('usuarios')
 							->join('persona', 'persona.id_persona = usuarios.id_persona')

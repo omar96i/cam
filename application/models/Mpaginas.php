@@ -153,6 +153,23 @@ class Mpaginas extends CI_Model {
 		return false;
 	}
 
+	public function obtenerUsuarioPaginas($id_usuario, $id_pagina){
+		$this->db->select('paginas.*, persona_pagina.correo, persona_pagina.clave');
+		$this->db->from('persona_pagina');
+		$this->db->join('paginas', 'persona_pagina.id_pagina = paginas.id_pagina');
+		$this->db->where('persona_pagina.id_persona', $id_usuario);
+		$this->db->where('persona_pagina.id_pagina', $id_pagina);
+		$this->db->where('persona_pagina.estado', 'activo');
+
+		$paginas = $this->db->get();
+
+		if($paginas->num_rows() > 0) {
+			return $paginas->result();
+		}
+
+		return false;
+	}
+
 	public function getPagesUsuarios($id_persona) {
 		$this->db->select("paginas.*, persona_pagina.*");
 		$this->db->from('persona_pagina');

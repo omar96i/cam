@@ -474,7 +474,7 @@ class Mregistronomina extends CI_Model {
 	}
 
 	public function getLastFactura($id_usuario){
-		$consulta = $this->db->select('estado_meta, cant_dias, descuento, penalizacion_horas, total_horas, porcentaje_paga, total_a_pagar, fecha_registrado, fecha_inicio, fecha_final, id_porcentaje_dias, id_factura')->select_max('fecha_registrado')->from('factura')->where('id_usuario', $id_usuario)->get();
+		$consulta = $this->db->select('estado_meta, cant_dias, descuento, penalizacion_horas, total_horas, porcentaje_paga, total_a_pagar, fecha_registrado, fecha_inicio, fecha_final, id_porcentaje_dias, id_factura, nuevo_valor')->from('factura')->where('id_usuario', $id_usuario)->order_by('fecha_registrado', 'DESC')->get();
 		if ($consulta->num_rows() > 0) {
 			return $consulta->result();
 		}

@@ -6,7 +6,6 @@
 		<div class="row">
 			<div class="col-xl-12">
 				<!-- Traffic sources -->
-
 				<div class="text-center container">
 					<img width="100%" src="<?php echo base_url('assets/images/titulo.png'); ?>">
 				</div>
@@ -18,7 +17,7 @@
 						Cordial saludo, <br><br>
 						Por medio de la presente, certificamos que la señora <?php echo $consulta1[0]->nombres." ".$consulta1[0]->apellidos ?> identificada con cédula 
 						de ciudadanía N° <?php echo $consulta1[0]->documento ?> labora con nuestra compañía desde el día 
-						<?php echo $consulta1[0]->fecha_entrada ?> desempeñándose como <?php if($consulta1[0]->tipo_cuenta == "empleado"){ echo "modelo"; }else{ echo $consulta1[0]->tipo_cuenta; } ?>, con un salario básico 
+						<?php echo $consulta1[0]->fecha_entrada ?> desempeñándose como <?php if($consulta1[0]->tipo_cuenta == "empleado"){ echo "modelo"; }else if($consulta1[0]->tipo_cuenta == "supervisor"){ echo "monitor"; }else if($consulta1[0]->tipo_cuenta == "tecnico_sistemas"){ echo "supervisor"; }else{ echo $consulta1[0]->tipo_cuenta; } ?>, con un salario básico 
 						de $ <?php echo $consulta1[0]->sueldo_aux ?> <br><br>
 						Para constancia se firma en Dosquebradas a los <span class="dia"></span> días del mes de <span class="mes"></span> de <span class="year"></span>.
 					</p><br>
