@@ -68,8 +68,12 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-4">
-                                            <div class="form-group mt-2">
+                                            <div class="form-group mt-2 text-center">
                                                 <button class="btn btn-success btn-block btn_agregar_asignacion">Aceptar</button>
+												<div class="spinner">
+													<div class="double-bounce1"></div>
+													<div class="double-bounce2"></div>
+												</div>
                                             </div>
                                         </div>
                                     </div>
@@ -86,6 +90,7 @@
 
 <script>
     $(document).ready(function() {
+		$(".spinner").hide()
         $("#empleado").change(function(event) {
             if ($(this).val() != 0) {
                 $("#descripcion").val('');
@@ -154,7 +159,9 @@
                 	$("#descripcion").val() != '' &&
                 	$("#cantidad_horas").val() != ''
                 ) {
-
+					$(".spinner").show()
+					$(".btn_agregar_asignacion").hide()
+				
                     $.ajax({
                         url: ruta,
                         type: 'POST',
@@ -162,7 +169,6 @@
                         data: {empleado: empleado, descripcion: descripcion, cantidad_horas: cantidad_horas, estado_meta: estado_meta},
                     })
                     .done(function(r) {
-
                         if(r.status){
                             $('#form_addproduct').trigger('reset');
                             alertify.notify(
@@ -170,15 +176,17 @@
                                 'success', 
                                 2
                             );
+							$(".spinner").hide()
+							$(".btn_agregar_asignacion").show()
                             return;
                         }
-
                         alertify.alert('Ups :(' , r.msg);
-
+						$(".spinner").hide()
+						$(".btn_agregar_asignacion").show()
                     }).fail( function(r) {
-
 						console.log(r);
-
+						$(".spinner").hide()
+						$(".btn_agregar_asignacion").show()
 					})
 
                     return false;

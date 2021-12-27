@@ -443,4 +443,135 @@ class Home extends CI_Controller {
 		unset($_SESSION['usuario']);
 		redirect('home');
 	}
+
+	public function GenerarPreNominaModelos(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$data['fecha_inicial'] = $this->input->post('fecha_inicio');
+		$data['fecha_final'] = $this->input->post('fecha_final');
+		$data['id_talento'] = $this->session->userdata('usuario')['id_usuario'];
+
+		if (!empty($data['fecha_inicial'])) {
+			if (new DateTime($data['fecha_final']) >= new DateTime($data['fecha_inicial'])) {
+				$modelos = $this->Musuarios->t_h_ver_empleados();
+				$nominas = [];
+				$error = [];
+				$acum = 0;
+				foreach ($modelos as $key => $modelo){
+					$respuesta =  $this->Mregistronomina->VerificarTokens($modelo, $data);
+					if($respuesta != false){
+				 		$error[$acum]['error'] = $respuesta;
+				 		$error[$acum]['modelo'] = $modelo;
+				 		$acum = $acum+1;
+				 	}
+				}
+				if(count($error)>0){
+				 	echo json_encode(['status' => false, 'data' => $error, 'msg' => "Falta tokens por validar"]);
+				 	return;
+				}
+
+				foreach ($modelos as $key => $modelo){
+					$respuesta =  $this->Mregistronomina->ValidarMeta($modelo);
+					if(!$respuesta){
+						$error[$acum]['error'] = "El usuario no tiene meta";
+						$error[$acum]['modelo'] = $modelo;
+						$acum = $acum+1;
+					}
+				}
+				if(count($error)>0){
+					echo json_encode(['status' => false, 'data' => $error, 'msg' => "Hay modelos sin metas"]);
+					return;
+				}
+
+				foreach ($modelos as $key => $modelo){
+					$data['id_persona'] = $modelo->id_persona;
+					$respuesta =  $this->Mregistronomina->VerificarCantidadTokens($data);
+					if($respuesta[0]->cantidad_horas > 0){
+							$nominas[$acum]['nominas'] = $this->Mregistronomina->PreRegistroNomina($data);
+							$nominas[$acum]['modelo'] = $modelo;
+							$acum = $acum+1;
+					}
+				}
+				
+				echo json_encode(['status' => true, 'data' => $nominas]);
+				return;
+				
+			}else{
+				echo json_encode(['status' => false, 'msg' => 'La fecha final debe ser mayor a la inicial.']);
+				return;
+			}
+
+		}else{
+			echo json_encode(['status' => false, 'msg' => 'no se a podido realizar el registro.']);
+			return;
+		}
+		echo json_encode($data);
+	}
+
+	public function GenerarNominaModelos(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$data['fecha_inicial'] = $this->input->post('fecha_inicio');
+		$data['fecha_final'] = $this->input->post('fecha_final');
+		$data['id_talento'] = $this->session->userdata('usuario')['id_usuario'];
+
+		if (!empty($data['fecha_inicial'])) {
+			if (new DateTime($data['fecha_final']) >= new DateTime($data['fecha_inicial'])) {
+				$modelos = $this->Musuarios->t_h_ver_empleados();
+				$error = [];
+				$acum = 0;
+				foreach ($modelos as $key => $modelo){
+					$respuesta =  $this->Mregistronomina->VerificarTokens($modelo, $data);
+					if($respuesta != false){
+				 		$error[$acum]['error'] = $respuesta;
+				 		$error[$acum]['modelo'] = $modelo;
+				 		$acum = $acum+1;
+				 	}
+				}
+				if(count($error)>0){
+				 	echo json_encode(['status' => false, 'data' => $error, 'msg' => "Falta tokens por validar"]);
+				 	return;
+				}
+
+				foreach ($modelos as $key => $modelo){
+					$respuesta =  $this->Mregistronomina->ValidarMeta($modelo);
+					if(!$respuesta){
+						$error[$acum]['error'] = "El usuario no tiene meta";
+						$error[$acum]['modelo'] = $modelo;
+						$acum = $acum+1;
+					}
+				}
+				if(count($error)>0){
+					echo json_encode(['status' => false, 'data' => $error, 'msg' => "Hay modelos sin metas"]);
+					return;
+				}
+
+				foreach ($modelos as $key => $modelo){
+					$data['id_persona'] = $modelo->id_persona;
+					$respuesta =  $this->Mregistronomina->VerificarCantidadTokens($data);
+					if($respuesta[0]->cantidad_horas > 0){
+						$this->Mregistronomina->registrarNomina($data);
+					}
+				}
+				
+				echo json_encode(['status' => true]);
+				return;
+				
+			}else{
+				echo json_encode(['status' => false, 'msg' => 'La fecha final debe ser mayor a la inicial.']);
+				return;
+			}
+
+		}else{
+			echo json_encode(['status' => false, 'msg' => 'no se a podido realizar el registro.']);
+			return;
+		}
+		echo json_encode($data);
+	}
 }

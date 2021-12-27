@@ -147,8 +147,12 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-4">
-                                            <div class="form-group mt-2">
+                                            <div class="form-group mt-2 text-center">
                                                 <button class="btn btn-success btn-block btn_addproduct">Aceptar</button>
+												<div class="spinner">
+													<div class="double-bounce1"></div>
+													<div class="double-bounce2"></div>
+												</div>
                                             </div>
                                         </div>
                                     </div>
@@ -165,6 +169,7 @@
 
 <script>
     $(document).ready(function() {
+		$(".spinner").hide()
 		$("#imagen").change(function (e) { 
 			// Creamos el objeto de la clase FileReader
 			let reader = new FileReader();
@@ -280,40 +285,44 @@
 				$("#fecha_entrada").val() != '' &&
                 $("#name_banco").val() != '') {
 
-                $.ajax({
-                    url: ruta,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: form_data,
-                    cache       : false,
-                    processData : false,
-                    contentType : false,
-                })
-                .done(function(r) {
-                    if(r.status){
-                        $('#form_addproduct').trigger('reset');
-                        alertify.notify(
-                            'Profesional agregado con éxito', 
-                            'success', 
-                            2
-                        );
-                        return;
-                    }
-                    alertify.alert('Ups :(' , r.msg);
+					$(".btn_addproduct").hide()	
+					$(".spinner").show()
+					
+					$.ajax({
+						url: ruta,
+						type: 'POST',
+						dataType: 'json',
+						data: form_data,
+						cache       : false,
+						processData : false,
+						contentType : false,
+					})
+					.done(function(r) {
+						if(r.status){
+							$('#form_addproduct').trigger('reset');
+							alertify.notify(
+								'Profesional agregado con éxito', 
+								'success', 
+								2
+							);
+							$(".spinner").hide()
+							$(".btn_addproduct").show()
+							return;
+						}
+						alertify.alert('Ups :(' , r.msg);
+						$(".spinner").hide()
+						$(".btn_addproduct").show()
 
-                })
-                .fail(function(r) {
-                    console.log(r);
-                    console.log("error");
-                });
-                
-
-                return false;
-
+					})
+					.fail(function(r) {
+						console.log(r);
+						console.log("error");
+						$(".spinner").hide()
+						$(".btn_addproduct").show()
+					});
+                	return false;
             }
-
             return false;
-
         });
     });
 </script>

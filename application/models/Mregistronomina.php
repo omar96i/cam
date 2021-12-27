@@ -518,4 +518,316 @@ class Mregistronomina extends CI_Model {
 
 		return $dato->fecha;
 	}
+
+	public function VerificarTokens($modelo, $data){
+		$consulta = $this->db->select('*')->from('registro_horas')->where('fecha_registro >=', $data['fecha_inicial'])->where('fecha_registro <=', $data['fecha_final'])->where('id_empleado', $modelo->id_persona)->where('estado_registro', 'sin registrar')->get();
+		if($consulta->num_rows() > 0){
+			return "El usuario tiene tokens sin validar";
+		}
+		return false;
+	}
+	
+	public function ValidarMeta($modelo){
+		$consulta_meta = $this->db->select('*')->from('metas')->where('id_empleado', $modelo->id_persona)->where('estado', 'sin registrar')->get();
+		if($consulta_meta->num_rows() > 0){
+			return true;
+		}
+		return false;
+	}
+
+	public function VerificarCantidadTokens($data){
+		$consulta = $this->db->select_sum('cantidad_horas')->from('registro_horas')->where('id_empleado', $data['id_persona'])->where('fecha_registro >=', $data['fecha_inicial'])->where('fecha_registro <=', $data['fecha_final'])->where('estado_registro', 'verificado')->get();
+		return $consulta->result();
+	}
+
+	public function PreRegistroNomina($data){
+
+		/// SACAMOS LA CANTIDAD DE ASISTENCIA DEL EMPLEADO ///
+		$sub_consulta='(asistencia_empleado.estado = "registrado" OR asistencia_empleado.motivo IN (SELECT id_motivo FROM motivo_asistencia WHERE descuenta = "No"))';
+
+		$consulta_asistencia = $this->db->select('asistencia_empleado.*, asistencia.fecha')->from('asistencia_empleado')->join('asistencia', 'asistencia.id_asistencia = asistencia_empleado.id_asistencia')->where('asistencia.fecha <=', $data['fecha_final'])->where('asistencia.fecha >=', $data['fecha_inicial'])->where('id_empleado', $data['id_persona'])->where($sub_consulta)->get()->result();
+
+		$numero_dias = count($consulta_asistencia);
+
+		
+		////////////////////////////////////////////////////
+
+		
+
+		/// CONSULTAMOS PENALIZACIONES ///
+		$consulta_penalizaciones = $this->db->select_sum('puntos')->from('empleado_penalizacion')
+										->where('estado', 'sin registrar')
+										->where('id_empleado', $data['id_persona'])
+										->where('fecha_registrado <=', $data['fecha_final'])
+										->where('fecha_registrado >=', $data['fecha_inicial'])
+										->get()->result();
+		if($consulta_penalizaciones[0]->puntos == null){
+			$num_penalizacion = 0;
+		}else{
+			$num_penalizacion = $consulta_penalizaciones[0]->puntos;
+		}
+
+
+		/////////////////////////////////
+
+		/// CONSULTAMOS LOS TOKENS DE LOS EMPLEADOS /////
+		$consulta_bonga = 0;
+		$tokens_general = 0;
+		$tokens_bonga = 0;
+		$response =	$this->db->select('paginas.id_pagina')->from('persona_pagina')
+							->join('paginas', 'persona_pagina.id_pagina = paginas.id_pagina')
+							->where('url_pagina', 'bongacams')
+							->where('id_persona', $data['id_persona'])
+							->get();
+		if($response->num_rows() > 0) {
+			$consulta_bonga = $response->result();
+			$tokens_bonga = $this->db->select_sum('cantidad_horas')
+							->from('registro_horas')
+							->where('id_empleado', $data['id_persona'])
+							->where('estado_registro', 'verificado')
+							->where('fecha_registro <=', $data['fecha_final'])
+							->where('fecha_registro >=', $data['fecha_inicial'])
+							->where('id_pagina', $consulta_bonga[0]->id_pagina)
+							->get();
+			if(!$tokens_bonga->num_rows() > 0){
+				$tokens_bonga = 0;
+			}else{
+				$tokens_bonga = $tokens_bonga->result();
+
+				$tokens_bonga = $tokens_bonga[0]->cantidad_horas;
+			}
+		}else{
+			$tokens_bonga = 0;
+		}
+			
+	
+
+		$tokens_general = $this->db->select_sum('cantidad_horas')->from('registro_horas')
+									->where('id_empleado', $data['id_persona'])
+									->where('estado_registro', 'verificado')
+									->where('fecha_registro <=', $data['fecha_final'])
+									->where('fecha_registro >=', $data['fecha_inicial'])
+									->where('id_pagina !=', 6)
+									->get()->result();
+		if($tokens_general[0]->cantidad_horas == null){
+			$tokens_general[0]->cantidad_horas = 0;
+		}
+
+		$cantidad_horas = $tokens_general[0]->cantidad_horas-$num_penalizacion;
+		$total_horas = $tokens_general[0]->cantidad_horas+$tokens_bonga;
+		$tokens_subtotal = $cantidad_horas+$tokens_bonga;
+		/////////////////////////////////////////
+		/// CONSULTAMOS LA META DEL EMPLEADO Y VERIFICAMOS SI CUMPLIO LA META ///
+		$consulta_meta = $this->db->select('*')->from('metas')->where('id_empleado', $data['id_persona'])->where('estado', 'sin registrar')->get()->result();
+		$estado_meta = "incompleta";
+		if ($tokens_subtotal>=$consulta_meta[0]->num_horas) {
+			$estado_meta = "completa";
+		}
+		/////////////////////////////////////////////////////////////////////////
+
+		/// CONSULTAMOS EL PORCENTAJE DE LOS DIAS GENERAL///
+
+		// Consultamos la fecha de entrada de la modelo 
+		$fecha_entrada = $this->db->select('fecha_entrada')->from('persona')->where('id_persona', $data['id_persona'])->get()->result();
+		$consulta_porcentaje_dias = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar,fecha_accion')->from('porcentajes_dias')
+											->where('estado', 'activo')
+											->where('tipo', 'general')
+											->order_by('fecha_accion', 'desc')
+											->get()->result();
+		$consulta_porcentaje_dias_bonga = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar,fecha_accion')->from('porcentajes_dias')
+											->where('estado', 'activo')
+											->where('tipo', 'bongacams')
+											->order_by('fecha_accion', 'desc')
+											->get()->result();
+		$porcentaje_dias = 0;
+		$porcentaje_dias_bonga = 0;
+		$porcentaje_dias_porcentaje = 0;
+		$id_porcentaje_dias = null;
+		////////////////////////////////////////////
+
+		foreach ($consulta_porcentaje_dias as $key => $value) {
+			if($fecha_entrada[0]->fecha_entrada >= $value->fecha_accion){
+				$subconsulta = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar,fecha_accion')->from('porcentajes_dias')
+										->where('estado', 'activo')
+										->where('tipo', 'general')
+										->where('fecha_accion', $value->fecha_accion)
+										->order_by('cantidad_dias', 'desc')
+										->get()->result();
+				$bandera = false;
+				foreach ($subconsulta as $key => $val) {
+					if ($numero_dias >= $val->cantidad_dias && $val->estado_meta == $estado_meta) {
+						/// ASIGNAMOS EL VALOR DEL % SI CuMPLE CON LOS DIAS Y META ///
+						$porcentaje_dias_porcentaje = $val->valor;
+						$porcentaje_dias = $val->valor_multiplicar;
+						$id_porcentaje_dias = $subconsulta[$key]->id_porcentajes_dias;
+						$bandera = true;
+						break;
+					}
+				}
+				if($bandera){
+					break;
+				}
+			}
+		}
+		///////////////////////////////////////////////////
+
+		foreach ($consulta_porcentaje_dias_bonga as $key => $value) {
+			if($fecha_entrada[0]->fecha_entrada >= $value->fecha_accion){
+				$subconsulta = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar,fecha_accion')->from('porcentajes_dias')
+										->where('estado', 'activo')
+										->where('tipo', 'bongacams')
+										->where('fecha_accion', $value->fecha_accion)
+										->order_by('cantidad_dias', 'desc')
+										->get()->result();
+				$bandera = false;
+				foreach ($subconsulta as $key => $val) {
+					if ($numero_dias >= $val->cantidad_dias && $val->estado_meta == $estado_meta) {
+						/// ASIGNAMOS EL VALOR DEL % SI CuMPLE CON LOS DIAS Y META ///
+						$porcentaje_dias_bonga = $val->valor_multiplicar;
+						$bandera = true;
+						break;
+					}
+				}
+				if($bandera){
+					break;
+				}
+			}
+		}
+
+		if($consulta_meta[0]->estado_meta == "sin_meta"){
+			$consulta_porcentaje_dias = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
+												->where('estado', 'activo')
+												->where('tipo', 'general')
+												->where('valor', 60)
+												->order_by('fecha_accion', 'desc')
+												->get()->result();
+			$consulta_porcentaje_dias_bonga = $this->db->select('cantidad_dias,valor,id_porcentajes_dias,estado_meta,valor_multiplicar')->from('porcentajes_dias')
+												->where('estado', 'activo')
+												->where('tipo', 'bongacams')
+												->where('valor', 60)
+												->order_by('fecha_accion', 'desc')
+												->get()->result();
+			$porcentaje_dias = $consulta_porcentaje_dias[0]->valor_multiplicar;
+			$id_porcentaje_dias = $consulta_porcentaje_dias[0]->id_porcentajes_dias;
+			$porcentaje_dias_bonga = $consulta_porcentaje_dias_bonga[0]->valor_multiplicar;
+			$porcentaje_dias_porcentaje = 60;
+		}
+		///////////////////////////////////////////////////
+		/// CONSULTAMOS ADELANTOS ///
+		$id_adelanto = 0;
+		$aux_adelanto = 0;
+		$adelanto_cantidad_cuotas = 0;
+		$adelanto_cantidad_cuotas_aux = 0;
+		$adelanto_cantidad_total = 0;
+		$adelanto_cantidad_total_aux = 0;
+		$estado_adelanto = "";
+		$bandera_adelanto = false;
+		$bandera_adelanto_proceso = false;
+
+		$consulta_adelantos = $this->db->select('*')->from('adelanto')->where('id_empleado', $data['id_persona'])->where('estado', 'sin registrar')->get();
+
+		if($consulta_adelantos->num_rows() > 0){
+			$bandera_adelanto = true;
+			$consulta_adelantos = $consulta_adelantos->result();
+			$adelanto_cantidad_cuotas = $consulta_adelantos[0]->cuota;
+			$adelanto_cantidad_total = $consulta_adelantos[0]->valor;
+			$id_adelanto = $consulta_adelantos[0]->id_adelanto;
+			$aux_adelanto = $adelanto_cantidad_total/$adelanto_cantidad_cuotas;
+			$adelanto_cantidad_total_aux = $adelanto_cantidad_total-$aux_adelanto;
+			$adelanto_cantidad_cuotas_aux = $adelanto_cantidad_cuotas-1;
+			$estado_adelanto = $consulta_adelantos[0]->estado;
+		}
+		// Consultamos si tiene un adelanto activo
+		$consulta_adelantos_proceso = $this->db->select('*')->from('adelanto')->where('id_empleado', $data['id_persona'])->where('estado', 'pagando')->get();
+		if($consulta_adelantos_proceso->num_rows() > 0){
+			$bandera_adelanto_proceso = true;
+			$consulta_adelantos_proceso = $consulta_adelantos_proceso->result();
+			$adelanto_cantidad_cuotas = $consulta_adelantos_proceso[0]->cuota;
+			$adelanto_cantidad_total = $consulta_adelantos_proceso[0]->valor;
+			$id_adelanto = $consulta_adelantos_proceso[0]->id_adelanto;
+
+			$aux_adelanto = $adelanto_cantidad_total/$adelanto_cantidad_cuotas;
+			$adelanto_cantidad_total_aux = $consulta_adelantos_proceso[0]->valor_aux-$aux_adelanto;
+			$adelanto_cantidad_cuotas_aux = $consulta_adelantos_proceso[0]->cuota_aux-1;
+			$estado_adelanto = $consulta_adelantos_proceso[0]->estado;
+		}
+
+		$adelanto = $aux_adelanto;
+		////////////////////////////
+
+		/// CONSULTAMOS DESCUENTOS ///
+		$aux_descuentos = 0;
+
+		$consulta_descuentos_dias = $this->db->select_sum('valor')->from('dias_descontados')->where('id_persona', $data['id_persona'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
+		if($consulta_descuentos_dias->num_rows() > 0){
+			foreach ($consulta_descuentos_dias->result() as $key => $descuento) {
+				$aux_descuentos = $aux_descuentos+$descuento->valor;
+			}
+		}
+
+
+		$adelanto = $adelanto+$aux_descuentos;
+		/////////////////////////////////
+		/// CONSULTAMOS VALOR DOLAR ///
+		$consulta_valor_dolar = $this->db->select('valor_dolar,id_dolar')->from('dolar')->where('estado', 'activo')->get()->result();
+		if (empty($consulta_valor_dolar)) {
+			return false;
+		}
+		$valor_dolar = $consulta_valor_dolar[0]->valor_dolar;
+		//////////////////////////////
+
+		/// AUMENTOS ////
+		$aux_aumentos = 0;
+		$aumentos = $this->db->select('id, valor')->from('aumentos')->where('id_persona', $data['id_persona'])->where('estado', 'sin registrar')->where('fecha >=', $data['fecha_inicial'])->where('fecha <=', $data['fecha_final'])->get();
+		if($aumentos->num_rows() > 0){
+			foreach ($aumentos->result() as $key => $aumento) {
+				$aux_aumentos = $aux_aumentos+$aumento->valor;
+			}
+		}
+
+		/// CALCULOS EMPLEADOS ///
+
+
+		// CALCULOS PAGINAS GENERALES //
+		$sub_total_generales = ($cantidad_horas*$porcentaje_dias)*$valor_dolar;
+		// CALCULOS PAGINAS BONGACAMS
+		$sub_total_bongacams = ($tokens_bonga*$porcentaje_dias_bonga)*$valor_dolar;
+
+		
+
+		$sub_total = $sub_total_generales+$sub_total_bongacams;
+
+		$total = ($sub_total+$aux_aumentos)-$adelanto;
+
+		///////////////
+
+		/// CALCULOS INGRESOS ///
+
+		// $porcentaje_ingreso = 100-$porcentaje_dias;
+
+		//  $total_ingreso = ($sub_total/100)*$porcentaje_ingreso;
+
+		//////////////////////////
+
+
+
+		/// INSERT DATOS A FACTURA ///
+		$datos['id_meta'] = $consulta_meta[0]->id_meta;
+		$datos['estado_meta'] = $estado_meta;
+		$datos['id_usuario'] = $data['id_persona'];
+		$datos['id_talento_humano'] = $data['id_talento'];
+		$datos['id_dolar'] = $consulta_valor_dolar[0]->id_dolar;
+		$datos['id_porcentaje_dias'] = $id_porcentaje_dias;
+		$datos['descuento'] = $adelanto;
+		$datos['aumentos'] = $aux_aumentos;
+		$datos['total_horas'] = $total_horas;
+		$datos['total_a_pagar'] = round($total);
+		$datos['estado_factura'] = "sin registrar";
+		$datos['penalizacion_horas'] = $num_penalizacion;
+		$datos['porcentaje_paga'] = $porcentaje_dias_porcentaje;
+		$datos['cant_dias'] = $numero_dias;
+		$datos['fecha_inicio'] = $data['fecha_inicial'];
+		$datos['fecha_final'] = $data['fecha_final'];
+		return $datos;
+	}
 }

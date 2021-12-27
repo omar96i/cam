@@ -125,9 +125,6 @@
 												}
 
 											?>
-
-                                            
-
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
@@ -179,8 +176,12 @@
 
                                     <div class="row">
                                         <div class="col-4">
-                                            <div class="form-group mt-2">
+                                            <div class="form-group mt-2 text-center">
                                                 <button class="btn btn-success btn-block btn_editusuary" data-id_usuario="<?php echo $usuarios->id_persona ?>">Editar</button>
+												<div class="spinner">
+													<div class="double-bounce1"></div>
+													<div class="double-bounce2"></div>
+												</div>
                                             </div>
                                         </div>
                                     </div>
@@ -196,7 +197,12 @@
 
 
 <script>
+	$(document).ready(function () {
+		$(".spinner").hide()
+	});
+	
 	$("#imagen").change(function (e) { 
+		
 		// Creamos el objeto de la clase FileReader
 		let reader = new FileReader();
 
@@ -272,7 +278,9 @@
             $('input[name="documento_u"]').val() != '' &&
             $('input[name="apellidos_u"]').val() != '' &&
 			$('input[name="cuenta_tipo_u"]').val() != ''
-        ){      
+        ){   
+			$(".btn_editusuary").hide()
+			$(".spinner").show()   
             $.ajax({
                 url: ruta,
                 type: 'POST',
@@ -287,14 +295,22 @@
                     alertify.notify('Registro actualizado', 'success', 2, function(){
                         window.location.href = '../../empleados';
                     });
+					$(".spinner").hide()
+					$(".btn_editusuary").show()
+
                     return;
                 }
                 alertify.alert('Ups :(' , r.msg);
+				$(".spinner").hide()
+				$(".btn_editusuary").show()
+
 
             })
             .fail(function(r) {
                 console.log("error");
                 console.log(r);
+				$(".spinner").hide()
+				$(".btn_editusuary").show()
             });
             return false;
 
