@@ -730,8 +730,11 @@ class Home extends CI_Controller {
 		$data['fecha_entrada'] = $this->input->post('fecha_ingreso');
 		$data['id_persona'] = $this->input->post('id_persona');
 
-		if($this->input->post('tipo_cuenta') == "supervisor" || $this->input->post('tipo_cuenta') == "tecnico sistemas" || $this->input->post('tipo_cuenta') == "empleado"){
+		if($this->input->post('tipo_cuenta') == "empleado"){
 			$data['sueldo_aux'] = $this->input->post('salario_aux');
+			if($this->input->post('cargo_aux') != ""){
+				$data['cargo_aux'] = $this->input->post('cargo_aux');
+			}
 		}else{
 			$sueldo = $this->MsalarioEmpleados->getSalarioTipoCuenta($this->input->post('tipo_cuenta'));
 			$data['sueldo_aux'] = $sueldo[0]->sueldo;

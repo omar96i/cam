@@ -129,6 +129,12 @@
                             <input type="number" id="salario_aux" class="form-control">
                             <div class="invalid-feedback">El campo no debe quedar vacío</div>
                         </div>
+
+						<div class="form-group">
+                            <label for="cargo_aux" class="col-form-label">Cargo aux (Opcional)</label>
+                            <input type="text" id="cargo_aux" class="form-control" placeholder="Ingresa el cargo en caso de que quiera cambiar el estandar">
+                            <div class="invalid-feedback">El campo no debe quedar vacío</div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -163,10 +169,12 @@
 	function actualizarUsuario(id_persona){
 		fecha_ingreso = $("#fecha_ingreso").val()
 		salario_aux = $("#salario_aux").val()
+		cargo_aux = $("#cargo_aux").val()
+
 		$.ajax({
             url      : '<?= base_url('admin/home/actualizarDatosUsuario') ?>',
             method   : 'POST',
-            data     : {fecha_ingreso : fecha_ingreso , salario_aux : salario_aux, id_persona : id_persona, tipo_cuenta: 'empleado'},
+            data     : {fecha_ingreso : fecha_ingreso , salario_aux : salario_aux, id_persona : id_persona, tipo_cuenta: 'empleado', cargo_aux: cargo_aux},
             success  : function(r){
 				if(r.status){
 					alertify.notify('Usuario actualizado', 'success', 2, function(){
@@ -204,7 +212,7 @@
                                 <a href="<?php echo site_url('admin/Home/editarempleados/') ?>${r.data[k]['id_persona']+"/"+tittle}" class="text-info" data-toggle="tooltip" title="Editar"><img src="<?php echo base_url('assets/iconos_menu/editar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-danger btn_deletepersonal" data-id_persona="${r.data[k]['id_persona']}" data-toggle="tooltip" title="Eliminar"><img src="<?php echo base_url('assets/iconos_menu/eliminar.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="" class="text-info btn_modal_registros" data-id_persona="${r.data[k]['id_persona']}"><img src="<?php echo base_url('assets/iconos_menu/ojo.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
-								<a href="" class="text-info modalPdf" data-id_persona="${r.data[k]['id_persona']}" data-fecha_entrada="${r.data[k]['fecha_entrada']}" data-sueldo_aux="${r.data[k]['sueldo_aux']}"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
+								<a href="" class="text-info modalPdf" data-id_persona="${r.data[k]['id_persona']}" data-fecha_entrada="${r.data[k]['fecha_entrada']}" data-sueldo_aux="${r.data[k]['sueldo_aux']}" data-cargo_aux="${r.data[k]['cargo_aux']}"><img src="<?php echo base_url('assets/iconos_menu/pdf.png') ?>" alt="" style="width: 20px; height: 20px; margin-right: 5px;"> </a>
                                 <a href="<?php echo base_url('supervisor/VerInformes/VerInformesEmpleado/') ?>${r.data[k]['id_persona']}" class="text-info"><img src="<?php echo base_url('assets/iconos_menu/reporte.png') ?>" alt=""></a>
                             </td>
                         </tr>`;
@@ -216,6 +224,7 @@
 						$("#ModalGenerarPDF").modal('show')
 						$("#fecha_ingreso").val($(this).data('fecha_entrada'))
 						$("#salario_aux").val($(this).data('sueldo_aux'))
+						$("#cargo_aux").val($(this).data('cargo_aux'))
 						$(".btn_registrar_valores").data('id_persona', $(this).data('id_persona'))
 						$(".btn_generar_pdf").data('id_persona', $(this).data('id_persona'))
 						id_user = $(this).data('id_persona')
