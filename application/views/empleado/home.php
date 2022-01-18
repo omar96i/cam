@@ -16,7 +16,6 @@
 							<div class="col-sm-12">
 							<p style="font-size: 16px"><?php echo $user[0]->nombres." ".$user[0]->apellidos." Modelo de la plataforma" ?>.</p>
 							</div>
-
 							<div class="col-sm-12">
 								<h1 class="card-tittle">Paginas</h1>
 								<select name="page" id="page" class="form-control">
@@ -27,6 +26,12 @@
 									} ?>
 								</select>
 								<button type="submit" class="btn btn-success my-2 btn_select_page">Aceptar</button>
+								<div class="alert alert-danger" id="error-alert" role="alert" style="display: none;">
+									Selecciona una pagina antes de darle al boton de la extension
+								</div>
+								<div class="alert alert-success" id="success-alert" role="alert" style="display: none;">
+									Pagina Seleccionada, Ve a la pagina seleccionada y en el login de esta interactura con la extension
+								</div>
 								<div style="display: none;">
 									<input type="text" id="user">
 									<input type="text" id="password">

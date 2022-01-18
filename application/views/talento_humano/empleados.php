@@ -35,33 +35,8 @@
 										</div>
 									</div>
                                 </div>
-
-                                <?php if(!empty($empleados)): ?>
-                                    <div  class="table-responsive mt-1">
-                                        <table id="empty" class="table table-sm table-striped table-bordered">
-                                            <thead class="text-center">
-                                                <tr>
-                                                    <th>Documento</th>
-                                                    <th>Nombres</th>
-                                                    <th>Apellidos</th>
-                                                    <th>Tokens sin verificar</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody id="tbodyempleados" class="text-center">
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <?php else: ?>
-                                        <div class="text-center">
-                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
-                                            <p><span class="text-muted">No hay modelos</span></p>
-                                        </div>
-                                    <?php endif; ?>
-									<div class="ocultar">
-										<div class="row my-5">
+								<div class="ocultar">
+										<div class="row my-2">
 											<div class="col-12 text-center">
 												<h2 class="d-inline">Simulacion</h2>
 											</div>
@@ -92,6 +67,32 @@
 											</table>
 										</div>
 									</div>
+
+                                <?php if(!empty($empleados)): ?>
+                                    <div  class="table-responsive mt-1">
+                                        <table id="empty" class="table table-sm table-striped table-bordered">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <th>Documento</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
+                                                    <th>Tokens sin verificar</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody id="tbodyempleados" class="text-center">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <?php else: ?>
+                                        <div class="text-center">
+                                            <img class="img-fluid" src="<?php echo base_url('assets/images/empty_folder.png') ?>" alt="emptyfolder" style="width: 350px">
+                                            <p><span class="text-muted">No hay modelos</span></p>
+                                        </div>
+                                    <?php endif; ?>
+									
 									
                                 </div>
                             </div>

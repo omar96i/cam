@@ -93,8 +93,10 @@
 												<th>Modelo</th>
 												<th>Url pagina</th>
 												<th>Cantidad Tokens</th>
-												<th>Estado registro</th>
-												<th>Fecha registro</th>
+												<th>Estado</th>
+												<th>Fecha</th>
+												<th>Fecha de registro</th>
+												
 											</tr>
 										</thead>
 
@@ -162,7 +164,8 @@
 							<td class="align-middle text-capitalize">${r.data[k]['url_pagina']}</td>
 							<td class="align-middle text-capitalize">${r.data[k]['cantidad_horas']}</td>
 							<td class="align-middle text-capitalize">${(r.data[k]['estado_registro'] == 'sin registrar')? 'sin verificar': r.data[k]['estado_registro']}</td>
-							<td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>`;
+							<td class="align-middle text-capitalize">${r.data[k]['fecha_registro']}</td>
+							<td class="align-middle text-capitalize">${r.data[k]['created_at']}</td>`;
 						tbody += `</tr>`;
 					}
 					$('#tbodyregistro_horas').html(tbody);
