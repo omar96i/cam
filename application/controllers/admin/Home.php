@@ -2689,7 +2689,7 @@ class Home extends CI_Controller {
 	}
 
 	public function editarFactura($id){
-		if($this->session->userdata('usuario')['tipo']=='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$data['factura'] = $this->Mregistronomina->getFactura($id);
 			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
 
@@ -2713,7 +2713,7 @@ class Home extends CI_Controller {
 	}
 
 	public function editarFacturaMonitor($id){
-		if($this->session->userdata('usuario')['tipo']=='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$data['factura'] = $this->Mregistronomina->getFacturaMonitor($id);
 			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
 
@@ -2737,7 +2737,7 @@ class Home extends CI_Controller {
 	}
 
 	public function editarFacturaSupervisor($id){
-		if($this->session->userdata('usuario')['tipo']=='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
 
 			$data['notificaciones'] = $this->Mcitas->getCitasEmpleado($id_usuario);        
@@ -2762,7 +2762,7 @@ class Home extends CI_Controller {
 	}
 
 	public function editarFacturaGeneral($id){
-		if($this->session->userdata('usuario')['tipo']=='administrador') {
+		if($this->session->userdata('usuario')['tipo']=='administrador' || $this->session->userdata('usuario')['tipo']=='talento humano') {
 			$data['factura'] = $this->Mregistronomina->getFacturaGeneral($id);
 			$id_usuario = $this->session->userdata('usuario')['id_usuario'];
 

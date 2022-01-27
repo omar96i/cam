@@ -120,7 +120,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Agregar Modelo</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Eliminar Modelo</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -325,9 +325,10 @@
                         event.preventDefault();
 						id_asistencia = $(this).data('id_asistencia')
                         $.ajax({
-                            url: '<?= base_url('supervisor/VerAsistencia/getModels') ?>',
+                            url: '<?= base_url('supervisor/VerAsistencia/getModelsAssist') ?>',
                             type: 'POST',
                             dataType: 'json',
+							data: {id_asistencia: id_asistencia},
                         })
                         .done(function(r) {
 							var tbody = '';

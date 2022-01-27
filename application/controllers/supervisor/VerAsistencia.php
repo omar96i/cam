@@ -29,6 +29,18 @@ class VerAsistencia extends CI_Controller {
 		echo json_encode($data);
 	}
 
+	public function getModelsAssist(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+		$id_asistencia = $this->input->post('id_asistencia');
+
+		$data['modelos'] = $this->Masistencia->getModelsAssist($id_asistencia);
+
+		echo json_encode($data);
+	}
+
 	public function AddModelo(){
 		if(!$this->input->is_ajax_request()){
 			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
