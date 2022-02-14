@@ -42,6 +42,7 @@ class Asistencia extends CI_Controller {
 			if (!$data['notificaciones']) {
 				$data['notificaciones'] = "vacio";
 			}
+			$data['modelos'] = $this->Musuarios->getempleadosMetas();
 
 			
 			$this->load->view('includes_admin/header', $data);
@@ -85,6 +86,20 @@ class Asistencia extends CI_Controller {
 		$respuesta['motivos'] = $this->Masistencia->get_motivoAsistencias('');
 
 		echo json_encode($respuesta);
+	}
+
+	public function getAsistenciasModelo(){
+		if(!$this->input->is_ajax_request()){
+			echo json_encode(['status' => false, 'msg' => 'Ups, algo pasó']);
+			return; 
+		}
+
+		$id_modelo = $this->input->post('empleado');
+
+		$respuesta = $this->Masistencia->getAsistenciasModelo($id_modelo);
+
+		echo json_encode(['status' => true, 'asistencias' => $respuesta]);
+
 	}
 
 	

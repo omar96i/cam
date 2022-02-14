@@ -271,4 +271,16 @@ class Masistencia extends CI_Model {
 		return false;
 	}
 
+	public function getAsistenciasModelo($id_modelo){
+		$consulta = $this->db->select('asistencia.*, persona.*')
+								->from('asistencia')
+								->join('asistencia_empleado', 'asistencia_empleado.id_asistencia = asistencia.id_asistencia')
+								->join('persona', 'asistencia.id_supervisor = persona.id_persona')
+								->where('asistencia_empleado.id_empleado', $id_modelo)
+								->get();
+
+			return $consulta->result();
+
+	}
+
 }
